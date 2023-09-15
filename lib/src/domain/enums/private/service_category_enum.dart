@@ -1,0 +1,16 @@
+enum ServiceCategoryEnum {
+  all,
+  vayCuoi,
+  aoDai,
+  vest,
+  trangDiem,
+  duaRuoc,
+  nhaHang,
+  trapCuoi,
+  trangTriDamHoi,
+  trangTriDamCuoi,
+  chupAnh,
+  mc,
+  empty,
+  more,
+}

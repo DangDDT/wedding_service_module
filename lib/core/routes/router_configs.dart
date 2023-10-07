@@ -1,23 +1,23 @@
 // ignore_for_file: void_checks
 
 import 'package:get/get.dart';
-import 'package:wedding_service_module/src/presentation/pages/categories_service/categories_service_page.dart';
-
-import 'router_constant.dart';
+import 'package:wedding_service_module/src/presentation/pages/service_detail_page/service_dedail_page_bindings.dart';
+import 'package:wedding_service_module/src/presentation/pages/service_detail_page/service_detail_page.dart';
+import 'package:wedding_service_module/src/presentation/pages/wedding_services_page/wedding_services_page.dart';
 
 class ModuleRouter {
+  static String weddingServicesRoute = '/wedding_services';
+  static String weddingServiceDetailRoute = '/wedding_service_detail';
+
   static final List<GetPage> routes = [
-    //  GetPage<dynamic>(
-    //   name: route_name,
-    //   page: () => const PageName(),
-    //   binding: BindingsBuilder(() {
-    //     Get.lazyPut(() => PageNameCtrl());
-    //     ...
-    //   }),
-    // ),
     GetPage<dynamic>(
-      name: RouteConstants.categoriesServiceRoute,
-      page: () => const CategoriesServicePage(),
+      name: weddingServicesRoute,
+      page: () => const WeddingServicesPage(),
+    ),
+    GetPage<dynamic>(
+      name: weddingServiceDetailRoute,
+      binding: ServiceDetailPageBindings(),
+      page: () => const ServiceDetailPage(),
     ),
   ];
 }

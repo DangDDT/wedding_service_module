@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../../core/core.dart';
+import 'package:wedding_service_module/core/constants/ui_constant.dart';
 
 class LoadingButton extends StatelessWidget {
   const LoadingButton({

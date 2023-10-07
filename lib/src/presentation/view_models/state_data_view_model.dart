@@ -1,77 +1,119 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../domain/domain.dart';
 
 class StateDataVM<T> {
-  StateDataVM(this.data, this.errorMessage,
-      {this.state = LoadingState.initial});
+  StateDataVM(
+    this.data, {
+    this.message,
+    this.status = LoadingState.initial,
+  });
 
-  final LoadingState state;
-  T? data;
-  String? errorMessage;
+  final LoadingState status;
+  final T? data;
+  String? message;
 
   static none<E>(Type type) {
     switch (type) {
       case List:
         final List<E> list = [];
-        return StateDataVM(list, null);
+        return StateDataVM(list);
       case RxList:
         final RxList<E> list = RxList<E>.empty();
-        return StateDataVM(list, null);
+        return StateDataVM(list);
       default:
-        return StateDataVM<E>(null, null);
+        return StateDataVM<E>(null);
     }
   }
 
   StateDataVM<T> _copyWith({
+    ValueGetter<T?>? data,
     LoadingState? state,
-    T? data,
-    required String? errorMessage,
+    ValueGetter<String?>? message,
   }) {
     return StateDataVM<T>(
-      data ?? this.data,
-      errorMessage,
-      state: state ?? this.state,
+      data != null ? data() : this.data,
+      message: message != null ? message() : this.message,
+      status: state ?? this.status,
     );
   }
 
-  StateDataVM<T> setLoading() {
-    return _copyWith(errorMessage: null, state: LoadingState.loading);
-  }
-
-  StateDataVM<T> setSuccess(T data) {
+  ///Shortcut to create a [StateDataVM] with loading state with optional message
+  ///
+  ///from a old [StateDataVM]
+  StateDataVM<T> loading({String? message}) {
     return _copyWith(
-        data: data, errorMessage: null, state: LoadingState.success);
+      message: () => message ?? this.message,
+      state: LoadingState.loading,
+    );
   }
 
-  StateDataVM<T> setError(String errorMessage) {
-    return _copyWith(errorMessage: errorMessage, state: LoadingState.error);
+  ///Shortcut to create a [StateDataVM] with success state
+  StateDataVM<T> success(T data) {
+    return _copyWith(
+      data: () => data,
+      message: null,
+      state: LoadingState.success,
+    );
   }
 
-  StateDataVM<T> setEmpty() {
-    return _copyWith(errorMessage: null, state: LoadingState.empty);
+  ///Shortcut to create a [StateDataVM] with error state
+  StateDataVM<T> error(String errorMessage) {
+    return _copyWith(
+      message: () => errorMessage,
+      state: LoadingState.error,
+    );
   }
 
-  bool get isInitial => state == LoadingState.initial;
+  ///Shortcut to create a [StateDataVM] with empty state
+  StateDataVM<T> empty() {
+    return _copyWith(
+      data: () => null,
+      message: null,
+      state: LoadingState.empty,
+    );
+  }
 
-  bool get isLoading => state == LoadingState.loading;
+  bool get isInitial => status == LoadingState.initial;
 
-  bool get isSuccess => state == LoadingState.success;
+  bool get isLoading => status == LoadingState.loading;
 
-  bool get isError => state == LoadingState.error;
+  bool get isSuccess => status == LoadingState.success;
 
-  bool get isEmpty => state == LoadingState.empty;
+  bool get isError => status == LoadingState.error;
 
-  bool get hasError => errorMessage != null;
+  bool get isEmpty => status == LoadingState.empty;
+
+  bool get hasError => message != null;
 
   @override
   bool operator ==(covariant StateDataVM<T> other) {
     if (identical(this, other)) return true;
 
-    return other.state == state;
+    return other.status == status &&
+        other.data == data &&
+        other.message == message;
   }
 
   @override
-  int get hashCode => state.hashCode;
+  int get hashCode => status.hashCode ^ data.hashCode ^ message.hashCode;
+
+  Widget when({
+    Widget Function()? initial,
+    required Widget Function(String? message) loading,
+    required Widget Function(T? data) success,
+    required Widget Function(String? message) error,
+  }) {
+    if (isLoading) {
+      return loading(message);
+    } else if (isSuccess) {
+      return success(data);
+    } else if (isError) {
+      return error(message);
+    } else {
+      return initial?.call() ?? const SizedBox.shrink();
+    }
+  }
 }

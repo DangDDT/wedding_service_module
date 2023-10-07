@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:wedding_service_module/core/wedding_service_module_manager.dart';
 
-import '../../../../core/core.dart';
 import '../../../../core/utils/helpers/logger.dart';
 
 class IsarDatabase {

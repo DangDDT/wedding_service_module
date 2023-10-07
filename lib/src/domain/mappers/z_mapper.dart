@@ -5,7 +5,7 @@ import 'base/base_data_mapper_profile.dart';
 ///Call
 class Mapper {
   Mapper._();
-  static Mapper _instance = Mapper._();
+  static final Mapper _instance = Mapper._();
 
   ///The mapper instance
   ///
@@ -20,7 +20,7 @@ class Mapper {
   void registerMappers(List<BaseDataMapperProfile> mappers) {
     for (BaseDataMapperProfile mapper in mappers) {
       if (instance._mappers.contains(mapper)) {
-        throw new Exception('Mapper already registered');
+        throw Exception('Mapper already registered');
       }
       _mappers.add(mapper);
     }

@@ -1,49 +1,48 @@
 name: wedding_service_module
 description: A new Flutter package project.
 version: 0.0.1
-homepage:
+homepage: none
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
+  carousel_slider: ^4.2.1
+  dio: ^5.3.2
+  dotted_border: ^2.1.0
+  expandable_page_view: ^1.0.17
+  extended_image: ^8.0.2
+  faker: ^2.1.0
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  freezed: ^2.4.1
-  get: ^4.6.5
-  intl: ^0.18.0
-  retrofit: ^4.0.1
-  talker: ^3.1.1
-  talker_dio_logger: ^2.3.0
-  isar: 3.1.0+1
-  isar_flutter_libs: 3.1.0+1
-  json_serializable: ^6.7.1
-  google_fonts: ^5.1.0
-  keyboard_dismisser: ^3.0.0
-  font_awesome_flutter: ^10.5.0
-  faker: ^2.1.0
-  path_provider: ^2.1.0
-  dio: ^5.3.2
-  shimmer: ^3.0.0
-  extended_image: ^8.0.2
   flutter_staggered_animations: ^1.1.1
   flutter_staggered_grid_view: ^0.7.0
-  expandable_page_view: ^1.0.17
-  carousel_slider: ^4.2.1
+  font_awesome_flutter: ^10.5.0
+  freezed: ^2.4.1
+  get: ^4.6.5
+  photo_browser: ^3.0.3
+  google_fonts: ^5.1.0
+  image_picker: ^1.0.4
+  loading_animation_widget: ^1.2.0+4
+  intl: ^0.18.0
+  keyboard_dismisser: ^3.0.0
+  path_provider: ^2.1.0
+  talker: ^3.1.1
+  talker_dio_logger: ^2.3.0
+
 dev_dependencies:
+  assets_gen: ^1.5.0
+  build_runner: ^2.4.6
+  flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
   isar_generator: 3.1.0+1
-  flutter_lints: ^2.0.0
-  assets_gen: ^1.5.0
-  build_runner: ^2.4.6
   retrofit_generator: ^7.0.8
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter packages.
 flutter:
   assets:
@@ -63,7 +62,6 @@ assets_gen:
   #
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
-
   # To add custom fonts to your package, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a

@@ -1,3 +1,10 @@
+import 'dart:math';
+
+import 'package:wedding_service_module/src/domain/enums/private/wedding_service_state.dart';
+import 'package:wedding_service_module/src/domain/models/image_model.dart';
+import 'package:wedding_service_module/src/domain/models/partner_service.dart';
+import 'package:wedding_service_module/src/domain/models/wedding_service_model.dart';
+
 import '../enums/private/service_category_enum.dart';
 import '../models/service_category_model.dart';
 
@@ -67,4 +74,42 @@ class Dummy {
       type: ServiceCategoryEnum.mc,
     ),
   ];
+
+  static final services = List.generate(
+    20,
+    (index) => WeddingServiceModel(
+      id: '$index-1dasdsd',
+      name: 'Xe Vinfast VF e34 - $index',
+      description:
+          'Xe Vinfast VF e34 với 4 chỗ ngồi, các bạn có thể chọn màu sắc theo ý thích',
+      unit: 'Chiếc',
+      price: (Random().nextDouble() * 1000000).clamp(1000000, 20000000),
+      actualRevenue:
+          (Random().nextDouble() * 1000000).clamp(1000000, 20000000).toDouble(),
+      commissionRate: 0.1,
+      coverImage:
+          'https://www.churchofengland.org/sites/default/files/2021-12/Photography.jpg',
+      images: [
+        ImageModel(
+          id: '1',
+          imageUrl: 'https://petapixel.com/assets/uploads/2020/03/wedding5.jpg',
+        ),
+        ImageModel(
+          id: '3',
+          imageUrl:
+              'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Wedding_photographer_at_work.jpg/640px-Wedding_photographer_at_work.jpg',
+        ),
+      ],
+      partnerService: index % 2 == 0
+          ? null
+          : PartnerServiceModel(
+              id: '132',
+              registeredAt: DateTime.now().subtract(const Duration(days: 1)),
+              totalRevenue: 20 * 1200.0,
+              state: WeddingServiceState.values[Random().nextInt(3) + 1],
+              totalOrder: 20,
+              totalProductProvided: 250,
+            ),
+    ),
+  );
 }

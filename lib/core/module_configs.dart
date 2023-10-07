@@ -1,6 +1,4 @@
-// // ignore_for_file: public_member_api_docs, sort_constructors_first
-
-import 'wedding_service_module.dart';
+import 'wedding_service_module_manager.dart';
 
 class ModuleConfig {
   static const String tag = '${WeddingServiceModule.packageName}_ModuleConfig';

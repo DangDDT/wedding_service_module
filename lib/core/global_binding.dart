@@ -2,8 +2,6 @@
 import 'package:get/get.dart';
 
 import '../src/domain/domain.dart';
-import '../src/infrastructure/infrastructure.dart';
-import '../src/presentation/global/module_controller.dart';
 import 'module_configs.dart';
 
 class GlobalBinding {
@@ -11,27 +9,21 @@ class GlobalBinding {
     required bool isShowLog,
     required BaseUrlConfig baseUrlConfig,
   }) async {
-    Get
-      ..put<ModuleConfig>(
-        ModuleConfig(
-          isShowLog: isShowLog,
-          baseUrlConfig: baseUrlConfig,
-        ),
-        tag: ModuleConfig.tag,
-      )
-      ..put<ModuleController>(
-        ModuleController(),
-      );
+    Get.put<ModuleConfig>(
+      ModuleConfig(
+        isShowLog: isShowLog,
+        baseUrlConfig: baseUrlConfig,
+      ),
+      tag: ModuleConfig.tag,
+    );
 
     Mapper.instance.registerMappers([]);
 
-    final dioClient = Get.put<DioClient>(
-      DioClient(
-        baseUrl: baseUrlConfig.baseUrl,
-      ),
-      tag: DioClient.tag,
-    );
-
-    ///TODO: ApiClient
+    // final dioClient = Get.put<DioClient>(
+    //   DioClient(
+    //     baseUrl: baseUrlConfig.baseUrl,
+    //   ),
+    //   tag: DioClient.tag,
+    // );
   }
 }

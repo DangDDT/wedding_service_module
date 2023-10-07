@@ -1,6 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
-import '../wedding_service_module.dart';
+import '../wedding_service_module_manager.dart';
 
 class LanguageKeys {
   static String _tag(String key) => '${WeddingServiceModule.packageName}_$key';

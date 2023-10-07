@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 
 ThemeData get kTheme => Get.theme;
 
+TextTheme get kTextTheme => kTheme.textTheme;
+
 const kGapH4 = SizedBox(height: 4);
 
 const kGapH8 = SizedBox(height: 8);

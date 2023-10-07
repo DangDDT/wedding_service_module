@@ -12,7 +12,8 @@ class DataResponse<T> {
   });
 
   // ignore: avoid-dynamic
-  factory DataResponse.fromJson(Map<String, dynamic> json, T Function(dynamic) fromJsonT) =>
+  factory DataResponse.fromJson(
+          Map<String, dynamic> json, T Function(dynamic) fromJsonT) =>
       _$DataResponseFromJson(json, fromJsonT);
 
   final T? data;
@@ -31,7 +32,8 @@ class DataListResponse<T> {
   });
 
   // ignore: avoid-dynamic
-  factory DataListResponse.fromJson(Map<String, dynamic> json, T Function(dynamic) fromJsonT) =>
+  factory DataListResponse.fromJson(
+          Map<String, dynamic> json, T Function(dynamic) fromJsonT) =>
       _$DataListResponseFromJson(json, fromJsonT);
 
   final List<T>? data;

@@ -1,4 +1,5 @@
-import '../../../../../core/core.dart';
+import 'package:wedding_service_module/core/typedefs/typedef.dart';
+
 import '../base/base_success_response_mapper.dart';
 
 class JsonArrayResponseMapper<T> extends BaseSuccessResponseMapper<T, List<T>> {

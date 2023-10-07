@@ -10,7 +10,6 @@ class DefaultValueMapperConstants {
   static const Color defaultColorValue = Colors.grey;
 
   /// Mã màu: #808080
-
   static const String defaultColorStringValue = '#808080';
 
   static const double defaultDoubleValue = -1.0;

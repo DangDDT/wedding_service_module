@@ -1,9 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, library_private_types_in_public_api
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import '../../../core/core.dart';
-import '../shared/animated_size_wrapper.dart';
+import 'package:wedding_service_module/core/constants/ui_constant.dart';
 
 class CustomTextField extends StatefulWidget {
   final String labelText;
@@ -58,84 +56,81 @@ class CustomTextField extends StatefulWidget {
 class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
-    return AnimatedSizeWrapper(
-      child: Column(
-        children: [
-          TextFormField(
-            onTap: widget.onTap,
-            onFieldSubmitted: widget.onSubmitted,
-            obscureText: widget.obscureText,
-            keyboardType: widget.keyboardType,
-            textInputAction: widget.textInputAction,
-            onChanged: (_) {
-              widget.onChanged;
-              setState(() {});
-            },
-            maxLength: widget.maxLength,
-            maxLines: widget.maxLines,
-            controller: widget.controller,
-            initialValue:
-                widget.controller == null ? widget.currentValue : null,
-            style: kTheme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
+    return Column(
+      children: [
+        TextFormField(
+          onTap: widget.onTap,
+          onFieldSubmitted: widget.onSubmitted,
+          obscureText: widget.obscureText,
+          keyboardType: widget.keyboardType,
+          textInputAction: widget.textInputAction,
+          onChanged: (_) {
+            widget.onChanged;
+            setState(() {});
+          },
+          maxLength: widget.maxLength,
+          maxLines: widget.maxLines,
+          controller: widget.controller,
+          initialValue: widget.controller == null ? widget.currentValue : null,
+          style: kTheme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+          inputFormatters: widget.inputFormatters,
+          readOnly: widget.readOnly,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6),
+              borderSide: BorderSide(
+                width: .1,
+                color: kTheme.colorScheme.primary.withOpacity(0.1),
+              ),
             ),
-            inputFormatters: widget.inputFormatters,
-            readOnly: widget.readOnly,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(6),
-                borderSide: BorderSide(
-                  width: .1,
-                  color: kTheme.colorScheme.primary.withOpacity(0.1),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6),
+              borderSide: BorderSide(
+                color: kTheme.colorScheme.primary,
+              ),
+            ),
+            hintText: widget.isShowHintText ? widget.labelText : null,
+            hintStyle: kTheme.textTheme.titleMedium?.copyWith(
+              color: kTheme.colorScheme.onBackground,
+            ),
+            labelStyle: kTheme.textTheme.titleMedium?.copyWith(
+              color: kTheme.colorScheme.onBackground.withOpacity(0.5),
+            ),
+            filled: true,
+            fillColor: kTheme.colorScheme.primaryContainer.withOpacity(.3),
+            isDense: widget.isDense,
+            prefixIcon: widget.prefixIcon != null && widget.maxLines == 1
+                ? Icon(
+                    widget.prefixIcon,
+                  )
+                : null,
+            prefixIconConstraints: const BoxConstraints(minWidth: 36),
+            suffixIcon: widget.suffixIcon != null && widget.maxLines == 1
+                ? widget.suffixIcon
+                : null,
+            suffixIconConstraints: const BoxConstraints(minWidth: 36),
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 8,
+              horizontal: 16,
+            ),
+          ),
+        ),
+        if (widget.errorText != null)
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Text(
+                widget.errorText!,
+                style: kTheme.textTheme.bodyMedium?.copyWith(
+                  color: kTheme.colorScheme.error,
                 ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(6),
-                borderSide: BorderSide(
-                  color: kTheme.colorScheme.primary,
-                ),
-              ),
-              hintText: widget.isShowHintText ? widget.labelText : null,
-              hintStyle: kTheme.textTheme.titleMedium?.copyWith(
-                color: kTheme.colorScheme.onBackground,
-              ),
-              labelStyle: kTheme.textTheme.titleMedium?.copyWith(
-                color: kTheme.colorScheme.onBackground.withOpacity(0.5),
-              ),
-              filled: true,
-              fillColor: kTheme.colorScheme.primaryContainer.withOpacity(.3),
-              isDense: widget.isDense,
-              prefixIcon: widget.prefixIcon != null && widget.maxLines == 1
-                  ? Icon(
-                      widget.prefixIcon,
-                    )
-                  : null,
-              prefixIconConstraints: const BoxConstraints(minWidth: 36),
-              suffixIcon: widget.suffixIcon != null && widget.maxLines == 1
-                  ? widget.suffixIcon
-                  : null,
-              suffixIconConstraints: const BoxConstraints(minWidth: 36),
-              contentPadding: const EdgeInsets.symmetric(
-                vertical: 8,
-                horizontal: 16,
               ),
             ),
           ),
-          if (widget.errorText != null)
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 2),
-                child: Text(
-                  widget.errorText!,
-                  style: kTheme.textTheme.bodyMedium?.copyWith(
-                    color: kTheme.colorScheme.error,
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
+      ],
     );
   }
 }

@@ -1,4 +1,5 @@
-import '../../../../../core/core.dart';
+import 'package:wedding_service_module/core/typedefs/typedef.dart';
+
 import '../success_response_mapper/success_response_mapper.dart';
 
 abstract class BaseSuccessResponseMapper<I, O> {

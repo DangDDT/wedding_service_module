@@ -1,4 +1,5 @@
-import '../../../../../core/core.dart';
+import 'package:wedding_service_module/core/typedefs/typedef.dart';
+
 import '../../../models/models.dart';
 import '../base/base_success_response_mapper.dart';
 

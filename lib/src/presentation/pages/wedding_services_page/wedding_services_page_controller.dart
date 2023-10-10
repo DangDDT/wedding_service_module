@@ -4,6 +4,8 @@ import 'package:wedding_service_module/core/utils/helpers/logger.dart';
 import 'package:wedding_service_module/src/domain/enums/private/wedding_service_state.dart';
 import 'package:wedding_service_module/src/domain/mock/dummy.dart';
 import 'package:wedding_service_module/src/domain/models/wedding_service_model.dart';
+import 'package:wedding_service_module/src/presentation/pages/wedding_services_page/widgets/services_list_filter_bottomsheet.dart';
+import 'package:wedding_service_module/src/presentation/view_models/services_list_filter_data.dart';
 
 class WeddingServicesPageController extends GetxController
     with StateMixin<List<WeddingServiceModel>> {
@@ -16,6 +18,7 @@ class WeddingServicesPageController extends GetxController
   late final FocusNode searchFocusNode;
   late final Rx<WeddingServiceState> currentStateTab;
   final showFullAddButton = false.obs;
+  final filterData = Rxn<ServicesListFilterData>();
 
   @override
   void onInit() {
@@ -50,12 +53,27 @@ class WeddingServicesPageController extends GetxController
     if (searchFocusNode.hasFocus) {
       isShowSearch.value = true;
     }
+
+    if (!searchFocusNode.hasFocus && searchController.text.isEmpty) {
+      isShowSearch.value = false;
+    }
   }
 
   void _onTextEditingControllerChanged() {
     final isNotEmpty = searchController.text.isNotEmpty;
     if (isNotEmpty != isHasSearchText.value) {
       isHasSearchText.value = isNotEmpty;
+    }
+  }
+
+  void showFilter() async {
+    final data = await ServicesListFilterBottomSheet.show(
+      initialData: filterData.value,
+      // registerDateRange: false,
+    );
+
+    if (data != null) {
+      filterData.value = data;
     }
   }
 

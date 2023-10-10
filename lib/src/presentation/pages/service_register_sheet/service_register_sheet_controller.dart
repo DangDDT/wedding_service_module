@@ -9,7 +9,8 @@ import 'package:wedding_service_module/src/domain/models/wedding_service_model.d
 import 'package:wedding_service_module/src/presentation/view_models/state_data_view_model.dart';
 import 'package:wedding_service_module/src/presentation/widgets/vif_bottom_sheet_layout.dart';
 
-class ServiceRegisterSheetController extends GetxController {
+class ServiceRegisterSheetController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   final state = StateDataVM<bool>(false).obs;
   final attachment = Rxn<XFile>(null);
   final attachmentFile = Rxn<File>(null);
@@ -23,7 +24,7 @@ class ServiceRegisterSheetController extends GetxController {
   void onInit() {
     super.onInit();
     slideUpAnimatedController = AnimationController(
-      vsync: Navigator.of(Get.context!),
+      vsync: this,
       duration: const Duration(milliseconds: 310),
     );
 

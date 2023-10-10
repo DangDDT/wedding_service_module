@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
-import 'package:isar/isar.dart';
 import 'package:wedding_service_module/wedding_service_module.dart';
 
 void main() async {
@@ -11,7 +10,7 @@ void main() async {
 }
 
 Future<void> init() async {
-  await Isar.initializeIsarCore();
+  // await Isar.initializeIsarCore();
 
   await WeddingServiceModule.init(
     isShowLog: true,

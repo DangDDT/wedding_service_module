@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import 'package:wedding_service_module/core/constants/ui_constant.dart';
+import 'package:wedding_service_module/core/utils/extensions/num_ext.dart';
 import 'package:wedding_service_module/src/domain/enums/private/wedding_service_state.dart';
 import 'package:wedding_service_module/src/presentation/pages/service_detail_page/service_detail_page_controller.dart';
 
@@ -276,7 +277,7 @@ class _ActiveServiceView extends GetView<ServiceDetailPageController> {
         ),
         kGapH8,
         Text(
-          '${partnerService.totalRevenue ?? 0}đ',
+          (partnerService.totalRevenue ?? 0).toVietNamCurrency(),
           style: kTextTheme.headlineMedium?.copyWith(
             fontWeight: FontWeight.w500,
             color: kTheme.colorScheme.primary,

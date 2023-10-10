@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:photo_browser/photo_browser.dart';
 import 'package:wedding_service_module/core/constants/ui_constant.dart';
+import 'package:wedding_service_module/core/utils/extensions/num_ext.dart';
 import 'package:wedding_service_module/src/presentation/pages/service_detail_page/service_detail_page_controller.dart';
 import 'package:wedding_service_module/src/presentation/pages/service_detail_page/widgets/service_bussiness_situation_view.dart';
 import 'package:wedding_service_module/src/presentation/widgets/page_count_widget.dart';
@@ -259,19 +260,19 @@ class _PriceAndRevenue extends GetView<ServiceDetailPageController> {
                 'Giá bán ra:',
                 state.price == null
                     ? 'Chưa cập nhật'
-                    : '${state.price?.toStringAsFixed(1)}đ',
+                    : state.price!.toVietNamCurrency(),
               ),
               _buildServiceInfoItem(
                 'Tỉ lệ hoa hồng:',
                 state.commissionRate == null
                     ? 'Chưa cập nhật'
-                    : '${state.commissionRate}%',
+                    : '${((state.commissionRate ?? 0) * 100).toStringAsFixed(2)}%',
               ),
               _buildServiceInfoItem(
                 'Doanh thu thực tế:',
                 state.actualRevenue == null
                     ? 'Chưa cập nhật'
-                    : '${state.actualRevenue}đ',
+                    : state.actualRevenue!.toVietNamCurrency(),
               ),
               kGapH8,
               Text(

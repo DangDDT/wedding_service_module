@@ -57,6 +57,8 @@ class ServiceCalendarPageController extends GetxController {
   Future<void> addDayOffInfo() async {
     final newInfo = await Get.bottomSheet(
       const AddDayOffBottomSheet(),
+      isDismissible: true,
+      isScrollControlled: true,
     );
   }
 }

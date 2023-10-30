@@ -8,7 +8,7 @@ class StateDataVM<T> {
   StateDataVM(
     this.data, {
     this.message,
-    this.status = LoadingState.initial,
+    this.status = LoadingState.idle,
   });
 
   final LoadingState status;
@@ -76,7 +76,7 @@ class StateDataVM<T> {
     );
   }
 
-  bool get isInitial => status == LoadingState.initial;
+  bool get isInitial => status == LoadingState.idle;
 
   bool get isLoading => status == LoadingState.loading;
 

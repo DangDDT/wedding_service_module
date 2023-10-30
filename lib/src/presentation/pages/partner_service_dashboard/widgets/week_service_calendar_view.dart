@@ -17,7 +17,7 @@ class WeekCalendarView extends GetView<PartnerServiceDashboardPageController> {
           children: [
             Expanded(
               child: Text(
-                'Lịch bận trong tuần',
+                'Lịch bận',
                 style: context.textTheme.titleLarge,
               ),
             ),

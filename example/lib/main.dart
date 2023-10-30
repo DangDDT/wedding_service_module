@@ -25,6 +25,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final colorSheme = ColorScheme.fromSeed(
+      seedColor: const Color.fromARGB(255, 240, 141, 71),
+    );
     return GetMaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
@@ -35,24 +38,22 @@ class MyApp extends StatelessWidget {
       ],
       translations: Translator(),
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 240, 141, 71),
-        ),
+        colorScheme: colorSheme,
         useMaterial3: true,
-        inputDecorationTheme: const InputDecorationTheme(
+        inputDecorationTheme: InputDecorationTheme(
           // contentPadding: EdgeInsets.symmetric(
           //   horizontal: 16,
           //   vertical: 12,
           // ),
           alignLabelWithHint: true,
-          border: OutlineInputBorder(
+          border: const OutlineInputBorder(
             borderSide: BorderSide.none,
             borderRadius: BorderRadius.all(
               Radius.circular(12),
             ),
           ),
           filled: true,
-          fillColor: Color.fromARGB(255, 255, 238, 226),
+          fillColor: colorSheme.surfaceVariant,
         ),
       ),
       locale: const Locale('vi', 'VN'),

@@ -43,7 +43,7 @@ class SelectionButton extends StatelessWidget {
               vertical: 12,
             ),
             decoration: BoxDecoration(
-              color: kTheme.colorScheme.primary.withOpacity(.1),
+              color: kTheme.colorScheme.surfaceVariant,
               borderRadius: kDefaultRadius,
             ),
             child: Column(

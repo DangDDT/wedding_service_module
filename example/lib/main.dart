@@ -1,3 +1,5 @@
+import 'package:core_picker/core/core_picker.dart';
+import 'package:example/l10n/translator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
@@ -11,7 +13,6 @@ void main() async {
 
 Future<void> init() async {
   // await Isar.initializeIsarCore();
-
   await WeddingServiceModule.init(
     isShowLog: true,
     baseUrlConfig: BaseUrlConfig(baseUrl: ''),
@@ -27,19 +28,34 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 240, 141, 71),
-        ),
-        useMaterial3: true,
-        // textTheme: GoogleFonts.arsenalTextTheme(),
-      ),
-      locale: const Locale('vi', 'VN'),
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
+      translations: Translator(),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromARGB(255, 240, 141, 71),
+        ),
+        useMaterial3: true,
+        inputDecorationTheme: const InputDecorationTheme(
+          // contentPadding: EdgeInsets.symmetric(
+          //   horizontal: 16,
+          //   vertical: 12,
+          // ),
+          alignLabelWithHint: true,
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.all(
+              Radius.circular(12),
+            ),
+          ),
+          filled: true,
+          fillColor: Color.fromARGB(255, 255, 238, 226),
+        ),
+      ),
+      locale: const Locale('vi', 'VN'),
       supportedLocales: const [
         Locale('vi', 'VN'),
         Locale('en', 'US'),
@@ -50,27 +66,44 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class PageViewController extends GetxController {
+  final pages = <Widget>[
+    const PartnerServiceDashboardPage(),
+    const DashboardPage(),
+  ];
+  final currentIndex = 0.obs;
+}
+
 class Page extends StatelessWidget {
   const Page({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: const WeddingServicesPage(),
-      bottomNavigationBar: BottomNavigationBar(items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
+    return GetBuilder(
+      init: PageViewController(),
+      builder: (controller) => Scaffold(
+        body: Obx(
+          () => controller.pages[controller.currentIndex.value],
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
+        bottomNavigationBar: Obx(
+          () => BottomNavigationBar(
+            currentIndex: controller.currentIndex.value,
+            onTap: (index) {
+              controller.currentIndex.value = index;
+            },
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Dashboard',
+              ),
+            ],
+          ),
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-      ]),
+      ),
     );
   }
 }
@@ -83,5 +116,27 @@ class Router {
       page: () => const Page(),
     ),
     ...WeddingServiceModule.pageRoutes,
+    ...CorePicker.pageRoutes,
   ];
+}
+
+class DashboardPage extends StatelessWidget {
+  const DashboardPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Dashboard'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Get.toNamed(WeddingServiceModule.pageRoutes[0].name);
+          },
+          child: const Text('Go to Wedding Service'),
+        ),
+      ),
+    );
+  }
 }

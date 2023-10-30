@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:wedding_service_module/core/global_binding.dart';
 import 'package:wedding_service_module/core/l10n/_translate_manager.dart';
 import 'package:wedding_service_module/core/module_configs.dart';
-import 'package:wedding_service_module/core/routes/router_configs.dart';
+import 'package:wedding_service_module/core/routes/module_router.dart';
 import '../src/infrastructure/local_databases/isar/isar_database.dart';
 
 // export '../src/presentation/views/public_view.dart';

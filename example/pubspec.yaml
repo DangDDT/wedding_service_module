@@ -36,10 +36,14 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  core_picker:
+    git:
+      url: https://github.com/DangDDT/picker_package.git
+      ref: main
   wedding_service_module:
     path: ../
   get: ^4.6.5
-  google_fonts: ^5.1.0
+  # google_fonts: ^5.1.0
   isar: ^3.1.0+1
   dio: ^5.3.2
 

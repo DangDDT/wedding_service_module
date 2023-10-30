@@ -4,11 +4,13 @@ import 'package:wedding_service_module/core/constants/ui_constant.dart';
 class ErrorOrEmptyWidget extends StatelessWidget {
   final String message;
   final String? content;
+  final String? retryButtonTitle;
   final VoidCallback? callBack;
   final double height;
   const ErrorOrEmptyWidget({
     Key? key,
     this.message = "Không có dữ liệu",
+    this.retryButtonTitle = "Thử lại",
     this.content,
     this.callBack,
     this.height = 300,
@@ -25,7 +27,7 @@ class ErrorOrEmptyWidget extends StatelessWidget {
           children: [
             Text(
               message,
-              style: Theme.of(context).textTheme.titleLarge,
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
             if (content != null) ...[
               kGapH12,
@@ -36,12 +38,11 @@ class ErrorOrEmptyWidget extends StatelessWidget {
             ],
             if (callBack != null) ...[
               kGapH12,
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: kTheme.colorScheme.primary,
-                ),
+              FilledButton.tonal(
                 onPressed: callBack,
-                child: const Text("Thử lại"),
+                child: Text(
+                  retryButtonTitle!,
+                ),
               ),
             ]
           ],

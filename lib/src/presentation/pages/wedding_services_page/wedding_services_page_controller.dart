@@ -4,34 +4,26 @@ import 'package:wedding_service_module/core/utils/helpers/logger.dart';
 import 'package:wedding_service_module/src/domain/enums/private/wedding_service_state.dart';
 import 'package:wedding_service_module/src/domain/mock/dummy.dart';
 import 'package:wedding_service_module/src/domain/models/wedding_service_model.dart';
-import 'package:wedding_service_module/src/presentation/pages/wedding_services_page/widgets/services_list_filter_bottomsheet.dart';
+import 'package:wedding_service_module/src/presentation/pages/wedding_services_page/widgets/services_list_filter/services_list_filter_bottomsheet.dart';
 import 'package:wedding_service_module/src/presentation/view_models/services_list_filter_data.dart';
 
 class WeddingServicesPageController extends GetxController
     with StateMixin<List<WeddingServiceModel>> {
-  WeddingServicesPageController({this.registerServicePage = false});
   late final List<WeddingServiceState> viewWeddingServiceStates;
-  final bool registerServicePage;
+  // final bool registerServicePage;
   final isShowSearch = false.obs;
   final isHasSearchText = false.obs;
   late final TextEditingController searchController;
   late final FocusNode searchFocusNode;
   late final Rx<WeddingServiceState> currentStateTab;
-  final showFullAddButton = false.obs;
   final filterData = Rxn<ServicesListFilterData>();
 
   @override
   void onInit() {
-    viewWeddingServiceStates = registerServicePage
-        ? [
-            WeddingServiceState.unRegistered,
-            WeddingServiceState.rejected,
-            WeddingServiceState.registering,
-          ]
-        : [
-            WeddingServiceState.active,
-            WeddingServiceState.suspended,
-          ];
+    viewWeddingServiceStates = [
+      WeddingServiceState.active,
+      WeddingServiceState.suspended,
+    ];
 
     currentStateTab = viewWeddingServiceStates.first.obs;
     searchFocusNode = FocusNode();
@@ -71,7 +63,6 @@ class WeddingServicesPageController extends GetxController
       initialData: filterData.value,
       // registerDateRange: false,
     );
-
     if (data != null) {
       filterData.value = data;
     }

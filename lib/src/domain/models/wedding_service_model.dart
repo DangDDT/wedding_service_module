@@ -14,6 +14,7 @@ class WeddingServiceModel {
     required this.coverImage,
     required this.images,
     required this.partnerService,
+    required this.rating,
   });
 
   final String id;
@@ -33,4 +34,6 @@ class WeddingServiceModel {
   final List<ImageModel> images;
 
   final PartnerServiceModel? partnerService;
+
+  final double? rating;
 }

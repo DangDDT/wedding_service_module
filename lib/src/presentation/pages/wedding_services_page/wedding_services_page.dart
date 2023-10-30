@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:wedding_service_module/core/constants/ui_constant.dart';
-import 'package:wedding_service_module/core/routes/router_configs.dart';
+import 'package:wedding_service_module/core/routes/module_router.dart';
 import 'package:wedding_service_module/core/utils/extensions/list_ext.dart';
 import 'package:wedding_service_module/src/domain/enums/private/wedding_service_state.dart';
 import 'package:wedding_service_module/src/presentation/pages/wedding_services_page/wedding_services_page_controller.dart';
@@ -17,36 +17,24 @@ class WeddingServicesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final arguments = Get.arguments;
-    final registerServicePage = arguments?['registerServicePage'] ?? false;
+    // final arguments = Get.arguments;
+    // final registerServicePage = arguments?['registerServicePage'] ?? false;
     return KeyboardDismisser(
       child: GetBuilder(
         init: WeddingServicesPageController(
-          registerServicePage: registerServicePage,
-        ),
+            // registerServicePage: registerServicePage,
+            ),
         global: false,
         builder: (controller) => Scaffold(
           // appBar: _CustomAppBar(controller),
-          floatingActionButton: controller.registerServicePage
-              ? null
-              : FloatingActionButton(
-                  onPressed: () {
-                    Get.toNamed(
-                      ModuleRouter.weddingServicesRoute,
-                      arguments: {'registerServicePage': true},
-                    );
-                  },
-                  child: const Icon(Icons.add),
-                ),
-          body: NestedScrollView(
-            headerSliverBuilder: (context, innerBoxIsScrolled) => [
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: _CustomAppBar(controller),
-                ),
-              ),
-            ],
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Get.toNamed(ModuleRouter.weddingServiceRegisterRoute);
+            },
+            child: const Icon(Icons.add),
+          ),
+          body: Scaffold(
+            appBar: _CustomAppBar(controller),
             body: SimpleBuilder(
               builder: (_) {
                 if (controller.status.isLoading &&
@@ -66,9 +54,7 @@ class WeddingServicesPage extends StatelessWidget {
                 return Column(
                   children: [
                     Expanded(
-                      child: controller.registerServicePage
-                          ? _ServiceListView(controller)
-                          : _ServiceGridView(controller: controller),
+                      child: _ServiceGridView(controller: controller),
                     ),
                   ],
                 );
@@ -94,6 +80,7 @@ class _CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(12, 16, 12, 0),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Obx(
               () => Row(
@@ -104,9 +91,7 @@ class _CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       flex: 0,
                       fit: FlexFit.tight,
                       child: Text(
-                        controller.registerServicePage
-                            ? 'Đăng ký dịch vụ'
-                            : 'Dịch vụ',
+                        'Dịch vụ',
                         maxLines: 1,
                         style: kTextTheme.titleLarge,
                       ),
@@ -188,11 +173,6 @@ class _SearchField extends StatelessWidget {
                     textInputAction: TextInputAction.search,
                     style: kTextTheme.bodyMedium,
                     decoration: InputDecoration(
-                      // isDense: true,
-                      // contentPadding: const EdgeInsets.only(
-                      //   top: 8,
-                      //   bottom: 12,
-                      // ),
                       constraints: const BoxConstraints(
                         maxHeight: 48,
                       ),
@@ -247,36 +227,36 @@ class _ServiceStatusTab extends StatelessWidget {
         ),
       );
     }
-
-    return Row(
-      children: List.generate(
-        viewState.length,
-        (index) => itemBuilder(context, index),
-      ).joinWidget(kGapW8),
+    return SizedBox(
+      height: kToolbarHeight,
+      child: Row(
+        children: List.generate(
+          viewState.length,
+          (index) => itemBuilder(context, index),
+        ).joinWidget(kGapW8),
+      ),
     );
   }
 
   Widget itemBuilder(BuildContext context, int index) {
     final state = controller.viewWeddingServiceStates[index];
-    return UnconstrainedBox(
-      child: WrappedInkWell(
-        onTap: () => controller.changeStateTab(state),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
+    return WrappedInkWell(
+      onTap: () => controller.changeStateTab(state),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: state == controller.currentStateTab.value
+              ? context.theme.colorScheme.primary
+              : Colors.grey.shade200,
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Text(
+          state.title,
+          style: kTextTheme.bodyMedium?.copyWith(
+            fontWeight: FontWeight.bold,
             color: state == controller.currentStateTab.value
-                ? context.theme.colorScheme.primary
-                : Colors.grey.shade200,
-            borderRadius: BorderRadius.circular(24),
-          ),
-          child: Text(
-            state.title,
-            style: kTextTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: state == controller.currentStateTab.value
-                  ? context.theme.colorScheme.onPrimary
-                  : context.theme.hintColor,
-            ),
+                ? context.theme.colorScheme.onPrimary
+                : context.theme.hintColor,
           ),
         ),
       ),
@@ -302,17 +282,17 @@ class _ServiceGridView extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: controller.fetchServices,
       child: GridView.builder(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(12),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          childAspectRatio: 0.6,
-          crossAxisSpacing: 8,
-          mainAxisSpacing: 8,
+          childAspectRatio: .66,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
         ),
         itemCount: controller.state!.length,
         itemBuilder: (_, index) {
           final service = controller.state![index];
-          return ServiceItemWidget.gridView(
+          return ServiceGridItemWidget(
             service: service,
             onTap: () => Get.toNamed(
               ModuleRouter.weddingServiceDetailRoute,
@@ -324,47 +304,5 @@ class _ServiceGridView extends StatelessWidget {
         },
       ),
     );
-  }
-}
-
-class _ServiceListView extends StatelessWidget {
-  const _ServiceListView(this.controller);
-
-  final WeddingServicesPageController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    return SimpleBuilder(builder: (ctx) {
-      if (controller.state?.isEmpty ?? true) {
-        return Center(
-          child: EmptyErrorHandler(
-            title: 'Không có dịch vụ nào',
-            reloadCallback: controller.fetchServices,
-          ),
-        );
-      }
-
-      return RefreshIndicator.adaptive(
-        onRefresh: controller.fetchServices,
-        child: ListView.separated(
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.all(8),
-          itemCount: controller.state!.length,
-          separatorBuilder: (_, __) => kGapH8,
-          itemBuilder: (_, index) {
-            final service = controller.state![index];
-            return ServiceItemWidget(
-              service: service,
-              onTap: () => Get.toNamed(
-                ModuleRouter.weddingServiceDetailRoute,
-                arguments: {
-                  'serviceId': service.id,
-                },
-              ),
-            );
-          },
-        ),
-      );
-    });
   }
 }

@@ -2,29 +2,39 @@ name: wedding_service_module
 description: A new Flutter package project.
 version: 0.0.1
 homepage: none
+publish_to: none
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
+  core_picker:
+    git:
+      url: https://github.com/DangDDT/picker_package.git
+      ref: main
   carousel_slider: ^4.2.1
   dio: ^5.3.2
   dotted_border: ^2.1.0
+  currency_text_input_formatter: ^2.1.10
   expandable_page_view: ^1.0.17
+  table_calendar: ^3.0.9
+  fl_chart: ^0.64.0
   extended_image: ^8.0.2
-  faker: ^2.1.0
+  scrollable_positioned_list: ^0.3.8
+  animate_do: ^3.0.2
+  # faker: ^2.1.0
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  flutter_staggered_animations: ^1.1.1
-  flutter_staggered_grid_view: ^0.7.0
+  # flutter_staggered_animations: ^1.1.1
+  # flutter_staggered_grid_view: ^0.7.0
   font_awesome_flutter: ^10.5.0
   freezed: ^2.4.1
   get: ^4.6.5
   photo_browser: ^3.0.3
-  google_fonts: ^5.1.0
-  image_picker: ^1.0.4
+  # google_fonts: ^5.1.0
+  # image_picker: ^1.0.4
   loading_animation_widget: ^1.2.0+4
   intl: ^0.18.0
   keyboard_dismisser: ^3.0.0

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wedding_service_module/core/routes/module_router.dart';
 import 'package:wedding_service_module/core/utils/helpers/logger.dart';
 import 'package:wedding_service_module/src/domain/mock/dummy.dart';
 import 'package:wedding_service_module/src/domain/models/wedding_service_model.dart';
-import 'package:wedding_service_module/src/presentation/pages/service_register_sheet/service_register_sheet.dart';
 import 'package:wedding_service_module/src/presentation/view_models/state_data_view_model.dart';
 
 class ServiceDetailPageController extends GetxController {
@@ -82,7 +82,9 @@ class ServiceDetailPageController extends GetxController {
       return;
     }
 
-    final result = await ServiceRegisterSheet.show(data);
+    final result = await Get.toNamed(
+      ModuleRouter.weddingServiceRegisterRoute,
+    );
 
     if (result != null) {
       await fetchData();

@@ -1,115 +1,80 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:ui';
+
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:wedding_service_module/core/constants/ui_constant.dart';
 import 'package:wedding_service_module/core/utils/extensions/num_ext.dart';
 import 'package:wedding_service_module/src/domain/models/wedding_service_model.dart';
+import 'package:wedding_service_module/src/presentation/widgets/rating_bar.dart';
 import 'package:wedding_service_module/src/presentation/widgets/wrapped_inkwell.dart';
 
-class ServiceItemWidget extends StatelessWidget {
-  const ServiceItemWidget({
+class ServiceGridItemWidget extends StatelessWidget {
+  const ServiceGridItemWidget({
     super.key,
     required this.service,
     required this.onTap,
-  }) : _isGridView = false;
-
-  const ServiceItemWidget.listView({
-    super.key,
-    required this.service,
-    required this.onTap,
-  }) : _isGridView = false;
-
-  const ServiceItemWidget.gridView({
-    super.key,
-    required this.service,
-    required this.onTap,
-  }) : _isGridView = true;
-
-  final WeddingServiceModel service;
-  final VoidCallback onTap;
-  final bool _isGridView;
-
-  @override
-  Widget build(BuildContext context) {
-    if (_isGridView) {
-      return WrappedInkWell(
-        onTap: onTap,
-        child: _GridView(service: service),
-      );
-    }
-
-    return Card(
-      elevation: 1,
-      child: WrappedInkWell(
-        onTap: onTap,
-        child: _CardView(service: service),
-      ),
-    );
-  }
-}
-
-class _GridView extends StatelessWidget {
-  const _GridView({required this.service});
-
-  final WeddingServiceModel service;
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(
-            child: SizedBox(
-              width: double.infinity,
-              child: _ServiceImage(
-                service: service,
-              ),
-            ),
-          ),
-          kGapH8,
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: _ServiceInfos(service: service),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _CardView extends StatelessWidget {
-  const _CardView({
-    required this.service,
   });
 
   final WeddingServiceModel service;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            children: [
-              SizedBox.square(
-                dimension: 80,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: _ServiceImage(service: service),
+    return WrappedInkWell(
+      onTap: onTap,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: kTheme.colorScheme.surface,
+          boxShadow: [
+            BoxShadow(
+              color: kTheme.colorScheme.onSurface.withOpacity(0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Positioned.fill(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: _ServiceImage(
+                  service: service,
                 ),
               ),
-              kGapW24,
-              Expanded(
-                child: _ServiceInfos(service: service),
+            ),
+            kGapH8,
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.4),
+                      Colors.black.withOpacity(0.5),
+                      Colors.black.withOpacity(0.6),
+                    ],
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 24, 8, 8),
+                  child: _ServiceInfos(service: service),
+                ),
               ),
-            ],
-          ),
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -124,10 +89,16 @@ class _ServiceImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ExtendedImage.network(
-      service.coverImage,
-      fit: BoxFit.cover,
-      loadStateChanged: _loadErrorHandler,
+    return ImageFiltered(
+      imageFilter: ImageFilter.blur(
+        sigmaX: 0.1,
+        sigmaY: .2,
+      ),
+      child: ExtendedImage.network(
+        service.coverImage,
+        fit: BoxFit.cover,
+        loadStateChanged: _loadErrorHandler,
+      ),
     );
   }
 
@@ -156,24 +127,44 @@ class _ServiceInfos extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           service.name,
-          maxLines: 1,
+          maxLines: 2,
           overflow: TextOverflow.ellipsis,
-          style: kTextTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
+          style: context.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
           ),
         ),
-        Text(
-          service.description,
-          maxLines: 1,
-          style: kTextTheme.labelMedium?.copyWith(
-            color: kTheme.hintColor,
+        kGapH12,
+        // Text(
+        //   service.description,
+        //   maxLines: 1,
+        //   style: context.textTheme.labelMedium?.copyWith(
+        //     color: Colors.white70,
+        //   ),
+        // ),
+        if (service.rating != null)
+          Row(
+            children: [
+              StarRatingBar(
+                rating: service.rating!,
+                color: Colors.yellow.shade700,
+              ),
+              kGapW4,
+              Text(
+                service.rating!.toStringAsFixed(1),
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
-        ),
-        kGapH20,
-        if (service.price != null)
+        if (service.price != null) ...[
+          kGapH8,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -183,15 +174,16 @@ class _ServiceInfos extends StatelessWidget {
                   fit: BoxFit.scaleDown,
                   child: Text(
                     service.price!.toVietNamCurrency(),
-                    style: kTextTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: kTheme.colorScheme.primary,
+                    style: context.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
                     ),
                   ),
                 ),
               ),
             ],
-          ),
+          )
+        ],
       ],
     );
   }

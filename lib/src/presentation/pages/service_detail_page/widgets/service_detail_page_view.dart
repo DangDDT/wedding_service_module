@@ -29,11 +29,11 @@ class ServiceDetailPageView extends GetView<ServiceDetailPageController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _ServiceImages(),
-                      kGapH8,
+                      kGapH24,
                       _ServiceInfos(),
-                      Divider(),
+                      Divider(height: 32),
                       _PriceAndRevenue(),
-                      Divider(),
+                      Divider(height: 32),
                       ServiceBusinessSituationView(),
                     ],
                   ),
@@ -59,42 +59,35 @@ class _AppBar extends GetView<ServiceDetailPageController> {
   @override
   Widget build(BuildContext context) {
     return Obx(
-      () => Stack(
-        children: [
-          Positioned.fill(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(.25),
-                    blurRadius: 40,
-                    offset: const Offset(0, .5),
-                  ),
-                ],
+      () => AppBar(
+        leading: UnconstrainedBox(
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white.withOpacity(
+                (1 - controller.appBarOpacity.value).clamp(0, 1).toDouble(),
               ),
             ),
-          ),
-          AppBar(
-            leading: const UnconstrainedBox(
-              child: BackButton(),
-            ),
-            scrolledUnderElevation: 0,
-            elevation: 0,
-            foregroundColor: controller.appBarOpacity.value > 0.5
-                ? kTheme.colorScheme.onBackground
-                : Colors.white,
-            title: controller.appBarOpacity.value > 0.5
-                ? Text(
-                    controller.state.value.data?.name ?? '',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  )
-                : null,
-            backgroundColor: kTheme.scaffoldBackgroundColor.withOpacity(
-              controller.appBarOpacity.value,
+            child: BackButton(
+              color: kTheme.colorScheme.primary,
             ),
           ),
-        ],
+        ),
+        scrolledUnderElevation: 0,
+        elevation: 0,
+        foregroundColor: controller.appBarOpacity.value > 0.5
+            ? kTheme.colorScheme.onBackground
+            : Colors.white,
+        title: controller.appBarOpacity.value > 0.5
+            ? Text(
+                controller.state.value.data?.name ?? '',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              )
+            : null,
+        backgroundColor: kTheme.scaffoldBackgroundColor.withOpacity(
+          controller.appBarOpacity.value,
+        ),
       ),
     );
   }
@@ -215,14 +208,13 @@ class _ServiceInfos extends GetView<ServiceDetailPageController> {
             Text(
               controller.state.value.data!.name,
               style: kTextTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            kGapH4,
+            kGapH12,
             Text(
               controller.state.value.data!.description,
-              style: kTextTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w400,
+              style: TextStyle(
                 color: kTheme.hintColor,
               ),
             ),
@@ -255,26 +247,28 @@ class _PriceAndRevenue extends GetView<ServiceDetailPageController> {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              kGapH4,
+              kGapH12,
               _buildServiceInfoItem(
-                'Giá bán ra:',
+                'Giá',
                 state.price == null
                     ? 'Chưa cập nhật'
                     : state.price!.toVietNamCurrency(),
               ),
+              kGapH4,
               _buildServiceInfoItem(
                 'Tỉ lệ hoa hồng:',
                 state.commissionRate == null
                     ? 'Chưa cập nhật'
                     : '${((state.commissionRate ?? 0) * 100).toStringAsFixed(2)}%',
               ),
+              kGapH4,
               _buildServiceInfoItem(
                 'Doanh thu thực tế:',
                 state.actualRevenue == null
                     ? 'Chưa cập nhật'
                     : state.actualRevenue!.toVietNamCurrency(),
               ),
-              kGapH8,
+              kGapH12,
               Text(
                 '* Doanh thu thực tế được tính dựa trên tỉ lệ hoa hồng và giá bán ra.',
                 style: kTextTheme.labelMedium?.copyWith(
@@ -296,7 +290,7 @@ class _PriceAndRevenue extends GetView<ServiceDetailPageController> {
           constraints: const BoxConstraints(minWidth: 140),
           child: Text(
             title,
-            style: kTextTheme.labelLarge?.copyWith(
+            style: kTextTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.w500,
               color: kTheme.hintColor,
             ),

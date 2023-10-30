@@ -117,3 +117,17 @@ class StateDataVM<T> {
     }
   }
 }
+
+extension StateDataVmRxX<T> on Rx<StateDataVM<T>> {
+  void loading({String? message}) {
+    value = value.loading(message: message);
+  }
+
+  void success(T data) {
+    value = value.success(data);
+  }
+
+  void error(String errorMessage) {
+    value = value.error(errorMessage);
+  }
+}

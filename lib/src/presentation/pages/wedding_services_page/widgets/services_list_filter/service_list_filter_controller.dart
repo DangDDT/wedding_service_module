@@ -4,6 +4,10 @@ import 'package:wedding_service_module/src/presentation/view_models/services_lis
 
 class ServicesListFilterController extends GetxController
     with GetSingleTickerProviderStateMixin {
+  final kMinRevenue = 0.0;
+  final kMaxRevenue = 100000000.0;
+  final kRevenueRangeDivisions = 100000;
+
   late final AnimationController slideUpAnimatedController;
   late final Rx<ServicesListFilterData> filterData;
 

@@ -1,7 +1,5 @@
 import 'dart:math';
 
-import 'package:intl/intl.dart';
-
 part 'string_ext_2.dart';
 
 extension StringX on String {

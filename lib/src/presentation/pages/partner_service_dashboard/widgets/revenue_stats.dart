@@ -88,10 +88,26 @@ class _RevenueColChart extends GetView<PartnerServiceDashboardPageController> {
   Widget build(BuildContext context) {
     final data = _makeChartData();
     return AspectRatio(
-      aspectRatio: 1.1,
+      aspectRatio: 1.3,
       child: BarChart(
         BarChartData(
           barGroups: data,
+          barTouchData: BarTouchData(
+            touchTooltipData: BarTouchTooltipData(
+              tooltipBgColor: kTheme.colorScheme.primary,
+              tooltipRoundedRadius: 8,
+              tooltipPadding: const EdgeInsets.fromLTRB(16, 6, 16, 2),
+              getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                return BarTooltipItem(
+                  rod.toY.round().toString(),
+                  TextStyle(
+                    color: kTheme.colorScheme.onPrimary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                );
+              },
+            ),
+          ),
           borderData: FlBorderData(show: false),
           gridData: const FlGridData(show: false),
           titlesData: FlTitlesData(

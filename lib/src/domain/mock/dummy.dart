@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:wedding_service_module/src/domain/enums/private/wedding_service_state.dart';
 import 'package:wedding_service_module/src/domain/models/image_model.dart';
-import 'package:wedding_service_module/src/domain/models/partner_service.dart';
+import 'package:wedding_service_module/src/domain/models/service_profit_statement_model.dart';
 import 'package:wedding_service_module/src/domain/models/wedding_service_model.dart';
 
 import '../models/service_category_model.dart';
@@ -96,13 +96,12 @@ class Dummy {
                 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Wedding_photographer_at_work.jpg/640px-Wedding_photographer_at_work.jpg',
           ),
         ],
-        partnerService: index % 2 == 0
+        registeredAt: DateTime.now().subtract(const Duration(days: 1)),
+        state: WeddingServiceState.values[Random().nextInt(3) + 1],
+        profitStatement: index % 2 == 0
             ? null
-            : PartnerServiceModel(
-                id: '132',
-                registeredAt: DateTime.now().subtract(const Duration(days: 1)),
+            : const ProfitStatementModel(
                 totalRevenue: 20 * 1200.0,
-                state: WeddingServiceState.values[Random().nextInt(3) + 1],
                 totalOrder: 20,
                 totalProductProvided: 250,
               ),

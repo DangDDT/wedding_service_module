@@ -4,68 +4,32 @@ import 'package:get/get.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:wedding_service_module/core/constants/ui_constant.dart';
 import 'package:wedding_service_module/core/routes/module_router.dart';
+import 'package:wedding_service_module/core/utils/extensions/color_ext.dart';
 import 'package:wedding_service_module/src/domain/enums/private/wedding_service_state.dart';
+import 'package:wedding_service_module/src/presentation/pages/requesting_services/widgets/service_list_view_item_widget.dart';
 import 'package:wedding_service_module/src/presentation/pages/wedding_services_page/wedding_services_page_controller.dart';
-import 'package:wedding_service_module/src/presentation/pages/wedding_services_page/widgets/service_grid_item_widget.dart';
 import 'package:wedding_service_module/src/presentation/widgets/auto_centerd_item_listview.dart';
 import 'package:wedding_service_module/src/presentation/widgets/empty_handler.dart';
-import 'package:wedding_service_module/src/presentation/widgets/expandable_fab.dart';
-import 'package:wedding_service_module/src/presentation/widgets/loading_widget.dart';
 import 'package:wedding_service_module/src/presentation/widgets/radio_filter_button.dart';
 
-class WeddingServicesPage extends GetView<WeddingServicesPageController> {
-  const WeddingServicesPage({super.key});
-
+class RequestingServicePage extends GetView<WeddingServicesPageController> {
+  static const String bindingTag = 'RequestingServicePage';
   @override
   String? get tag => bindingTag;
-
-  static const bindingTag = 'WeddingServicesPage';
+  const RequestingServicePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return KeyboardDismisser(
       child: Scaffold(
-        // appBar: _CustomAppBar(controller),
-        floatingActionButton: ExpandableFab(
-          directAction: ActionButton(
-            onPressed: () => Get.toNamed(
-              ModuleRouter.weddingServiceRegisterRoute,
-            ),
-            label: const Text('Thêm mới'),
-            icon: const Icon(CupertinoIcons.add),
+        appBar: const _CustomAppBar(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => Get.toNamed(
+            ModuleRouter.weddingServiceRegisterRoute,
           ),
-          actions: [
-            ActionButton(
-              onPressed: () => Get.toNamed(
-                ModuleRouter.requestingServiceRoute,
-              ),
-              label: const Text('Danh sách chờ duyệt'),
-              icon: const Icon(Icons.pending_actions),
-            ),
-          ],
+          child: const Icon(Icons.add),
         ),
-        body: Scaffold(
-          appBar: const _CustomAppBar(),
-          body: SimpleBuilder(
-            builder: (_) {
-              if (controller.status.isLoading &&
-                  (controller.state?.isEmpty ?? true)) {
-                return const Center(
-                  child: LoadingWidget(
-                    message: 'Đang lấy danh sách dịch vụ...',
-                  ),
-                );
-              } else if (controller.status.isError) {
-                return EmptyErrorHandler(
-                  title: 'Có lỗi xảy ra, vui lòng thử lại',
-                  reloadCallback: controller.fetchServices,
-                );
-              }
-
-              return const _ServiceGridView();
-            },
-          ),
-        ),
+        body: const _ServiceListView(),
       ),
     );
   }
@@ -76,7 +40,7 @@ class _CustomAppBar extends GetView<WeddingServicesPageController>
   const _CustomAppBar();
 
   @override
-  String? get tag => WeddingServicesPage.bindingTag;
+  String? get tag => RequestingServicePage.bindingTag;
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +61,7 @@ class _CustomAppBar extends GetView<WeddingServicesPageController>
                       flex: 0,
                       fit: FlexFit.tight,
                       child: Text(
-                        'Dịch vụ',
+                        'Danh sách chờ duyệt',
                         maxLines: 1,
                         style: kTextTheme.titleLarge,
                       ),
@@ -130,6 +94,7 @@ class _CustomAppBar extends GetView<WeddingServicesPageController>
               alignment: Alignment.centerLeft,
               child: _ServiceStatusTab(),
             ),
+            kGapH8,
           ],
         ),
       ),
@@ -144,7 +109,7 @@ class _SearchField extends GetView<WeddingServicesPageController> {
   const _SearchField();
 
   @override
-  String? get tag => WeddingServicesPage.bindingTag;
+  String get tag => RequestingServicePage.bindingTag;
 
   @override
   Widget build(BuildContext context) {
@@ -222,7 +187,7 @@ class _ServiceStatusTab extends GetView<WeddingServicesPageController> {
   const _ServiceStatusTab();
 
   @override
-  String? get tag => WeddingServicesPage.bindingTag;
+  String get tag => RequestingServicePage.bindingTag;
 
   @override
   Widget build(BuildContext context) {
@@ -249,48 +214,42 @@ class _ServiceStatusTab extends GetView<WeddingServicesPageController> {
   }
 }
 
-class _ServiceGridView extends GetView<WeddingServicesPageController> {
-  const _ServiceGridView();
-
+class _ServiceListView extends GetView<WeddingServicesPageController> {
+  const _ServiceListView();
   @override
-  String? get tag => WeddingServicesPage.bindingTag;
+  String get tag => RequestingServicePage.bindingTag;
 
   @override
   Widget build(BuildContext context) {
-    return SimpleBuilder(builder: (ctx) {
-      if (controller.state?.isEmpty ?? true) {
-        return Center(
-          child: EmptyErrorHandler(
-            title: 'Không có dịch vụ nào',
-            reloadCallback: controller.fetchServices,
-          ),
-        );
-      }
-      return RefreshIndicator(
-        onRefresh: controller.fetchServices,
-        child: GridView.builder(
-          padding: const EdgeInsets.all(12),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: .66,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-          ),
-          itemCount: controller.state!.length,
-          itemBuilder: (_, index) {
-            final service = controller.state![index];
-            return ServiceGridItemWidget(
-              service: service,
-              onTap: () => Get.toNamed(
-                ModuleRouter.weddingServiceDetailRoute,
-                arguments: {
-                  'serviceId': service.id,
-                },
-              ),
-            );
-          },
+    if (controller.state?.isEmpty ?? true) {
+      return Center(
+        child: EmptyErrorHandler(
+          title: 'Không có dịch vụ nào',
+          reloadCallback: controller.fetchServices,
         ),
       );
-    });
+    }
+    return RefreshIndicator(
+      onRefresh: controller.fetchServices,
+      child: ListView.separated(
+        padding: const EdgeInsets.all(12),
+        separatorBuilder: (_, index) => kGapH24,
+        itemCount: controller.state!.length,
+        itemBuilder: (_, index) {
+          final service = controller.state![index];
+          return ServiceListItemWidget(
+            service: service,
+            backgroundColor:
+                context.theme.colorScheme.surfaceVariant.lighten(.05),
+            onTap: () => Get.toNamed(
+              ModuleRouter.weddingServiceDetailRoute,
+              arguments: {
+                'serviceId': service.id,
+              },
+            ),
+          );
+        },
+      ),
+    );
   }
 }

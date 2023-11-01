@@ -7,7 +7,9 @@ import 'package:get/get.dart';
 
 import 'package:wedding_service_module/core/constants/ui_constant.dart';
 import 'package:wedding_service_module/core/utils/extensions/num_ext.dart';
+import 'package:wedding_service_module/src/domain/enums/private/wedding_service_state.dart';
 import 'package:wedding_service_module/src/domain/models/wedding_service_model.dart';
+import 'package:wedding_service_module/src/presentation/widgets/activate_banner.dart';
 import 'package:wedding_service_module/src/presentation/widgets/rating_bar.dart';
 import 'package:wedding_service_module/src/presentation/widgets/wrapped_inkwell.dart';
 
@@ -29,51 +31,56 @@ class ServiceGridItemWidget extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: kTheme.colorScheme.surface,
-          boxShadow: [
-            BoxShadow(
-              color: kTheme.colorScheme.onSurface.withOpacity(0.1),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
         ),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            Positioned.fill(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: _ServiceImage(
-                  service: service,
-                ),
-              ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: ActivateBanner(
+            enabled: service.state.isSuspended,
+            message: 'Tạm ngưng'.toUpperCase(),
+            color: Colors.black.withOpacity(.7),
+            textStyle: context.textTheme.bodyMedium!.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
             ),
-            kGapH8,
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.transparent,
-                      Colors.black.withOpacity(0.4),
-                      Colors.black.withOpacity(0.5),
-                      Colors.black.withOpacity(0.6),
-                    ],
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Positioned.fill(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: _ServiceImage(
+                      service: service,
+                    ),
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 24, 8, 8),
-                  child: _ServiceInfos(service: service),
-                ),
-              ),
-            )
-          ],
+                kGapH8,
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withOpacity(0.4),
+                          Colors.black.withOpacity(0.5),
+                          Colors.black.withOpacity(0.6),
+                        ],
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 24, 8, 8),
+                      child: _ServiceInfos(service: service),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );

@@ -28,12 +28,10 @@ class ServiceBusinessSituationView
                 ),
               ),
               kGapH4,
-              if (controller.state.value.data?.partnerService == null)
+              if (controller.state.value.data?.profitStatement == null)
                 const _NotRegistered()
               else
-                switch (controller.state.value.data!.partnerService!.state) {
-                  //This case will never happen
-                  WeddingServiceState.unRegistered => const SizedBox.shrink(),
+                switch (controller.state.value.data!.state) {
                   WeddingServiceState.registering =>
                     const _RequestingServiceView(),
                   WeddingServiceState.rejected => const _RejectedServiceBuild(),
@@ -100,7 +98,7 @@ class _RequestingServiceView extends GetView<ServiceDetailPageController> {
 
   @override
   Widget build(BuildContext context) {
-    final partnerService = controller.state.value.data?.partnerService;
+    final partnerService = controller.state.value.data;
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: SizedBox(
@@ -201,10 +199,11 @@ class _ActiveServiceView extends GetView<ServiceDetailPageController> {
 
   @override
   Widget build(BuildContext context) {
-    final partnerService = controller.state.value.data?.partnerService;
+    final partnerService = controller.state.value.data;
+    final profitStatement = partnerService?.profitStatement;
     final data = [
-      ('Số Lượt Đặt', partnerService?.totalOrder ?? 0, 'lượt'),
-      ('Đã cung cấp', partnerService?.totalProductProvided ?? 0, 'sp'),
+      ('Số Lượt Đặt', profitStatement?.totalOrder ?? 0, 'lượt'),
+      ('Đã cung cấp', profitStatement?.totalProductProvided ?? 0, 'sp'),
     ];
     return Column(
       children: [
@@ -277,7 +276,7 @@ class _ActiveServiceView extends GetView<ServiceDetailPageController> {
         ),
         kGapH8,
         Text(
-          (partnerService.totalRevenue ?? 0).toVietNamCurrency(),
+          (profitStatement?.totalRevenue ?? 0).toVietNamCurrency(),
           style: kTextTheme.headlineMedium?.copyWith(
             fontWeight: FontWeight.w500,
             color: kTheme.colorScheme.primary,

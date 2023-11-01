@@ -13,13 +13,15 @@ class RadioFilterButton extends StatelessWidget {
       horizontal: 18,
       vertical: 8,
     ),
+    this.textStyle,
   }) : super(key: key);
 
   final VoidCallback? onTap;
   final bool selected;
-  final String title;
+  final Widget title;
   final IconData? icon;
   final EdgeInsetsGeometry padding;
+  final TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -39,12 +41,6 @@ class RadioFilterButton extends StatelessWidget {
         color: selected ? selectedBackgroundColor : unSelectedBackgroundColor,
         borderRadius: BorderRadius.circular(80),
         clipBehavior: Clip.hardEdge,
-        textStyle: kTheme.textTheme.bodyLarge!.copyWith(
-          color: selected
-              ? (selectedForegroundColor)
-              : (unSelectedForegroundColor),
-          fontWeight: FontWeight.bold,
-        ),
         type: MaterialType.card,
         child: IconTheme(
           data: IconThemeData(
@@ -65,7 +61,16 @@ class RadioFilterButton extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   if (icon != null) ...[Icon(icon), kGapW4],
-                  Text(title),
+                  DefaultTextStyle(
+                    style: textStyle ??
+                        kTheme.textTheme.bodyMedium!.copyWith(
+                          color: selected
+                              ? (selectedForegroundColor)
+                              : (unSelectedForegroundColor),
+                          fontWeight: FontWeight.bold,
+                        ),
+                    child: title,
+                  ),
                 ],
               ),
             ),

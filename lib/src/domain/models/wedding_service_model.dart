@@ -1,5 +1,5 @@
-import 'package:wedding_service_module/src/domain/models/partner_service.dart';
-
+import 'package:wedding_service_module/src/domain/enums/private/wedding_service_state.dart';
+import 'package:wedding_service_module/src/domain/models/service_profit_statement_model.dart';
 import 'image_model.dart';
 
 class WeddingServiceModel {
@@ -13,8 +13,10 @@ class WeddingServiceModel {
     required this.commissionRate,
     required this.coverImage,
     required this.images,
-    required this.partnerService,
+    required this.profitStatement,
+    required this.state,
     required this.rating,
+    required this.registeredAt,
   });
 
   final String id;
@@ -33,7 +35,12 @@ class WeddingServiceModel {
   /// List of images of this service
   final List<ImageModel> images;
 
-  final PartnerServiceModel? partnerService;
+  /// Profit and loss statement of this service
+  final ProfitStatementModel? profitStatement;
+
+  final WeddingServiceState state;
+
+  final DateTime registeredAt;
 
   final double? rating;
 }

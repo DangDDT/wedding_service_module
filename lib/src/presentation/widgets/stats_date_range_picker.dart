@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:wedding_service_module/core/utils/extensions/build_context_ext.dart';
 import 'package:wedding_service_module/core/utils/extensions/datetime_ext.dart';
 import 'package:wedding_service_module/src/presentation/view_models/nullable_daterange.dart';
+import 'package:wedding_service_module/src/presentation/widgets/auto_centerd_item_listview.dart';
 import 'package:wedding_service_module/src/presentation/widgets/radio_filter_button.dart';
-import 'package:wedding_service_module/src/presentation/widgets/scroll_physics/no_animate_scroll_physic.dart';
 import 'package:wedding_service_module/src/presentation/widgets/selection_button.dart';
 
 import '../../../core/constants/ui_constant.dart';
@@ -26,25 +25,7 @@ class StatsDateRangePicker extends StatefulWidget {
 }
 
 class _StatsDateRangePickerState extends State<StatsDateRangePicker> {
-  late final ItemScrollController _itemScrollController;
-  late final ItemPositionsListener _itemPositionsListener;
-
   StatsTimeRangeType _selectedTimeRange = StatsTimeRangeType.values.first;
-
-  final List<ItemPosition> _visibleIndexes = [];
-  @override
-  void initState() {
-    _itemScrollController = ItemScrollController();
-    _itemPositionsListener = ItemPositionsListener.create();
-    _itemPositionsListener.itemPositions.addListener(() {
-      _visibleIndexes.clear();
-      _visibleIndexes.addAll(_itemPositionsListener.itemPositions.value
-          .where((element) => element.itemTrailingEdge > 0)
-          .toList());
-    });
-
-    super.initState();
-  }
 
   void _pickDate(bool pickStartTime) {
     final now = DateTime.now();
@@ -86,31 +67,12 @@ class _StatsDateRangePickerState extends State<StatsDateRangePicker> {
     setState(() {
       _selectedTimeRange = type;
     });
-    _scrollToSelected(index);
 
     if (type == StatsTimeRangeType.custom) return;
 
     final value = type.dateTimeRange;
     if (value == null) return;
     widget.onDateRangeChanged.call(value);
-  }
-
-  void _scrollToSelected(int index) async {
-    final visibleItem = _visibleIndexes.firstWhere(
-      (element) => element.index == index,
-    );
-
-    final leadingEdge = visibleItem.itemLeadingEdge;
-    final trailingEdge = visibleItem.itemTrailingEdge;
-    final offSetWidth = (trailingEdge - leadingEdge) / 2;
-    final alignment = .5 - offSetWidth;
-
-    await _itemScrollController.scrollTo(
-      index: index,
-      duration: const Duration(milliseconds: 210),
-      curve: Curves.easeInOut,
-      alignment: alignment,
-    );
   }
 
   @override
@@ -122,25 +84,15 @@ class _StatsDateRangePickerState extends State<StatsDateRangePicker> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            height: 48,
-            child: ScrollConfiguration(
-              behavior: NoGlowingOnOverScrollBehavior(),
-              child: ScrollablePositionedList.separated(
-                itemScrollController: _itemScrollController,
-                itemPositionsListener: _itemPositionsListener,
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: StatsTimeRangeType.values.length,
-                separatorBuilder: (ctx, index) => kGapW12,
-                itemBuilder: (ctx, index) => UnconstrainedBox(
-                  child: RadioFilterButton(
-                    title: StatsTimeRangeType.values[index].title,
-                    selected:
-                        StatsTimeRangeType.values[index] == _selectedTimeRange,
-                    onTap: () => _onChangeStatsTimeRangeType(index),
-                  ),
-                ),
+          AutoCenteredItemListView(
+            currentIndex: StatsTimeRangeType.values.indexOf(_selectedTimeRange),
+            itemCount: StatsTimeRangeType.values.length,
+            itemBuilder: (ctx, index) => UnconstrainedBox(
+              child: RadioFilterButton(
+                title: Text(StatsTimeRangeType.values[index].title),
+                selected:
+                    StatsTimeRangeType.values[index] == _selectedTimeRange,
+                onTap: () => _onChangeStatsTimeRangeType(index),
               ),
             ),
           ),

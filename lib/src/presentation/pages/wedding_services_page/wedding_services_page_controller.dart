@@ -9,8 +9,14 @@ import 'package:wedding_service_module/src/presentation/view_models/services_lis
 
 class WeddingServicesPageController extends GetxController
     with StateMixin<List<WeddingServiceModel>> {
-  late final List<WeddingServiceState> viewWeddingServiceStates;
-  // final bool registerServicePage;
+  WeddingServicesPageController({
+    this.viewWeddingServiceStates = const [
+      WeddingServiceState.active,
+      WeddingServiceState.suspended,
+    ],
+  });
+
+  final List<WeddingServiceState> viewWeddingServiceStates;
   final isShowSearch = false.obs;
   final isHasSearchText = false.obs;
   late final TextEditingController searchController;
@@ -20,11 +26,6 @@ class WeddingServicesPageController extends GetxController
 
   @override
   void onInit() {
-    viewWeddingServiceStates = [
-      WeddingServiceState.active,
-      WeddingServiceState.suspended,
-    ];
-
     currentStateTab = viewWeddingServiceStates.first.obs;
     searchFocusNode = FocusNode();
     searchController = TextEditingController();
@@ -86,10 +87,8 @@ class WeddingServicesPageController extends GetxController
       //TODO: call api
       final data = Dummy.services
           .where(
-            (element) => currentStateTab.value.isUnregistered
-                ? element.partnerService == null
-                : (element.partnerService != null &&
-                    element.partnerService!.state == currentStateTab.value),
+            (element) => (element.profitStatement != null &&
+                element.state == currentStateTab.value),
           )
           .toList();
       change(data, status: RxStatus.success());

@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:wedding_service_module/core/constants/ui_constant.dart';
 
 enum WeddingServiceState {
-  /// The service is not registered
-  unRegistered,
-
   /// The service is active
   active,
 
@@ -21,8 +18,6 @@ enum WeddingServiceState {
 extension WeddingServiceStateX on WeddingServiceState {
   String get title {
     switch (this) {
-      case WeddingServiceState.unRegistered:
-        return 'Chưa đăng ký';
       case WeddingServiceState.active:
         return 'Đang kinh doanh';
       case WeddingServiceState.registering:
@@ -50,9 +45,6 @@ extension WeddingServiceStateX on WeddingServiceState {
         return Colors.grey;
     }
   }
-
-  /// Weather the state is unregistered
-  bool get isUnregistered => this == WeddingServiceState.unRegistered;
 
   /// Weather the state is registering
   bool get isRegistering => this == WeddingServiceState.registering;

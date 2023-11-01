@@ -78,7 +78,7 @@ class ServiceDetailPageController extends GetxController {
       return;
     }
 
-    if (data.partnerService != null) {
+    if (data.profitStatement != null) {
       return;
     }
 

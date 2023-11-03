@@ -57,4 +57,32 @@ extension WeddingServiceStateX on WeddingServiceState {
 
   /// Weather the state is suspended
   bool get isSuspended => this == WeddingServiceState.suspended;
+
+  String toStringCode() {
+    switch (this) {
+      case WeddingServiceState.active:
+        return 'Active';
+      case WeddingServiceState.registering:
+        return 'Pending';
+      case WeddingServiceState.rejected:
+        return 'Reject';
+      case WeddingServiceState.suspended:
+        return 'Inactive';
+    }
+  }
+
+  static WeddingServiceState fromStringCode(String? code) {
+    switch (code) {
+      case 'Active':
+        return WeddingServiceState.active;
+      case 'Pending':
+        return WeddingServiceState.registering;
+      case 'Reject':
+        return WeddingServiceState.rejected;
+      case 'Inactive':
+        return WeddingServiceState.suspended;
+      default:
+        throw Exception('Invalid code');
+    }
+  }
 }

@@ -37,16 +37,27 @@ class WeddingServiceModule {
     }
   }
 
-  static Future<void> login(
-      {required UserConfig userConfig, AuthConfig? authConfig}) async {
+  static Future<void> login({
+    required UserConfig userConfig,
+    AuthConfig? authConfig,
+    OnGetMyCategoryIdCallback? onGetMyCategoryCallback,
+  }) async {
     _assertInitialized();
-    Get.find<ModuleConfig>(tag: ModuleConfig.tag).setUserConfig = userConfig;
-    Get.find<ModuleConfig>(tag: ModuleConfig.tag).setAuthConfig = authConfig;
+    final moduleConfig = Get.find<ModuleConfig>(
+      tag: ModuleConfig.tag,
+    );
+    moduleConfig.setUserConfig = userConfig;
+    moduleConfig.setAuthConfig = authConfig;
+    moduleConfig.setGetMyCategoryCallback = onGetMyCategoryCallback;
   }
 
   static Future<void> logout() async {
     _assertInitialized();
-    Get.find<ModuleConfig>(tag: ModuleConfig.tag).setUserConfig = null;
-    Get.find<ModuleConfig>(tag: ModuleConfig.tag).setAuthConfig = null;
+    final moduleConfig = Get.find<ModuleConfig>(
+      tag: ModuleConfig.tag,
+    );
+    moduleConfig.setUserConfig = null;
+    moduleConfig.setAuthConfig = null;
+    moduleConfig.setGetMyCategoryCallback = null;
   }
 }

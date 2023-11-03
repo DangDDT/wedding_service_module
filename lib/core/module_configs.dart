@@ -6,7 +6,8 @@ class ModuleConfig {
     this.isShowLog = false,
     required this.baseUrlConfig,
   })  : _userConfig = null,
-        _authConfig = null;
+        _authConfig = null,
+        _myCategoryIdCallback = null;
 
   final bool isShowLog;
 
@@ -42,6 +43,15 @@ class ModuleConfig {
   // }
 
   // set setModuleRole(ModuleRole? moduleRole) => _moduleRole = moduleRole;
+
+  ///[_myCategoryIdCallback] là callback được gọi để lấy categoryId của user
+  OnGetMyCategoryIdCallback? _myCategoryIdCallback;
+  OnGetMyCategoryIdCallback? get getMyCategoryIdCallback =>
+      _myCategoryIdCallback;
+  set setGetMyCategoryCallback(
+    OnGetMyCategoryIdCallback? myCategoryIdCallback,
+  ) =>
+      _myCategoryIdCallback = myCategoryIdCallback;
 }
 
 class BaseUrlConfig {
@@ -81,3 +91,4 @@ class AuthConfig {
 typedef OnGetTokenCallback = Future<String?> Function();
 typedef OnRefreshTokenCallback = Future<String?> Function();
 typedef OnUnauthorizedCallback = Future<void> Function();
+typedef OnGetMyCategoryIdCallback = Future<String> Function();

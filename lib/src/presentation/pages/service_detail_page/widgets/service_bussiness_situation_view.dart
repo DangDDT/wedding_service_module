@@ -293,7 +293,7 @@ class _ActiveServiceView extends GetView<ServiceDetailPageController> {
         SizedBox(
           width: double.infinity,
           child: FilledButton.tonal(
-            onPressed: controller.deActive,
+            onPressed: controller.suspendService,
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(
                 kTheme.hintColor.withOpacity(0.2),

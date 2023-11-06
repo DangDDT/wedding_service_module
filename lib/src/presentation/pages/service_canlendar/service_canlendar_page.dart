@@ -65,6 +65,7 @@ class _CalendarView extends GetView<ServiceCalendarPageController> {
         onDaySelected: (selectedDay, focusedDay) {
           controller.selectedDate = selectedDay;
         },
+        onPageChanged: controller.onPageChanged,
         firstDay: DateTime(1900),
         lastDay: DateTime(2100),
       ),
@@ -142,7 +143,10 @@ class _DayDetailInfo extends GetView<ServiceCalendarPageController> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               image: DecorationImage(
-                image: NetworkImage(dayOffInfo.weddingService.coverImage),
+                image: NetworkImage(
+                  dayOffInfo.weddingService.listImage.firstOrNull?.imageUrl ??
+                      '',
+                ),
                 fit: BoxFit.cover,
               ),
             ),

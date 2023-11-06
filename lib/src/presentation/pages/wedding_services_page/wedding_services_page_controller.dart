@@ -1,38 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_rx/src/rx_workers/utils/debouncer.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:wedding_service_module/core/utils/extensions/paging_controller_ext.dart';
 import 'package:wedding_service_module/core/utils/helpers/logger.dart';
 import 'package:wedding_service_module/src/domain/enums/private/wedding_service_state.dart';
-import 'package:wedding_service_module/src/domain/mock/dummy.dart';
 import 'package:wedding_service_module/src/domain/models/wedding_service_model.dart';
+import 'package:wedding_service_module/src/domain/requests/get_wedding_service_param.dart';
 import 'package:wedding_service_module/src/presentation/pages/wedding_services_page/widgets/services_list_filter/services_list_filter_bottomsheet.dart';
 import 'package:wedding_service_module/src/presentation/view_models/services_list_filter_data.dart';
+import 'package:wedding_service_module/src/domain/services/interfaces/i_wedding_service_service.dart';
 
-class WeddingServicesPageController extends GetxController
-    with StateMixin<List<WeddingServiceModel>> {
+class WeddingServicesPageController extends GetxController {
   WeddingServicesPageController({
     this.viewWeddingServiceStates = const [
       WeddingServiceState.active,
       WeddingServiceState.suspended,
     ],
   });
+  final _weddingServiceService = Get.find<IWeddingServiceService>();
 
+  late final PagingController<int, WeddingServiceModel> pagingController;
   final List<WeddingServiceState> viewWeddingServiceStates;
   final isShowSearch = false.obs;
   final isHasSearchText = false.obs;
   late final TextEditingController searchController;
+  final _debouncer = Debouncer(delay: const Duration(milliseconds: 500));
   late final FocusNode searchFocusNode;
   late final Rx<WeddingServiceState> currentStateTab;
   final filterData = Rxn<ServicesListFilterData>();
 
   @override
   void onInit() {
+    pagingController =
+        PagingController<int, WeddingServiceModel>(firstPageKey: 0)
+          ..addFetchPage(fetchServices);
     currentStateTab = viewWeddingServiceStates.first.obs;
     searchFocusNode = FocusNode();
-    searchController = TextEditingController();
+    searchController = TextEditingController()
+      ..addListener(() {
+        _debouncer.call(() {
+          pagingController.refresh();
+        });
+      });
+    ever(filterData, (callback) => pagingController.refresh());
     searchFocusNode.addListener(_onFocusChanged);
     searchController.addListener(_onTextEditingControllerChanged);
     super.onInit();
-    fetchServices();
   }
 
   @override
@@ -78,28 +92,35 @@ class WeddingServicesPageController extends GetxController
 
   void changeStateTab(WeddingServiceState state) {
     currentStateTab.value = state;
-    fetchServices();
+    pagingController.refresh();
   }
 
-  Future<void> fetchServices() async {
-    change(state, status: RxStatus.loading());
+  Future<List<WeddingServiceModel>> fetchServices(int pageKey) async {
     try {
-      //TODO: call api
-      final data = Dummy.services
-          .where(
-            (element) => (element.profitStatement != null &&
-                element.state == currentStateTab.value),
-          )
-          .toList();
-      change(data, status: RxStatus.success());
+      final data = await _weddingServiceService.getServices(
+        GetWeddingServiceParam(
+          status: currentStateTab.value,
+          fromDate: filterData.value?.dateRange?.start,
+          toDate: filterData.value?.dateRange?.end,
+          categoryId: null,
+          name: null,
+          priceFrom: filterData.value?.revenueRange.start,
+          priceTo: filterData.value?.revenueRange.end,
+          pageIndex: pageKey,
+          pageSize: pagingController.defaultPageSize,
+          orderBy: null,
+          orderType: null,
+        ),
+      );
+      return data;
     } catch (e, stackTrace) {
-      change(state, status: RxStatus.error('Có lỗi xảy ra, vui lòng thử lại'));
       Logger.logCritical(
         e.toString(),
         stackTrace: stackTrace,
         exception: e,
         name: runtimeType.toString(),
       );
+      rethrow;
     }
   }
 }

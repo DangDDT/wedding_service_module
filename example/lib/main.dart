@@ -3,7 +3,8 @@ import 'package:example/l10n/translator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
-import 'package:wedding_service_module/wedding_service_module.dart';
+import 'package:wedding_service_module/wedding_service_module.dart' as wds;
+import 'package:wss_repository/wss_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,10 +13,18 @@ void main() async {
 }
 
 Future<void> init() async {
-  // await Isar.initializeIsarCore();
-  await WeddingServiceModule.init(
+  WssRepository.init(
+    isShowDioLogger: true,
+    authConfig: AuthConfig(
+      accessToken: () async =>
+          'eyJhbGciOiJSUzI1NiIsImtpZCI6IjBkMGU4NmJkNjQ3NDBjYWQyNDc1NjI4ZGEyZWM0OTZkZjUyYWRiNWQiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoic3RyaW5nIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL3dlZGRpbmctc2VydmljZS13c3MiLCJhdWQiOiJ3ZWRkaW5nLXNlcnZpY2Utd3NzIiwiYXV0aF90aW1lIjoxNjk5MDI1NDQ3LCJ1c2VyX2lkIjoiZTRiODUzODUtZmQ2NC00ZmY5LWIxMDgtZjcwZmE4M2E5Y2I0Iiwic3ViIjoiZTRiODUzODUtZmQ2NC00ZmY5LWIxMDgtZjcwZmE4M2E5Y2I0IiwiaWF0IjoxNjk5MDI1NDQ3LCJleHAiOjE2OTkwMjkwNDcsImVtYWlsIjoid3BzX3Rlc3RfcGFydG5lckBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInBob25lX251bWJlciI6Iis4NDM2OTIyMjMxMSIsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsid3BzX3Rlc3RfcGFydG5lckBnbWFpbC5jb20iXSwicGhvbmUiOlsiKzg0MzY5MjIyMzExIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.MR0d9O4RoAthdzN8n3cX_iID44iVJHuElrqlbzrrpGVS0SzWHoG2Ke0dMjQDZtTnWgB635Q5NP38aX-jG0Ra7N8IJ3kfP-HEOnJ5ItD5qtlb6yp-hokD7YaK2_6Kus-mbGKDDopqUo8Y9jlxsGsBtv9cpmrNs2GV_0SGVTUtvTg2qMhMfitTJIDuFfkbnB-zwrsHYh8SzcttV1HiZmeJESjsW8MD_Bh8wicBCWVWvdL8q-6_JVV6Va-tWlbde-dpxgluN77Ziyu63hiIwvFu5Slu7JfGKDfupbKZg_I2Exv3HmE02b8PJKApRWrPqTa7f5LbfxrWVjony-MediMfow',
+      onRefreshTokenCallback: null,
+      onUnauthorizedCallback: null,
+    ),
+  );
+  await wds.WeddingServiceModule.init(
     isShowLog: true,
-    baseUrlConfig: BaseUrlConfig(baseUrl: ''),
+    baseUrlConfig: wds.BaseUrlConfig(baseUrl: ''),
   );
 }
 
@@ -63,13 +72,21 @@ class MyApp extends StatelessWidget {
       ],
       initialRoute: Router.page,
       getPages: Router.routes,
+      onReady: () async {
+        await wds.WeddingServiceModule.login(
+          userConfig: const wds.UserConfig(userId: 12),
+          onGetMyCategoryCallback: () async {
+            return wds.ServiceCategoryModel.empty();
+          },
+        );
+      },
     );
   }
 }
 
 class PageViewController extends GetxController {
   final pages = <Widget>[
-    const PartnerServiceDashboardPage(),
+    const wds.PartnerServiceDashboardPage(),
     const DashboardPage(),
   ];
   final currentIndex = 0.obs;
@@ -116,7 +133,7 @@ class Router {
       name: page,
       page: () => const Page(),
     ),
-    ...WeddingServiceModule.pageRoutes,
+    ...wds.WeddingServiceModule.pageRoutes,
     ...CorePicker.pageRoutes,
   ];
 }
@@ -133,7 +150,7 @@ class DashboardPage extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            Get.toNamed(WeddingServiceModule.pageRoutes[0].name);
+            Get.toNamed(wds.WeddingServiceModule.pageRoutes[0].name);
           },
           child: const Text('Go to Wedding Service'),
         ),

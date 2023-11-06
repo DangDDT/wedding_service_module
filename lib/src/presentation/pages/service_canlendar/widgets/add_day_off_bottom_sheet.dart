@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:wedding_service_module/core/constants/ui_constant.dart';
 import 'package:wedding_service_module/core/utils/extensions/datetime_ext.dart';
-import 'package:wedding_service_module/core/utils/extensions/objec_ext.dart';
+import 'package:wedding_service_module/src/domain/models/wedding_service_model.dart';
 import 'package:wedding_service_module/src/presentation/pages/service_canlendar/widgets/add_day_off_controller.dart';
+import 'package:wedding_service_module/src/presentation/widgets/empty_handler.dart';
 import 'package:wedding_service_module/src/presentation/widgets/loading_widget.dart';
 import 'package:wedding_service_module/src/presentation/widgets/selection_button.dart';
 
@@ -125,61 +127,50 @@ class _SelectServiceView extends GetView<AddDayOffController> {
         minHeight: 170,
         maxHeight: 400,
       ),
-      child: Obx(() {
-        if ((controller.userServices.value.isLoading ||
-                controller.userServices.value.isInitial) &&
-            controller.userServices.value.data.isNullOrEmpty) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
+      child: PagedListView<int, WeddingServiceModel>.separated(
+        pagingController: controller.pagingController,
+        padding: const EdgeInsets.all(12),
+        separatorBuilder: (context, index) => kGapH12,
+        builderDelegate: PagedChildBuilderDelegate(
+          noItemsFoundIndicatorBuilder: (context) => EmptyErrorHandler(
+            title: 'Không có dịch vụ nào',
+            reloadCallback: controller.pagingController.refresh,
+          ),
+          noMoreItemsIndicatorBuilder: (context) => const SizedBox.shrink(),
+          firstPageErrorIndicatorBuilder: (context) => EmptyErrorHandler(
+            title: 'Không thể tải dữ liệu',
+            reloadCallback: controller.pagingController.refresh,
+          ),
+          firstPageProgressIndicatorBuilder: (context) => const LoadingWidget(
+            axis: Axis.horizontal,
+          ),
+          itemBuilder: _itemBuilder,
+        ),
+      ),
+    );
+  }
 
-        return Column(
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: TextField(
-                decoration: InputDecoration(
-                  isDense: true,
-                  hintText: 'Tìm kiếm dịch vụ',
-                  prefixIcon: Icon(Icons.search),
-                ),
-              ),
-            ),
-            kGapH4,
-            Expanded(
-              child: ListView.separated(
-                separatorBuilder: (context, index) => const Divider(),
-                itemCount: controller.userServices.value.data!.length,
-                itemBuilder: (context, index) {
-                  final service = controller.userServices.value.data![index];
-                  return ListTile(
-                    onTap: () =>
-                        controller.selectedWeddingService.value = service,
-                    leading: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.circular(10),
-                        image: DecorationImage(
-                          image: NetworkImage(service.coverImage),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    title: Text(service.name),
-                    subtitle: Text(service.description),
-                    trailing: const Icon(
-                      Icons.arrow_forward_ios,
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        );
-      }),
+  Widget _itemBuilder(
+      BuildContext context, WeddingServiceModel service, int index) {
+    return ListTile(
+      onTap: () => controller.selectedWeddingService.value = service,
+      leading: Container(
+        width: 50,
+        height: 50,
+        decoration: BoxDecoration(
+          color: Colors.grey,
+          borderRadius: BorderRadius.circular(10),
+          image: DecorationImage(
+            image: NetworkImage(service.coverImage),
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
+      title: Text(service.name),
+      subtitle: Text(service.description),
+      trailing: const Icon(
+        Icons.arrow_forward_ios,
+      ),
     );
   }
 }

@@ -10,7 +10,7 @@ import 'package:wedding_service_module/core/constants/ui_constant.dart';
 import 'package:wedding_service_module/src/presentation/pages/service_register/service_register_controller.dart';
 import 'package:wedding_service_module/src/presentation/pages/service_register/widgets/service_register_form.dart';
 
-class ServiceRegisterPage extends StatelessWidget {
+class ServiceRegisterPage extends GetView<ServiceRegisterPageController> {
   // final WeddingServiceModel service;
 
   const ServiceRegisterPage({
@@ -18,65 +18,53 @@ class ServiceRegisterPage extends StatelessWidget {
     // required this.service,
   }) : super(key: key);
 
-  // static Future<T?> show<T>(WeddingServiceModel service) {
-  //   return Get.dialog(
-  //     ServiceRegisterPage(service: service),
-  //     barrierColor: Colors.black.withOpacity(0.2),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return KeyboardDismisser(
-      child: GetBuilder(
-        init: ServiceRegisterPageController(),
-        builder: (controller) {
-          return WillPopScope(
-            onWillPop: () async {
-              controller.handlePopData();
-              return false;
-            },
-            child: Scaffold(
-              appBar: AppBar(
-                leading: const BackButton(),
-                title: const Text('Đăng ký dịch vụ'),
-              ),
-              body: Obx(
-                () => AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 410),
-                  reverseDuration: Duration.zero,
-                  transitionBuilder: (child, animation) => SlideTransition(
-                    position: Tween<Offset>(
-                      begin: const Offset(0, .05),
-                      end: Offset.zero,
-                    ).animate(
-                      CurvedAnimation(
-                        parent: animation,
-                        curve: Curves.decelerate,
-                      ),
-                    ),
-                    child: FadeTransition(
-                      opacity: animation,
-                      child: child,
-                    ),
-                  ),
-                  child: controller.state.value.when(
-                    initial: () => const RegisterForm(),
-                    loading: (_) => const _Registering(),
-                    success: (_) => const _RegisterSuccess(),
-                    error: (_) => const _RegisterFailed(),
+      child: WillPopScope(
+        onWillPop: () async {
+          controller.handlePopData();
+          return false;
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            leading: const BackButton(),
+            title: const Text('Đăng ký dịch vụ'),
+          ),
+          body: Obx(
+            () => AnimatedSwitcher(
+              duration: const Duration(milliseconds: 410),
+              reverseDuration: Duration.zero,
+              transitionBuilder: (child, animation) => SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0, .05),
+                  end: Offset.zero,
+                ).animate(
+                  CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.decelerate,
                   ),
                 ),
+                child: FadeTransition(
+                  opacity: animation,
+                  child: child,
+                ),
+              ),
+              child: controller.state.value.when(
+                initial: () => const RegisterForm(),
+                loading: (_) => const _Registering(),
+                success: (_) => const _RegisterSuccess(),
+                error: (_) => const _RegisterFailed(),
               ),
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }
 }
 
-class _Registering extends StatelessWidget {
+class _Registering extends GetView<ServiceRegisterPageController> {
   const _Registering();
 
   @override
@@ -92,10 +80,12 @@ class _Registering extends StatelessWidget {
               color: kTheme.primaryColor,
             ),
             kGapH24,
-            Text(
-              'Đang gửi yêu cầu...',
-              textAlign: TextAlign.center,
-              style: kTextTheme.titleMedium,
+            Obx(
+              () => Text(
+                controller.state.value.message ?? 'Đang đăng ký dịch vụ...',
+                textAlign: TextAlign.center,
+                style: kTextTheme.titleMedium,
+              ),
             ),
             kGapH4,
             const Text(

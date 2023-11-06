@@ -1,15 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:wedding_service_module/core/constants/ui_constant.dart';
 import 'package:wedding_service_module/core/routes/module_router.dart';
-import 'package:wedding_service_module/core/utils/extensions/color_ext.dart';
 import 'package:wedding_service_module/src/domain/enums/private/wedding_service_state.dart';
+import 'package:wedding_service_module/src/domain/models/wedding_service_model.dart';
 import 'package:wedding_service_module/src/presentation/pages/requesting_services/widgets/service_list_view_item_widget.dart';
 import 'package:wedding_service_module/src/presentation/pages/wedding_services_page/wedding_services_page_controller.dart';
 import 'package:wedding_service_module/src/presentation/widgets/auto_centerd_item_listview.dart';
 import 'package:wedding_service_module/src/presentation/widgets/empty_handler.dart';
+import 'package:wedding_service_module/src/presentation/widgets/loading_widget.dart';
 import 'package:wedding_service_module/src/presentation/widgets/radio_filter_button.dart';
 
 class RequestingServicePage extends GetView<WeddingServicesPageController> {
@@ -58,12 +60,16 @@ class _CustomAppBar extends GetView<WeddingServicesPageController>
                   if (capPop) const BackButton(),
                   if (!controller.isShowSearch.value)
                     Flexible(
-                      flex: 0,
+                      flex: 1,
                       fit: FlexFit.tight,
-                      child: Text(
-                        'Danh sách chờ duyệt',
-                        maxLines: 1,
-                        style: kTextTheme.titleLarge,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          'Danh sách chờ duyệt',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: kTextTheme.titleLarge,
+                        ),
                       ),
                     ),
                   const Expanded(
@@ -221,34 +227,38 @@ class _ServiceListView extends GetView<WeddingServicesPageController> {
 
   @override
   Widget build(BuildContext context) {
-    if (controller.state?.isEmpty ?? true) {
-      return Center(
-        child: EmptyErrorHandler(
-          title: 'Không có dịch vụ nào',
-          reloadCallback: controller.fetchServices,
-        ),
-      );
-    }
     return RefreshIndicator(
-      onRefresh: controller.fetchServices,
-      child: ListView.separated(
+      onRefresh: () async => controller.pagingController.refresh(),
+      child: PagedListView<int, WeddingServiceModel>.separated(
+        pagingController: controller.pagingController,
         padding: const EdgeInsets.all(12),
-        separatorBuilder: (_, index) => kGapH24,
-        itemCount: controller.state!.length,
-        itemBuilder: (_, index) {
-          final service = controller.state![index];
-          return ServiceListItemWidget(
-            service: service,
-            backgroundColor:
-                context.theme.colorScheme.surfaceVariant.lighten(.05),
-            onTap: () => Get.toNamed(
-              ModuleRouter.weddingServiceDetailRoute,
-              arguments: {
-                'serviceId': service.id,
-              },
-            ),
-          );
-        },
+        separatorBuilder: (context, index) => kGapH12,
+        builderDelegate: PagedChildBuilderDelegate(
+          noItemsFoundIndicatorBuilder: (context) => EmptyErrorHandler(
+            title: 'Không có dịch vụ nào',
+            reloadCallback: controller.pagingController.refresh,
+          ),
+          noMoreItemsIndicatorBuilder: (context) => const SizedBox.shrink(),
+          firstPageErrorIndicatorBuilder: (context) => EmptyErrorHandler(
+            title: 'Không thể tải dữ liệu',
+            reloadCallback: controller.pagingController.refresh,
+          ),
+          firstPageProgressIndicatorBuilder: (context) => const LoadingWidget(
+            axis: Axis.horizontal,
+          ),
+          itemBuilder: (context, item, index) {
+            return ServiceListItemWidget(
+              service: item,
+              backgroundColor: context.theme.colorScheme.surfaceVariant,
+              onTap: () => Get.toNamed(
+                ModuleRouter.weddingServiceDetailRoute,
+                arguments: {
+                  'serviceId': item.id,
+                },
+              ),
+            );
+          },
+        ),
       ),
     );
   }

@@ -28,10 +28,10 @@ extension IntX on int {
 }
 
 extension IntNullExt on int? {
-  String toVietNamCurrency() {
-    return NumberFormat.currency(locale: 'vi', symbol: 'đ', decimalDigits: 0)
-        .format(this);
-  }
+  // String toVietNamCurrency() {
+  //   return NumberFormat.currency(locale: 'vi', symbol: 'đ', decimalDigits: 0)
+  //       .format(this);
+  // }
 
   String? toStringNotNull() {
     return this == null ? null : toString();

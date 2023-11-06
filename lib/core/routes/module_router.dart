@@ -3,14 +3,15 @@
 import 'package:get/get.dart';
 import 'package:wedding_service_module/src/presentation/pages/requesting_services/requesting_service_page.dart';
 import 'package:wedding_service_module/src/presentation/pages/requesting_services/requesting_service_page_binding.dart';
-import 'package:wedding_service_module/src/presentation/pages/service_calendar/service_calendar_page_binding.dart';
-import 'package:wedding_service_module/src/presentation/pages/service_calendar/service_canlendar_page.dart';
+import 'package:wedding_service_module/src/presentation/pages/service_canlendar/service_calendar_page_binding.dart';
 import 'package:wedding_service_module/src/presentation/pages/service_detail_page/service_dedail_page_bindings.dart';
 import 'package:wedding_service_module/src/presentation/pages/service_detail_page/service_detail_page.dart';
 import 'package:wedding_service_module/src/presentation/pages/service_register/service_register_page.dart';
 import 'package:wedding_service_module/src/presentation/pages/service_register/service_register_page_binding.dart';
 import 'package:wedding_service_module/src/presentation/pages/wedding_services_page/wedding_servicce_page_binding.dart';
 import 'package:wedding_service_module/src/presentation/pages/wedding_services_page/wedding_services_page.dart';
+
+import '../../src/presentation/pages/service_canlendar/service_canlendar_page.dart';
 
 class ModuleRouter {
   static String weddingServicesRoute = '/wedding_services';

@@ -1,10 +1,14 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:get/get.dart';
 import 'package:wedding_service_module/src/domain/mappers/profiles/category_mapper.dart';
-import 'package:wedding_service_module/src/domain/services/i_wedding_service_service.dart';
-import 'package:wedding_service_module/src/infrastructure/repositories/wedding_service_service.dart';
+import 'package:wedding_service_module/src/domain/mappers/profiles/day_off_info_mapper.dart';
+import 'package:wedding_service_module/src/domain/mappers/profiles/wedding_serivce_mapper.dart';
+import 'package:wedding_service_module/src/domain/services/implements/partner_day_off_service.dart';
+import 'package:wedding_service_module/src/domain/services/implements/wedding_service_service.dart';
+import 'package:wedding_service_module/src/domain/services/interfaces/i_partner_day_off_service.dart';
+import 'package:wedding_service_module/src/domain/services/interfaces/i_wedding_service_service.dart';
 
-import '../src/domain/domain.dart';
+import '../src/domain/mappers/z_mapper.dart';
 import 'module_configs.dart';
 
 class GlobalBinding {
@@ -22,12 +26,17 @@ class GlobalBinding {
 
     Mapper.instance.registerMappers(
       [
+        WeddingServiceMapper(),
+        DayOffInfoMapper(),
         CategoryMapper(),
       ],
     );
-
     Get.put<IWeddingServiceService>(
       WeddingServiceService(),
+    );
+
+    Get.put<IPartnerDayOffService>(
+      PartnerDayOffService(),
     );
 
     // final dioClient = Get.put<DioClient>(

@@ -1,6 +1,11 @@
+import 'package:get/get.dart';
+import 'package:wedding_service_module/src/domain/models/service_category_model.dart';
+
 import 'wedding_service_module_manager.dart';
 
 class ModuleConfig {
+  static ModuleConfig get instance =>
+      Get.find<ModuleConfig>(tag: ModuleConfig.tag);
   static const String tag = '${WeddingServiceModule.packageName}_ModuleConfig';
   ModuleConfig({
     this.isShowLog = false,
@@ -91,4 +96,4 @@ class AuthConfig {
 typedef OnGetTokenCallback = Future<String?> Function();
 typedef OnRefreshTokenCallback = Future<String?> Function();
 typedef OnUnauthorizedCallback = Future<void> Function();
-typedef OnGetMyCategoryIdCallback = Future<String> Function();
+typedef OnGetMyCategoryIdCallback = Future<ServiceCategoryModel> Function();

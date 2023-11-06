@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:wedding_service_module/src/domain/models/image_model.dart';
+import 'package:wedding_service_module/src/domain/models/wedding_service_model.dart';
 
 class DayOffInfoModel {
   const DayOffInfoModel({
@@ -18,12 +19,22 @@ class DayOffInfoModel {
 }
 
 class WeddingServiceDayOffInfo {
-  final String id;
-  final String name;
-  final List<ImageModel> listImage;
-  WeddingServiceDayOffInfo({
+  const WeddingServiceDayOffInfo({
     required this.id,
     required this.name,
     required this.listImage,
   });
+
+  factory WeddingServiceDayOffInfo.fromService({
+    required WeddingServiceModel service,
+  }) =>
+      WeddingServiceDayOffInfo(
+        id: service.id,
+        name: service.name,
+        listImage: service.images,
+      );
+
+  final String id;
+  final String name;
+  final List<ImageModel> listImage;
 }

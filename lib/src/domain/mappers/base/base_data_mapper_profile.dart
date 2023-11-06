@@ -1,4 +1,4 @@
-import '../../domain.dart';
+import 'package:wedding_service_module/src/domain/mappers/z_mapper.dart';
 
 abstract class BaseDataMapperProfile<Src, Dest> {
   ///The data mapper method

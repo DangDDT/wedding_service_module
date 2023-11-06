@@ -3,13 +3,11 @@ import 'package:wedding_service_module/core/global_binding.dart';
 import 'package:wedding_service_module/core/l10n/_translate_manager.dart';
 import 'package:wedding_service_module/core/module_configs.dart';
 import 'package:wedding_service_module/core/routes/module_router.dart';
-import '../src/infrastructure/local_databases/isar/isar_database.dart';
 
 // export '../src/presentation/views/public_view.dart';
 
 class WeddingServiceModule {
   static const packageName = "wedding_service_module-$version";
-
   static const version = "1.0.0";
   static List<GetPage<dynamic>> get pageRoutes => ModuleRouter.routes;
   static TranslateManager get l10n => TranslateManager();
@@ -19,9 +17,7 @@ class WeddingServiceModule {
   static Future<void> init({
     bool isShowLog = false,
     required BaseUrlConfig baseUrlConfig,
-    AuthConfig? authConfig,
   }) async {
-    await IsarDatabase.init();
     await GlobalBinding.setUpLocator(
       isShowLog: isShowLog,
       baseUrlConfig: baseUrlConfig,
@@ -32,15 +28,15 @@ class WeddingServiceModule {
   static void _assertInitialized() {
     if (!_isInitialized) {
       throw AssertionError(
-        'UserModule is not initialized. Please call UserModule.init() before using any methods of UserModule.',
+        'WeddingServiceModule is not initialized. Please call UserModule.init() before using any methods of UserModule.',
       );
     }
   }
 
   static Future<void> login({
     required UserConfig userConfig,
+    required OnGetMyCategoryIdCallback onGetMyCategoryCallback,
     AuthConfig? authConfig,
-    OnGetMyCategoryIdCallback? onGetMyCategoryCallback,
   }) async {
     _assertInitialized();
     final moduleConfig = Get.find<ModuleConfig>(

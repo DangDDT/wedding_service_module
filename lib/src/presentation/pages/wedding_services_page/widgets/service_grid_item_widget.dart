@@ -170,27 +170,26 @@ class _ServiceInfos extends StatelessWidget {
               ),
             ],
           ),
-        if (service.price != null) ...[
-          kGapH8,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Flexible(
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    service.price!.toVietNamCurrency(),
-                    style: context.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                    ),
+
+        kGapH8,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Flexible(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  service.price.toVietNamCurrency(),
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
                   ),
                 ),
               ),
-            ],
-          )
-        ],
+            ),
+          ],
+        )
       ],
     );
   }

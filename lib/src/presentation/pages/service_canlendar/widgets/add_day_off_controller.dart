@@ -1,18 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_rx/src/rx_workers/utils/debouncer.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:wedding_service_module/core/utils/extensions/paging_controller_ext.dart';
 import 'package:wedding_service_module/core/utils/helpers/logger.dart';
 import 'package:wedding_service_module/src/domain/enums/private/loading_enum.dart';
-import 'package:wedding_service_module/src/domain/mock/dummy.dart';
+import 'package:wedding_service_module/src/domain/enums/private/wedding_service_state.dart';
+import 'package:wedding_service_module/src/domain/models/day_off_info_model.dart.dart';
 import 'package:wedding_service_module/src/domain/models/wedding_service_model.dart';
-import 'package:wedding_service_module/src/presentation/view_models/state_data_view_model.dart';
+import 'package:wedding_service_module/src/domain/requests/get_wedding_service_param.dart';
+import 'package:wedding_service_module/src/domain/services/interfaces/i_partner_day_off_service.dart';
+import 'package:wedding_service_module/src/domain/services/interfaces/i_wedding_service_service.dart';
 
 class AddDayOffController extends GetxController {
+  final _weddingServiceService = Get.find<IWeddingServiceService>();
+
+  final _partnerDayOffService = Get.find<IPartnerDayOffService>();
   final selectedWeddingService = Rxn<WeddingServiceModel>();
   final selectedDate = Rxn<DateTime>();
   final reason = RxString('');
   final addingState = Rx<LoadingState>(LoadingState.idle);
-  //
-  final userServices = StateDataVM<List<WeddingServiceModel>>([]).obs;
+  late final PagingController<int, WeddingServiceModel> pagingController;
+  late final TextEditingController searchController;
+  final _debouncer = Debouncer(delay: const Duration(milliseconds: 500));
 
   AddDayOffController({
     WeddingServiceModel? weddingService,
@@ -21,21 +31,46 @@ class AddDayOffController extends GetxController {
 
   @override
   void onInit() {
+    searchController = TextEditingController()
+      ..addListener(() {
+        _debouncer.call(() {
+          pagingController.refresh();
+        });
+      });
     if (selectedWeddingService.value == null) {
-      loadServices();
+      pagingController =
+          PagingController<int, WeddingServiceModel>(firstPageKey: 0)
+            ..addFetchPage(fetchServices);
     }
     super.onInit();
   }
 
-  Future<void> loadServices() async {
+  Future<List<WeddingServiceModel>> fetchServices(int pageKey) async {
     try {
-      userServices.loading();
-      //TODO: call api
-      await Future.delayed(const Duration(seconds: 1));
-      userServices.success(Dummy.services.take(6).toList());
-    } catch (e, s) {
-      Logger.logCritical(e.toString(), stackTrace: s);
-      userServices.error('Có lỗi khi lấy danh sách dịch vụ');
+      final data = await _weddingServiceService.getServices(
+        GetWeddingServiceParam(
+          status: WeddingServiceState.active,
+          fromDate: null,
+          toDate: null,
+          categoryId: null,
+          name: null,
+          priceFrom: null,
+          priceTo: null,
+          pageIndex: pageKey,
+          pageSize: pagingController.defaultPageSize,
+          orderBy: null,
+          orderType: null,
+        ),
+      );
+      return data;
+    } catch (e, stackTrace) {
+      Logger.logCritical(
+        e.toString(),
+        stackTrace: stackTrace,
+        exception: e,
+        name: runtimeType.toString(),
+      );
+      rethrow;
     }
   }
 
@@ -56,8 +91,41 @@ class AddDayOffController extends GetxController {
   }
 
   Future<void> addDayOff() async {
-    addingState.value = LoadingState.loading;
-    await Future.delayed(const Duration(seconds: 2));
+    try {
+      addingState.value = LoadingState.loading;
+      final weddingService = selectedWeddingService.value;
+      if (weddingService == null) {
+        throw Exception('Vui lòng chọn dịch vụ');
+      }
+      final date = selectedDate.value;
+      if (date == null) {
+        throw Exception('Vui lòng chọn ngày');
+      }
+      final reason = this.reason.value;
+      if (reason.isEmpty) {
+        throw Exception('Vui lòng nhập lý do');
+      }
+      final addedDayOff = await _partnerDayOffService.createPartnerDayOff(
+        DayOffInfoModel(
+          id: '-1',
+          reason: reason,
+          date: date,
+          weddingService: WeddingServiceDayOffInfo.fromService(
+            service: weddingService,
+          ),
+        ),
+      );
+      Get.back(result: addedDayOff);
+    } catch (e, stackTrace) {
+      Logger.logCritical(
+        e.toString(),
+        stackTrace: stackTrace,
+        exception: e,
+        name: runtimeType.toString(),
+      );
+      addingState.value = LoadingState.error;
+      rethrow;
+    }
     addingState.value = LoadingState.success;
   }
 }

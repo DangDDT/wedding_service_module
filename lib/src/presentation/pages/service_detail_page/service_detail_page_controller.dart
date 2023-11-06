@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wedding_service_module/core/routes/module_router.dart';
 import 'package:wedding_service_module/core/utils/helpers/logger.dart';
-import 'package:wedding_service_module/src/domain/mock/dummy.dart';
+import 'package:wedding_service_module/core/utils/helpers/snack_bar_helper.dart';
 import 'package:wedding_service_module/src/domain/models/wedding_service_model.dart';
+import 'package:wedding_service_module/src/domain/services/interfaces/i_wedding_service_service.dart';
 import 'package:wedding_service_module/src/presentation/view_models/state_data_view_model.dart';
 
 class ServiceDetailPageController extends GetxController {
@@ -11,6 +12,7 @@ class ServiceDetailPageController extends GetxController {
     required this.serviceId,
   });
 
+  final _weddingServiceService = Get.find<IWeddingServiceService>();
   final state = StateDataVM<WeddingServiceModel?>(null).obs;
   final imageViewHeight = (Get.height * 0.4).clamp(200.0, 350.0);
   final String serviceId;
@@ -57,10 +59,7 @@ class ServiceDetailPageController extends GetxController {
   Future<void> fetchData() async {
     state.value = state.value.loading();
     try {
-      await Future.delayed(const Duration(seconds: 2));
-      final data = Dummy.services.firstWhereOrNull(
-        (element) => element.id == serviceId,
-      );
+      final data = await _weddingServiceService.getDetail(serviceId);
       state.value = state.value.success(data);
     } catch (e, stackTrace) {
       Logger.logCritical(
@@ -92,13 +91,43 @@ class ServiceDetailPageController extends GetxController {
   }
 
   Future<void> reActive() async {
-    //TODO: implement reActive
-    throw UnimplementedError();
+    try {
+      final results = await _weddingServiceService.reActiveService(serviceId);
+      if (results) {
+        await fetchData();
+        SnackBarHelper.show(message: 'Kích hoạt dịch vụ thành công');
+      }
+    } catch (error, exception) {
+      SnackBarHelper.show(
+        message: 'Kích hoạt dịch vụ không thành công',
+        type: SnackBarType.error,
+      );
+      Logger.logCritical(
+        error.toString(),
+        stackTrace: exception,
+        name: 'ServiceDetailPageController.reActive',
+      );
+    }
   }
 
-  Future<void> deActive() async {
-    //TODO: implement deActive
-    throw UnimplementedError();
+  Future<void> suspendService() async {
+    try {
+      final results = await _weddingServiceService.suspendService(serviceId);
+      if (results) {
+        await fetchData();
+        SnackBarHelper.show(message: 'Đã ngừng dịch vụ thành công');
+      }
+    } catch (error, exception) {
+      SnackBarHelper.show(
+        message: 'Có lỗi xảy ra, vui lòng thử lại',
+        type: SnackBarType.error,
+      );
+      Logger.logCritical(
+        error.toString(),
+        stackTrace: exception,
+        name: 'ServiceDetailPageController.deActive',
+      );
+    }
   }
 
   Future<void> contactUs() async {

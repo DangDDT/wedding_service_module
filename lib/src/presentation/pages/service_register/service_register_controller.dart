@@ -1,18 +1,25 @@
-import 'dart:math';
-
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wedding_service_module/core/module_configs.dart';
 import 'package:wedding_service_module/core/utils/helpers/logger.dart';
 // import 'package:image_picker/image_picker.dart';
 import 'package:wedding_service_module/core/utils/mixins/local_attachment_picker_mixin.dart';
+import 'package:wedding_service_module/src/domain/models/image_model.dart';
 import 'package:wedding_service_module/src/domain/models/service_category_model.dart';
+import 'package:wedding_service_module/src/domain/models/wedding_service_model.dart';
+import 'package:wedding_service_module/src/domain/services/interfaces/i_wedding_service_service.dart';
 import 'package:wedding_service_module/src/presentation/view_models/state_data_view_model.dart';
 
 class ServiceRegisterPageController extends GetxController
     with GetSingleTickerProviderStateMixin, LocalAttachmentPickerMixin {
+  final _moduleConfig = ModuleConfig.instance;
+  final _weddingServiceService = Get.find<IWeddingServiceService>();
   final state = StateDataVM<bool>(false).obs;
   final category = Rx<StateDataVM<ServiceCategoryModel>>(
     StateDataVM<ServiceCategoryModel>(null),
   );
+
+  final formKey = GlobalKey<FormState>();
 
   final serviceName = ''.obs;
   final serviceDescription = ''.obs;
@@ -30,19 +37,8 @@ class ServiceRegisterPageController extends GetxController
   Future<void> _loadUserServiceCategory() async {
     category.value = category.value.loading();
     try {
-      //Load data from api (maybe)
-      await Future.delayed(const Duration(seconds: 2));
-      category.value = category.value.success(
-        ServiceCategoryModel(
-          id: '1',
-          name: 'Xe Đưa Đón',
-          code: 'DV1',
-          description:
-              'Cho thuê xe đám cưới cho cô dâu chú rể. Đảm bảo chất lượng, giá cả phải chăng.',
-          commissionRate: 8,
-          // image: 'https://picsum.photos/200/300',
-        ),
-      );
+      final userCategory = await _moduleConfig.getMyCategoryIdCallback!();
+      category.success(userCategory);
     } catch (e, stackTrace) {
       category.value = category.value.error(e.toString());
       Logger.logCritical(
@@ -53,65 +49,35 @@ class ServiceRegisterPageController extends GetxController
     }
   }
 
-  // Future<void> addAttachment() async {
-  //   try {
-  // final source = await Get.bottomSheet<ImageSource?>(
-  //   const ActionBottomSheet<ImageSource>(
-  //     title: 'Thêm ảnh',
-  //     subTitle: 'Chọn ảnh từ',
-  //     items: [
-  //       ActionBottomSheetItem(
-  //         title: 'Thư viện',
-  //         icon: Icon(Icons.photo_library),
-  //         value: ImageSource.gallery,
-  //       ),
-  //       ActionBottomSheetItem(
-  //         title: 'Máy ảnh',
-  //         icon: Icon(Icons.camera_alt),
-  //         value: ImageSource.camera,
-  //       ),
-  //     ],
-  //   ),
-  // );
-
-  // final result = await CorePicker.showPickerMenu(
-  //   submitButtonTitle: 'Chọn',
-  // );
-
-  // if (source == null) {
-  //   return;
-  // }
-
-  // final image = await _pickImage(source);
-
-  // if (image == null) {
-  //   return;
-  // }
-
-  // attachment.value = image;
-  // final file = File(image.path);
-  // attachmentFile.value = file;
-  //   } catch (e, stackTrace) {
-  //     Logger.logCritical(
-  //       e.toString(),
-  //       stackTrace: stackTrace,
-  //       name: 'ServiceRegisterSheetController.pickImage',
-  //     );
-  //   }
-  // }
-
-  // Future<XFile?> _pickImage(ImageSource imageSource) {
-  //   final picker = ImagePicker();
-  //   return picker.pickImage(source: imageSource);
-  // }
-
   Future<void> register() async {
+    if (!formKey.currentState!.validate()) {
+      return;
+    }
     try {
       state.value = state.value.loading(message: 'Đang đăng ký dịch vụ...');
-      await Future.delayed(const Duration(seconds: 2));
-      if (!_randomSuccess()) {
-        throw Exception();
+
+      if (!attachmentPicker.isAllUploaded) {
+        state.value = state.value.loading(message: 'Đang tải ảnh lên...');
+        await attachmentPicker.uploadAll();
       }
+      state.value = state.value.loading(message: 'Đang gửi yêu cầu...');
+      final images = attachments
+          .map(
+            (e) => e.networkPath,
+          )
+          .map((e) => ImageModel(id: -1, imageUrl: e!))
+          .toList();
+
+      await _weddingServiceService.registerService(
+        WeddingServiceModel.onRegister(
+          name: serviceName.value,
+          description: serviceDescription.value,
+          unit: serviceUnit.value,
+          price: double.parse(servicePrice.value),
+          category: category.value.data!,
+          images: images,
+        ),
+      );
 
       state.value = state.value.success(true);
     } catch (e) {
@@ -119,14 +85,6 @@ class ServiceRegisterPageController extends GetxController
         'Đăng ký dịch vụ thất bại, vui lòng thử lại sau.',
       );
     }
-  }
-
-  ///Random success or failed with given rate, using radom algorithm
-  bool _randomSuccess() {
-    final random = Random();
-    const failedRate = 0.7;
-
-    return random.nextDouble() > failedRate;
   }
 
   void handlePopData() {

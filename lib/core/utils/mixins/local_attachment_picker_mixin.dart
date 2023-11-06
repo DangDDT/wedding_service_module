@@ -14,10 +14,15 @@ mixin LocalAttachmentPickerMixin on GetxController {
 }
 
 class _AttachmentPicker {
+  ///This key can be add to [FormField.key] to make it work with [FormField]
+  final formFieldKey = GlobalKey<FormFieldState<List<LocalAttachmentModel>>>();
   int _maxAttachment = 5;
 
   final attachments = RxList<LocalAttachmentModel>();
 
+  bool get isAllUploaded => attachments.every((e) => e.state.isUploaded);
+
+  ///Set max attachment can be picked
   void setMaxAttachment(int maxAttachment) {
     _maxAttachment = maxAttachment;
   }
@@ -87,6 +92,7 @@ class _AttachmentPicker {
           state: LocalAttachmentState.idle,
         );
         attachments.add(attachment);
+        formFieldKey.currentState?.didChange(attachments);
       }
     } catch (e, stackTrace) {
       Logger.logCritical(

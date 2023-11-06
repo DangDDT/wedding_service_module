@@ -183,23 +183,25 @@ class _ExpandableFabState extends State<ExpandableFab>
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
                       onTap: widget.directAction!.onPressed,
-                      child: Row(
-                        children: [
-                          IconTheme(
-                            data: const IconThemeData(
-                              size: 24,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Row(
+                          children: [
+                            IconTheme(
+                              data: const IconThemeData(
+                                size: 24,
+                              ),
+                              child: widget.directAction!.icon,
                             ),
-                            child: widget.directAction!.icon,
-                          ),
-                          kGapW8,
-                          DefaultTextStyle(
-                            style: Get.textTheme.labelLarge!.copyWith(
-                              fontWeight: FontWeight.w500,
+                            kGapW8,
+                            DefaultTextStyle(
+                              style: Get.textTheme.labelLarge!
+                                  .copyWith(fontWeight: FontWeight.bold),
+                              child: widget.directAction!.label,
                             ),
-                            child: widget.directAction!.label,
-                          ),
-                          kGapW16,
-                        ],
+                            kGapW16,
+                          ],
+                        ),
                       ),
                     ),
                     const ColoredBox(

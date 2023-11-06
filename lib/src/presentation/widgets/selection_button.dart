@@ -61,7 +61,7 @@ class SelectionButton extends StatelessWidget {
                     ],
                     Expanded(
                       child: Text(
-                        content ?? 'Bấm để chọn',
+                        content ?? 'Chọn',
                         style: kTheme.textTheme.bodyLarge?.copyWith(
                           color: isNull
                               ? kTheme.disabledColor.withOpacity(0.45)

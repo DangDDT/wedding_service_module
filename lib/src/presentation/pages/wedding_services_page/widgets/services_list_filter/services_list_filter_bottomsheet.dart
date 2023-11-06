@@ -110,7 +110,7 @@ class ServicesListFilterBottomSheet extends StatelessWidget {
                               kGapH16,
                             ],
                             if (registerRevenueRange) ...[
-                              const _RevenueRange(),
+                              const _PriceRangeSlider(),
                               kGapH16,
                             ],
                             Row(
@@ -276,8 +276,8 @@ class _DateRangePicker extends GetView<ServicesListFilterController> {
   }
 }
 
-class _RevenueRange extends GetView<ServicesListFilterController> {
-  const _RevenueRange();
+class _PriceRangeSlider extends GetView<ServicesListFilterController> {
+  const _PriceRangeSlider();
 
   @override
   Widget build(BuildContext context) {

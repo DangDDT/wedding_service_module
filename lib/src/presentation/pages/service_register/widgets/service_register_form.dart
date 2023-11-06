@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wedding_service_module/core/constants/ui_constant.dart';
 import 'package:wedding_service_module/core/utils/extensions/num_ext.dart';
+import 'package:wedding_service_module/src/domain/models/local_attachment_model.dart';
 import 'package:wedding_service_module/src/presentation/pages/service_register/service_register_controller.dart';
 import 'package:wedding_service_module/src/presentation/widgets/wrapped_inkwell.dart';
 
@@ -16,52 +17,55 @@ class RegisterForm extends GetView<ServiceRegisterPageController> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const _ServiceCategory(),
-          kGapH24,
-          Text(
-            'Thông tin dịch vụ',
-            style: kTextTheme.titleMedium,
-          ),
-          Text(
-            'Các thông tin này sẽ được hiển thị cho khách hàng khi họ xem dịch vụ của bạn.',
-            style: TextStyle(
-              color: kTheme.hintColor,
+      child: Form(
+        key: controller.formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const _ServiceCategory(),
+            kGapH24,
+            Text(
+              'Thông tin dịch vụ',
+              style: kTextTheme.titleMedium,
             ),
-          ),
-          kGapH8,
-          const _ServiceNameInput(),
-          kGapH16,
-          const _ServiceUnitInput(),
-          kGapH16,
-          const _ServicePriceInput(),
-          kGapH16,
-          const _ServiceDescriptionInput(),
-          kGapH24,
-          Text(
-            'Hình ảnh dịch vụ',
-            style: kTextTheme.titleMedium,
-          ),
-          Text(
-            'Chọn tối đa 5 hình ảnh cho dịch vụ của bạn. Hình ảnh đầu tiên sẽ được sử dụng làm ảnh đại diện cho dịch vụ.',
-            style: TextStyle(
-              color: kTheme.hintColor,
+            Text(
+              'Các thông tin này sẽ được hiển thị cho khách hàng khi họ xem dịch vụ của bạn.',
+              style: TextStyle(
+                color: kTheme.hintColor,
+              ),
             ),
-          ),
-          kGapH4,
-          const _ServiceImageAttachments(),
-          kGapH8,
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton(
-              onPressed: controller.register,
-              child: const Text('Đăng ký'),
+            kGapH8,
+            const _ServiceNameInput(),
+            kGapH16,
+            const _ServiceUnitInput(),
+            kGapH16,
+            const _ServicePriceInput(),
+            kGapH16,
+            const _ServiceDescriptionInput(),
+            kGapH24,
+            Text(
+              'Hình ảnh dịch vụ',
+              style: kTextTheme.titleMedium,
             ),
-          ),
-        ],
+            Text(
+              'Chọn tối đa 5 hình ảnh cho dịch vụ của bạn. Hình ảnh đầu tiên sẽ được sử dụng làm ảnh đại diện cho dịch vụ.',
+              style: TextStyle(
+                color: kTheme.hintColor,
+              ),
+            ),
+            kGapH4,
+            const _ServiceImageAttachments(),
+            kGapH8,
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: controller.register,
+                child: const Text('Đăng ký'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -153,6 +157,10 @@ class _ServiceNameInput extends GetView<ServiceRegisterPageController> {
           if (value == null || value.isEmpty) {
             return 'Vui lòng nhập tên dịch vụ';
           }
+
+          if (value.length < 6) {
+            return 'Tên dịch vụ phải có ít nhất 6 ký tự';
+          }
           return null;
         },
         onChanged: controller.serviceName,
@@ -232,6 +240,12 @@ class _ServicePriceInput extends GetView<ServiceRegisterPageController> {
               controller.servicePrice.value =
                   value.replaceAll(RegExp(r'[.|đ]'), '').removeAllWhitespace;
             },
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Vui lòng nhập giá dịch vụ';
+              }
+              return null;
+            },
             inputFormatters: [
               CurrencyTextInputFormatter(
                 locale: 'vi',
@@ -297,56 +311,77 @@ class _ServiceImageAttachments extends GetView<ServiceRegisterPageController> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
-      child: Obx(() {
-        return SizedBox(
-          height: 120,
-          child: ListView.separated(
-            separatorBuilder: (_, __) => kGapW8,
-            scrollDirection: Axis.horizontal,
-            itemCount: controller.attachments.length + 1,
-            itemBuilder: (context, index) {
-              if (index == controller.attachments.length) {
-                return SizedBox(
-                  width: 120,
-                  child: WrappedInkWell(
-                    onTap: controller.attachmentPicker.pickAttachment,
-                    child: DottedBorder(
-                      borderType: BorderType.RRect,
-                      dashPattern: const [8, 4],
-                      color:
-                          (controller.attachmentPicker.attachments.isNotEmpty)
-                              ? Colors.transparent
-                              : kTheme.hintColor.withOpacity(0.2),
-                      radius: const Radius.circular(12),
-                      child: Center(
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Icon(
-                            Icons.add_a_photo_outlined,
-                            size: 34,
-                            color: kTheme.hintColor.withOpacity(0.2),
+    return FormField<List<LocalAttachmentModel>>(
+      key: controller.attachmentPicker.formFieldKey,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Vui lòng chọn ít nhất 1 hình ảnh';
+        }
+        return null;
+      },
+      builder: (formFieldState) => Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: Obx(() {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 120,
+                child: ListView.separated(
+                  separatorBuilder: (_, __) => kGapW8,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: controller.attachments.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == controller.attachments.length) {
+                      return SizedBox(
+                        width: 120,
+                        child: WrappedInkWell(
+                          onTap: controller.attachmentPicker.pickAttachment,
+                          child: DottedBorder(
+                            borderType: BorderType.RRect,
+                            dashPattern: const [8, 4],
+                            color: (controller
+                                    .attachmentPicker.attachments.isNotEmpty)
+                                ? Colors.transparent
+                                : kTheme.hintColor.withOpacity(0.2),
+                            radius: const Radius.circular(12),
+                            child: Center(
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: Icon(
+                                  Icons.add_a_photo_outlined,
+                                  size: 34,
+                                  color: kTheme.hintColor.withOpacity(0.2),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
+                      );
+                    }
+                    final attachment = controller.attachmentPicker
+                        .attachments[index - 1]; // -1 because of the add button
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.file(
+                        File(attachment.localPath),
+                        fit: BoxFit.cover,
                       ),
-                    ),
-                  ),
-                );
-              }
-              final attachment = controller.attachmentPicker
-                  .attachments[index - 1]; // -1 because of the add button
-              return ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.file(
-                  File(attachment.localPath),
-                  fit: BoxFit.cover,
+                    );
+                  },
                 ),
-              );
-            },
-          ),
-        );
-      }),
+              ),
+              if (formFieldState.hasError)
+                Text(
+                  formFieldState.errorText!,
+                  style: TextStyle(
+                    color: kTheme.colorScheme.error,
+                  ),
+                ),
+            ],
+          );
+        }),
+      ),
     );
   }
 }

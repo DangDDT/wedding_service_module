@@ -67,7 +67,7 @@ extension WeddingServiceStateX on WeddingServiceState {
       case WeddingServiceState.rejected:
         return 'Reject';
       case WeddingServiceState.suspended:
-        return 'Inactive';
+        return 'InActive';
     }
   }
 
@@ -79,7 +79,7 @@ extension WeddingServiceStateX on WeddingServiceState {
         return WeddingServiceState.registering;
       case 'Reject':
         return WeddingServiceState.rejected;
-      case 'Inactive':
+      case 'InActive':
         return WeddingServiceState.suspended;
       default:
         throw Exception('Invalid code');

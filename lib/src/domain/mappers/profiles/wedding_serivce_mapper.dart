@@ -2,6 +2,7 @@ import 'package:wedding_service_module/core/constants/default_value_mapper_const
 import 'package:wedding_service_module/src/domain/enums/private/wedding_service_state.dart';
 import 'package:wedding_service_module/src/domain/mappers/z_mapper.dart';
 import 'package:wedding_service_module/src/domain/models/image_model.dart';
+import 'package:wedding_service_module/src/domain/models/service_category_model.dart';
 import 'package:wedding_service_module/src/domain/models/service_profit_statement_model.dart';
 import 'package:wedding_service_module/src/domain/models/wedding_service_model.dart';
 import 'package:wss_repository/entities/service.dart';
@@ -18,8 +19,10 @@ class WeddingServiceMapper
           DefaultValueMapperConstants.defaultStringValue,
       rating: entity.rating?.toDouble() ??
           DefaultValueMapperConstants.defaultDoubleValue,
-
-      price: entity.currentPrices?.price?.toDouble() ??
+      category: (entity.category != null)
+          ? mapper.mapData<Category, ServiceCategoryModel>(entity.category!)
+          : ServiceCategoryModel.empty(),
+      price: entity.currentPrices?.price ??
           DefaultValueMapperConstants.defaultDoubleValue,
       state: WeddingServiceStateX.fromStringCode(entity.status),
       description: entity.description?.toString() ??

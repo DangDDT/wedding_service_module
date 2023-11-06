@@ -40,6 +40,10 @@ dependencies:
     git:
       url: https://github.com/DangDDT/picker_package.git
       ref: main
+  wss_repository:
+    git:
+      url: https://github.com/DangDDT/wss_repository.git
+      ref: main
   wedding_service_module:
     path: ../
   get: ^4.6.5

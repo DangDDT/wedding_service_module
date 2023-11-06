@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
-
-import '../../domain/domain.dart';
+import 'package:wedding_service_module/src/domain/enums/private/loading_enum.dart';
 
 class StateModel<T> {
   final Rx<T> data;

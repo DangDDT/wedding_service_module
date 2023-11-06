@@ -1,17 +1,21 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:wedding_service_module/core/constants/ui_constant.dart';
 import 'package:wedding_service_module/core/routes/module_router.dart';
 import 'package:wedding_service_module/src/domain/enums/private/wedding_service_state.dart';
+import 'package:wedding_service_module/src/domain/models/wedding_service_model.dart';
 import 'package:wedding_service_module/src/presentation/pages/wedding_services_page/wedding_services_page_controller.dart';
 import 'package:wedding_service_module/src/presentation/pages/wedding_services_page/widgets/service_grid_item_widget.dart';
 import 'package:wedding_service_module/src/presentation/widgets/auto_centerd_item_listview.dart';
-import 'package:wedding_service_module/src/presentation/widgets/empty_handler.dart';
 import 'package:wedding_service_module/src/presentation/widgets/expandable_fab.dart';
 import 'package:wedding_service_module/src/presentation/widgets/loading_widget.dart';
 import 'package:wedding_service_module/src/presentation/widgets/radio_filter_button.dart';
+
+import '../../widgets/empty_handler.dart';
 
 class WeddingServicesPage extends GetView<WeddingServicesPageController> {
   const WeddingServicesPage({super.key});
@@ -44,27 +48,9 @@ class WeddingServicesPage extends GetView<WeddingServicesPageController> {
             ),
           ],
         ),
-        body: Scaffold(
-          appBar: const _CustomAppBar(),
-          body: SimpleBuilder(
-            builder: (_) {
-              if (controller.status.isLoading &&
-                  (controller.state?.isEmpty ?? true)) {
-                return const Center(
-                  child: LoadingWidget(
-                    message: 'Đang lấy danh sách dịch vụ...',
-                  ),
-                );
-              } else if (controller.status.isError) {
-                return EmptyErrorHandler(
-                  title: 'Có lỗi xảy ra, vui lòng thử lại',
-                  reloadCallback: controller.fetchServices,
-                );
-              }
-
-              return const _ServiceGridView();
-            },
-          ),
+        body: const Scaffold(
+          appBar: _CustomAppBar(),
+          body: _ServiceGridView(),
         ),
       ),
     );
@@ -96,7 +82,7 @@ class _CustomAppBar extends GetView<WeddingServicesPageController>
                     Flexible(
                       flex: 0,
                       fit: FlexFit.tight,
-                      child: Text(
+                      child: AutoSizeText(
                         'Dịch vụ',
                         maxLines: 1,
                         style: kTextTheme.titleLarge,
@@ -128,7 +114,10 @@ class _CustomAppBar extends GetView<WeddingServicesPageController>
             kGapH16,
             const Align(
               alignment: Alignment.centerLeft,
-              child: _ServiceStatusTab(),
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 8),
+                child: _ServiceStatusTab(),
+              ),
             ),
           ],
         ),
@@ -257,40 +246,43 @@ class _ServiceGridView extends GetView<WeddingServicesPageController> {
 
   @override
   Widget build(BuildContext context) {
-    return SimpleBuilder(builder: (ctx) {
-      if (controller.state?.isEmpty ?? true) {
-        return Center(
-          child: EmptyErrorHandler(
+    return RefreshIndicator(
+      onRefresh: () async => controller.pagingController.refresh(),
+      child: PagedGridView<int, WeddingServiceModel>(
+        pagingController: controller.pagingController,
+        padding: const EdgeInsets.all(12),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: .66,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+        ),
+        builderDelegate: PagedChildBuilderDelegate(
+          noItemsFoundIndicatorBuilder: (context) => EmptyErrorHandler(
             title: 'Không có dịch vụ nào',
-            reloadCallback: controller.fetchServices,
+            reloadCallback: controller.pagingController.refresh,
           ),
-        );
-      }
-      return RefreshIndicator(
-        onRefresh: controller.fetchServices,
-        child: GridView.builder(
-          padding: const EdgeInsets.all(12),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: .66,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
+          noMoreItemsIndicatorBuilder: (context) => const SizedBox.shrink(),
+          firstPageErrorIndicatorBuilder: (context) => EmptyErrorHandler(
+            title: 'Không thể tải dữ liệu',
+            reloadCallback: controller.pagingController.refresh,
           ),
-          itemCount: controller.state!.length,
-          itemBuilder: (_, index) {
-            final service = controller.state![index];
+          firstPageProgressIndicatorBuilder: (context) => const LoadingWidget(
+            axis: Axis.horizontal,
+          ),
+          itemBuilder: (context, item, index) {
             return ServiceGridItemWidget(
-              service: service,
+              service: item,
               onTap: () => Get.toNamed(
                 ModuleRouter.weddingServiceDetailRoute,
                 arguments: {
-                  'serviceId': service.id,
+                  'serviceId': item.id,
                 },
               ),
             );
           },
         ),
-      );
-    });
+      ),
+    );
   }
 }

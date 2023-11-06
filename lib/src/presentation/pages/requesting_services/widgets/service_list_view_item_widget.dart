@@ -120,34 +120,32 @@ class _ServiceInfos extends StatelessWidget {
             color: kTheme.hintColor,
           ),
         ),
-        if (service.price != null) ...[
-          const Spacer(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    service.price!.toVietNamCurrency(),
-                    style: context.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+        const Spacer(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  service.price.toVietNamCurrency(),
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              kGapW8,
-              FilledButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: kTheme.colorScheme.primary,
-                  visualDensity: VisualDensity.compact,
-                ),
-                onPressed: onPressed,
-                child: const Text('Chi tiết'),
+            ),
+            kGapW8,
+            FilledButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: kTheme.colorScheme.primary,
+                visualDensity: VisualDensity.compact,
               ),
-            ],
-          )
-        ],
+              onPressed: onPressed,
+              child: const Text('Chi tiết'),
+            ),
+          ],
+        )
       ],
     );
   }

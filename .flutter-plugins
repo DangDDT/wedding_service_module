@@ -1,15 +1,15 @@
 # This is a generated file; do not edit or check into version control.
 camera=/Users/huynhtuan/.pub-cache/hosted/pub.dev/camera-0.10.5+5/
-camera_android=/Users/huynhtuan/.pub-cache/hosted/pub.dev/camera_android-0.10.8+12/
-camera_avfoundation=/Users/huynhtuan/.pub-cache/hosted/pub.dev/camera_avfoundation-0.9.13+6/
+camera_android=/Users/huynhtuan/.pub-cache/hosted/pub.dev/camera_android-0.10.8+13/
+camera_avfoundation=/Users/huynhtuan/.pub-cache/hosted/pub.dev/camera_avfoundation-0.9.13+7/
 camera_web=/Users/huynhtuan/.pub-cache/hosted/pub.dev/camera_web-0.3.2+2/
 device_info_plus=/Users/huynhtuan/.pub-cache/hosted/pub.dev/device_info_plus-9.1.0/
 file_picker=/Users/huynhtuan/.pub-cache/hosted/pub.dev/file_picker-5.5.0/
-flutter_plugin_android_lifecycle=/Users/huynhtuan/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.16/
+flutter_plugin_android_lifecycle=/Users/huynhtuan/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.17/
 location=/Users/huynhtuan/.pub-cache/git/flutterlocation-44745026a384c743cb5e64f94296303d9adbb237/packages/location/
 location_web=/Users/huynhtuan/.pub-cache/hosted/pub.dev/location_web-3.1.1/
 path_provider=/Users/huynhtuan/.pub-cache/hosted/pub.dev/path_provider-2.1.1/
-path_provider_android=/Users/huynhtuan/.pub-cache/hosted/pub.dev/path_provider_android-2.2.0/
+path_provider_android=/Users/huynhtuan/.pub-cache/hosted/pub.dev/path_provider_android-2.2.1/
 path_provider_foundation=/Users/huynhtuan/.pub-cache/hosted/pub.dev/path_provider_foundation-2.3.1/
 path_provider_linux=/Users/huynhtuan/.pub-cache/hosted/pub.dev/path_provider_linux-2.2.1/
 path_provider_windows=/Users/huynhtuan/.pub-cache/hosted/pub.dev/path_provider_windows-2.2.1/

@@ -118,6 +118,17 @@ class StateDataVM<T> {
 }
 
 extension StateDataVmRxX<T> on Rx<StateDataVM<T>> {
+  bool get isInitial => value.isInitial;
+  bool get isLoading => value.isLoading;
+  bool get isSuccess => value.isSuccess;
+  bool get isError => value.isError;
+  bool get hasError => value.isError && value.message != null;
+  bool get hasData =>
+      value.data != null ||
+      value.data != [] ||
+      value.data != {} ||
+      (value.data).toString().trim() != '';
+
   void loading({String? message}) {
     value = value.loading(message: message);
   }

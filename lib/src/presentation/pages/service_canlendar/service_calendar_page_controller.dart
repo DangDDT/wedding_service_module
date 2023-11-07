@@ -39,23 +39,8 @@ class ServiceCalendarPageController extends GetxController {
 
   DateTime get selectedDateValue => _selectedDate.value;
 
-  Future<void> onPageChanged(DateTime date) async {
-    _selectedDate.value = date;
-    final startOfMonth = DateTime(
-      _selectedDate.value.year,
-      _selectedDate.value.month,
-      1,
-    );
-    final endOfMonth = DateTime(
-      _selectedDate.value.year,
-      _selectedDate.value.month + 1,
-      0,
-    );
-
-    viewingDateRange.value = NullableDateRange(
-      start: startOfMonth,
-      end: endOfMonth,
-    );
+  Future<void> onViewingDateRangeChanged(NullableDateRange range) async {
+    viewingDateRange.value = range;
     await _loadDayOffInMonth();
   }
 

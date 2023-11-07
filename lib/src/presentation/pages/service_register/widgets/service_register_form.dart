@@ -322,63 +322,103 @@ class _ServiceImageAttachments extends GetView<ServiceRegisterPageController> {
       builder: (formFieldState) => Padding(
         padding: const EdgeInsets.only(top: 8.0),
         child: Obx(() {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 120,
-                child: ListView.separated(
-                  separatorBuilder: (_, __) => kGapW8,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: controller.attachments.length + 1,
-                  itemBuilder: (context, index) {
-                    if (index == controller.attachments.length) {
-                      return SizedBox(
-                        width: 120,
-                        child: WrappedInkWell(
-                          onTap: controller.attachmentPicker.pickAttachment,
-                          child: DottedBorder(
-                            borderType: BorderType.RRect,
-                            dashPattern: const [8, 4],
-                            color: (controller
-                                    .attachmentPicker.attachments.isNotEmpty)
-                                ? Colors.transparent
-                                : kTheme.hintColor.withOpacity(0.2),
-                            radius: const Radius.circular(12),
-                            child: Center(
-                              child: SizedBox(
-                                width: double.infinity,
-                                child: Icon(
-                                  Icons.add_a_photo_outlined,
-                                  size: 34,
-                                  color: kTheme.hintColor.withOpacity(0.2),
+          return AnimatedSize(
+            duration: const Duration(milliseconds: 300),
+            alignment: Alignment.topCenter,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (controller.attachments.isNotEmpty)
+                  Text('Đã chọn ${controller.attachments.length}/5 hình ảnh'),
+                SizedBox(
+                  height: 130,
+                  child: ListView.separated(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    separatorBuilder: (_, __) => kGapW8,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: controller.attachments.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index == controller.attachments.length) {
+                        return AspectRatio(
+                          aspectRatio: 1,
+                          child: WrappedInkWell(
+                            onTap: controller.attachmentPicker.pickAttachment,
+                            child: DottedBorder(
+                              borderType: BorderType.RRect,
+                              dashPattern: const [8, 4],
+                              color: kTheme.hintColor.withOpacity(0.2),
+                              radius: const Radius.circular(12),
+                              child: Center(
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: Icon(
+                                    Icons.add_a_photo_outlined,
+                                    size: 34,
+                                    color: kTheme.hintColor.withOpacity(0.2),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
+                        );
+                      }
+                      final attachment = controller.attachmentPicker
+                          .attachments[index]; // -1 because of the add button
+                      return Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          AspectRatio(
+                            aspectRatio: 1,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.file(
+                                File(attachment.localPath),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            top: -4,
+                            right: -1,
+                            child: GestureDetector(
+                              onTap: () {
+                                controller.attachmentPicker.attachments
+                                    .removeAt(index);
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade300,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      blurRadius: 2,
+                                      offset: const Offset(0, 1),
+                                    ),
+                                  ],
+                                ),
+                                padding: const EdgeInsets.all(4),
+                                child: const Icon(
+                                  Icons.close,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       );
-                    }
-                    final attachment = controller.attachmentPicker
-                        .attachments[index - 1]; // -1 because of the add button
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.file(
-                        File(attachment.localPath),
-                        fit: BoxFit.cover,
-                      ),
-                    );
-                  },
-                ),
-              ),
-              if (formFieldState.hasError)
-                Text(
-                  formFieldState.errorText!,
-                  style: TextStyle(
-                    color: kTheme.colorScheme.error,
+                    },
                   ),
                 ),
-            ],
+                if (formFieldState.hasError)
+                  Text(
+                    formFieldState.errorText!,
+                    style: TextStyle(
+                      color: kTheme.colorScheme.error,
+                    ),
+                  ),
+              ],
+            ),
           );
         }),
       ),

@@ -5,23 +5,33 @@ import 'package:wedding_service_module/src/domain/models/image_model.dart';
 import 'package:wedding_service_module/src/domain/models/service_category_model.dart';
 import 'package:wedding_service_module/src/domain/models/service_profit_statement_model.dart';
 import 'package:wedding_service_module/src/domain/models/wedding_service_model.dart';
-import 'package:wss_repository/entities/service.dart';
+import 'package:wss_repository/entities/service.dart' as wss;
 
 import '../base/base_data_mapper_profile.dart';
 
 class WeddingServiceMapper
-    extends BaseDataMapperProfile<Service, WeddingServiceModel> {
+    extends BaseDataMapperProfile<wss.Service, WeddingServiceModel> {
   @override
-  WeddingServiceModel mapData(Service entity, Mapper mapper) {
+  WeddingServiceModel mapData(wss.Service entity, Mapper mapper) {
     return WeddingServiceModel(
       id: entity.id.toString(),
       name: entity.name?.toString() ??
           DefaultValueMapperConstants.defaultStringValue,
       rating: entity.rating?.toDouble() ??
           DefaultValueMapperConstants.defaultDoubleValue,
-      category: (entity.category != null)
-          ? mapper.mapData<Category, ServiceCategoryModel>(entity.category!)
-          : ServiceCategoryModel.empty(),
+      // category: (entity.category != null)
+      //     ? mapper.mapData<Category, ServiceCategoryModel>(entity.category!)
+      //     : ServiceCategoryModel.empty(),
+      category: entity.category == null
+          ? ServiceCategoryModel.empty()
+          : ServiceCategoryModel(
+              id: entity.category?.id.toString(),
+              name: entity.category?.name?.toString() ??
+                  DefaultValueMapperConstants.defaultStringValue,
+              description: entity.category?.description?.toString() ??
+                  DefaultValueMapperConstants.defaultStringValue,
+              code: 'UNKNOWN',
+            ),
       price: entity.currentPrices?.price ??
           DefaultValueMapperConstants.defaultDoubleValue,
       state: WeddingServiceStateX.fromStringCode(entity.status),

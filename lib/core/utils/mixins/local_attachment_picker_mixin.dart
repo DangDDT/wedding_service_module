@@ -6,6 +6,7 @@ import 'package:path/path.dart' as path;
 import 'package:wedding_service_module/core/utils/helpers/logger.dart';
 import 'package:wedding_service_module/src/domain/enums/private/local_attachment_state.dart';
 import 'package:wedding_service_module/src/domain/models/local_attachment_model.dart';
+import 'package:wss_repository/repositories/file_repository.dart';
 
 mixin LocalAttachmentPickerMixin on GetxController {
   final attachmentPicker = _AttachmentPicker();
@@ -14,6 +15,8 @@ mixin LocalAttachmentPickerMixin on GetxController {
 }
 
 class _AttachmentPicker {
+  final _fileService = Get.find<IFileRepository>();
+  // final _fileService = Get.find<IAccountRepository>()
   ///This key can be add to [FormField.key] to make it work with [FormField]
   final formFieldKey = GlobalKey<FormFieldState<List<LocalAttachmentModel>>>();
   int _maxAttachment = 5;
@@ -64,14 +67,15 @@ class _AttachmentPicker {
     }
 
     final result = await CorePicker.showPickerMenu(
+      attachmentTypes: [
+        AttachmentType.media,
+      ],
       isShowLog: true,
-      submitButtonTitle: 'Chọn',
       mediaPickerOption: MediaPickerOption(
+        isUseCaptionField: false,
+        mediaPickerTypes: [MediaPickerType.image],
         isMultiSelection: true,
-        //TODO: handle max file
       ),
-      attachmentTypes: [AttachmentType.media],
-      submitButtonIcon: Icons.check,
     );
 
     if (result == null) return;
@@ -115,7 +119,7 @@ class _AttachmentPicker {
 
   Future<void> uploadAll() async {
     try {
-      // final uploadTasks = <Future<VIFFileUploaderResult?>>[];
+      final uploadTasks = <Future>[];
 
       for (int i = 0; i < attachments.length; i++) {
         if (attachments[i].state.isUploading ||
@@ -123,32 +127,36 @@ class _AttachmentPicker {
           continue;
         }
 
-        //TODO: handle upload file
+        attachments[i] = attachments[i].copyWith(
+          state: LocalAttachmentState.uploading,
+        );
 
-        // final uploadTask = VIFBase.I.uploader
-        //     .uploadFromPath(
-        //   pathFile: attachments[i].localPath,
-        //   categorize: GopYModule.packageName,
-        // )
-        //     .then((value) {
-        //   if (value != null) {
-        //     attachments[i] = attachments[i].copyWith(
-        //       state: LocalAttachmentState.uploaded,
-        //       networkPath: () => value.data,
-        //     );
-        //   } else {
-        //     attachments[i] = attachments[i].copyWith(
-        //       state: LocalAttachmentState.error,
-        //     );
-        //     throw Exception('Upload file thất bại -> ${attachments[i].name}');
-        //   }
-        // });
-        // uploadTasks.add(uploadTask);
-        // attachments[i] = attachments[i].copyWith(
-        //   state: LocalAttachmentState.uploading,
-        // );
+        final file = attachments[i].file;
+
+        if (file == null) continue;
+
+        final uploadTask = _fileService.uploadFiles([
+          attachments[i].file!,
+        ]).then((value) {
+          final uploadedFile = value.first;
+
+          attachments[i] = attachments[i].copyWith(
+            state: LocalAttachmentState.uploaded,
+            networkPath: () => uploadedFile.link,
+          );
+        }).onError((error, stackTrace) {
+          attachments[i] = attachments[i].copyWith(
+            state: LocalAttachmentState.error,
+          );
+          Logger.logCritical(
+            error.toString(),
+            stackTrace: stackTrace,
+          );
+        });
+
+        uploadTasks.add(uploadTask);
       }
-      // await Future.wait(uploadTasks);
+      await Future.wait(uploadTasks);
     } catch (e, stackTrace) {
       Logger.logCritical(
         e.toString(),

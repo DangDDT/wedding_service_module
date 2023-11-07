@@ -6,6 +6,7 @@ import 'package:wedding_service_module/core/utils/extensions/datetime_ext.dart';
 import 'package:wedding_service_module/core/utils/extensions/objec_ext.dart';
 import 'package:wedding_service_module/src/domain/models/day_off_info_model.dart.dart';
 import 'package:wedding_service_module/src/presentation/pages/service_canlendar/service_calendar_page_controller.dart';
+import 'package:wedding_service_module/src/presentation/view_models/nullable_daterange.dart';
 import 'package:wedding_service_module/src/presentation/widgets/error_widget.dart';
 import 'package:wedding_service_module/src/presentation/widgets/loading_widget.dart';
 
@@ -65,7 +66,12 @@ class _CalendarView extends GetView<ServiceCalendarPageController> {
         onDaySelected: (selectedDay, focusedDay) {
           controller.selectedDate = selectedDay;
         },
-        onPageChanged: controller.onPageChanged,
+        onPageChanged: (focusedDay) {
+          final startOfMonth = DateTime(focusedDay.year, focusedDay.month, 1);
+          final endOfMonth = DateTime(focusedDay.year, focusedDay.month + 1, 0);
+          final range = NullableDateRange(start: startOfMonth, end: endOfMonth);
+          controller.onViewingDateRangeChanged(range);
+        },
         firstDay: DateTime(1900),
         lastDay: DateTime(2100),
       ),

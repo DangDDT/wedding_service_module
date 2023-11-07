@@ -103,7 +103,7 @@ class WeddingServicesPageController extends GetxController {
           fromDate: filterData.value?.dateRange?.start,
           toDate: filterData.value?.dateRange?.end,
           categoryId: null,
-          name: null,
+          name: searchController.text,
           priceFrom: filterData.value?.revenueRange.start,
           priceTo: filterData.value?.revenueRange.end,
           pageIndex: pageKey,

@@ -5,13 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:wedding_service_module/src/domain/enums/private/local_attachment_state.dart';
 
-class LocalAttachmentModel {
+class LocalAttachmentModel<T> {
   const LocalAttachmentModel({
+    required this.localPath,
     required this.name,
     required this.size,
     required this.file,
     this.state = LocalAttachmentState.idle,
-    required this.localPath,
+    this.attachmentNetworkData,
     this.networkPath,
   });
 
@@ -21,6 +22,7 @@ class LocalAttachmentModel {
   final File? file;
   final LocalAttachmentState state;
   final String? networkPath;
+  final T? attachmentNetworkData;
 
   String get fileExtension => path.extension(path.basename(localPath));
 
@@ -33,7 +35,8 @@ class LocalAttachmentModel {
         other.size == size &&
         other.file == file &&
         other.state == state &&
-        other.networkPath == networkPath;
+        other.networkPath == networkPath &&
+        other.attachmentNetworkData == attachmentNetworkData;
   }
 
   @override
@@ -43,7 +46,8 @@ class LocalAttachmentModel {
         size.hashCode ^
         file.hashCode ^
         state.hashCode ^
-        networkPath.hashCode;
+        networkPath.hashCode ^
+        attachmentNetworkData.hashCode;
   }
 
   LocalAttachmentModel copyWith({
@@ -53,6 +57,7 @@ class LocalAttachmentModel {
     ValueGetter<File?>? file,
     LocalAttachmentState? state,
     ValueGetter<String?>? networkPath,
+    ValueGetter<T?>? attachmentNetworkData,
   }) {
     return LocalAttachmentModel(
       name: name ?? this.name,
@@ -61,6 +66,9 @@ class LocalAttachmentModel {
       file: file != null ? file.call() : this.file,
       state: state ?? this.state,
       networkPath: networkPath != null ? networkPath.call() : this.networkPath,
+      attachmentNetworkData: attachmentNetworkData != null
+          ? attachmentNetworkData.call()
+          : this.attachmentNetworkData,
     );
   }
 }

@@ -183,7 +183,7 @@ class _ServiceDescriptionInput extends GetView<ServiceRegisterPageController> {
       ),
       child: TextFormField(
         maxLines: 5,
-        textInputAction: TextInputAction.done,
+        textInputAction: TextInputAction.newline,
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Vui lòng nhập mô tả dịch vụ';

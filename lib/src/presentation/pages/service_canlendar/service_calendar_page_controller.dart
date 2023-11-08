@@ -32,6 +32,7 @@ class ServiceCalendarPageController extends GetxController {
       start: startOfMonth,
       end: endOfMonth,
     );
+    // selectedDate = DateTime.now();
     _loadDayOffInMonth();
     loadDayOffInDay();
     super.onInit();
@@ -69,13 +70,20 @@ class ServiceCalendarPageController extends GetxController {
   Future<void> loadDayOffInDay() async {
     selectedDayOffInfos.loading();
     try {
+      final start = _selectedDate.value.copyWith(
+        hour: 0,
+        minute: 0,
+        second: 0,
+        isUtc: true,
+      );
+      final end = _selectedDate.value.copyWith(
+        hour: 23,
+        minute: 59,
+        second: 55,
+        isUtc: true,
+      );
       final data = await _partnerDayOffService.getPartnerDayOffs(
-        GetDayOffParams(
-          dateRange: NullableDateRange(
-            start: _selectedDate.value.copyWith(hour: 0, minute: 0, second: 0),
-            end: _selectedDate.value.copyWith(hour: 23, minute: 59, second: 59),
-          ),
-        ),
+        GetDayOffParams(dateRange: NullableDateRange(start: start, end: end)),
       );
 
       selectedDayOffInfos.success(data);

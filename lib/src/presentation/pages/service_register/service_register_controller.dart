@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wedding_service_module/core/module_configs.dart';
+import 'package:wedding_service_module/core/utils/extensions/objec_ext.dart';
 import 'package:wedding_service_module/core/utils/helpers/logger.dart';
+import 'package:wedding_service_module/core/utils/helpers/snack_bar_helper.dart';
 // import 'package:image_picker/image_picker.dart';
 import 'package:wedding_service_module/core/utils/mixins/local_attachment_picker_mixin.dart';
 import 'package:wedding_service_module/src/domain/models/image_model.dart';
@@ -37,7 +39,8 @@ class ServiceRegisterPageController extends GetxController
   Future<void> _loadUserServiceCategory() async {
     category.value = category.value.loading();
     try {
-      final userCategory = await _moduleConfig.getMyCategoryIdCallback!();
+      final id = await _moduleConfig.getMyCategoryIdCallback!();
+      final userCategory = await _weddingServiceService.getCategory(id);
       category.success(userCategory);
     } catch (e, stackTrace) {
       category.value = category.value.error(e.toString());
@@ -50,10 +53,25 @@ class ServiceRegisterPageController extends GetxController
   }
 
   Future<void> register() async {
-    if (!formKey.currentState!.validate()) {
-      return;
-    }
     try {
+      if (category.value.isNullOrEmpty) {
+        SnackBarHelper.show(
+          message:
+              'Hiện không lấy được danh mục dịch vụ. Vui lòng thử lại sau.',
+          type: SnackBarType.error,
+        );
+        return;
+      }
+      if (state.value.status.isLoading) {
+        return;
+      }
+
+      if (!state.value.isError) {
+        if (formKey.currentState?.validate() == false) {
+          return;
+        }
+      }
+
       state.value = state.value.loading(message: 'Đang đăng ký dịch vụ...');
 
       if (!attachmentPicker.isAllUploaded) {
@@ -74,13 +92,18 @@ class ServiceRegisterPageController extends GetxController
           description: serviceDescription.value,
           unit: serviceUnit.value,
           price: double.parse(servicePrice.value),
-          category: category.value.data!,
+          category: category.value.data ?? ServiceCategoryModel.empty(),
           images: images,
         ),
       );
 
       state.value = state.value.success(true);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Logger.logCritical(
+        e.toString(),
+        stackTrace: stackTrace,
+        name: 'ServiceRegisterSheetController.register',
+      );
       state.value = state.value.error(
         'Đăng ký dịch vụ thất bại, vui lòng thử lại sau.',
       );

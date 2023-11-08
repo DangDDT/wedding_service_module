@@ -5,6 +5,7 @@ import 'package:wedding_service_module/src/domain/enums/private/wedding_service_
 import 'package:wedding_service_module/src/domain/models/wedding_service_model.dart';
 import 'package:wedding_service_module/src/domain/requests/get_wedding_service_param.dart';
 import 'package:wedding_service_module/src/domain/services/interfaces/i_wedding_service_service.dart';
+import 'package:wedding_service_module/src/presentation/pages/service_canlendar/service_calendar_page_controller.dart';
 import 'package:wedding_service_module/src/presentation/view_models/nullable_daterange.dart';
 import 'package:wedding_service_module/src/presentation/view_models/state_data_view_model.dart';
 
@@ -17,8 +18,7 @@ class PartnerServiceDashboardPageController extends GetxController {
   //RevenueStats
   final dateRange = const NullableDateRange().obs;
 
-  //WeekCalendarView
-  final selectedDate = DateTime.now().obs;
+  final dayOffCalendarDashboardController = ServiceCalendarPageController();
 
   @override
   void onInit() {
@@ -27,6 +27,7 @@ class PartnerServiceDashboardPageController extends GetxController {
       start: date?.start,
       end: date?.end,
     );
+    dayOffCalendarDashboardController.selectedDate = DateTime.now();
     fetchRecentAddedServices();
     super.onInit();
   }

@@ -76,7 +76,7 @@ class MyApp extends StatelessWidget {
         await wds.WeddingServiceModule.login(
           userConfig: const wds.UserConfig(userId: 12),
           onGetMyCategoryCallback: () async {
-            return wds.ServiceCategoryModel.empty();
+            return '';
           },
         );
       },

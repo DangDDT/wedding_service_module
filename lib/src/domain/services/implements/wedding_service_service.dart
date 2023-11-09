@@ -35,6 +35,9 @@ class WeddingServiceService extends IWeddingServiceService {
         pageSize: param.pageSize,
         sortKey: param.orderBy,
         sortOrder: param.orderType,
+        createdAtFrom: param.fromDate,
+        createdAtTo: param.toDate,
+        name: param.name,
       ),
     );
 

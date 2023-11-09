@@ -70,7 +70,8 @@ class WeddingServiceMapper
       actualRevenue: DefaultValueMapperConstants.defaultDoubleValue,
 
       /// Cung cấp thêm đơn vị tính của service
-      unit: DefaultValueMapperConstants.defaultStringValue,
+      unit: entity.unit?.toString() ??
+          DefaultValueMapperConstants.defaultStringValue,
 
       /// Cung cấp thêm thông tin về tỉ lệ hoa hồng của service (bằng với category luôn á)
       commissionRate: DefaultValueMapperConstants.defaultDoubleValue,

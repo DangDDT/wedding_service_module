@@ -20,6 +20,7 @@ class SnackBarHelper {
       ),
       isDismissible: true,
       snackPosition: SnackPosition.BOTTOM,
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, 24),
     );
 
     Get.showSnackbar(snackBar);

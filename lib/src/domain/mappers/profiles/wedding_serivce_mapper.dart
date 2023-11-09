@@ -52,17 +52,18 @@ class WeddingServiceMapper
       registeredAt: DefaultValueMapperConstants.defaultDateTimeValue,
 
       ///Cung cấp thêm thông tin về thống kê của service
-      profitStatement: const ProfitStatementModel(
+      profitStatement: ProfitStatementModel(
         /// Cung cấp thêm thông tin về tổng số sản phẩm đã cung cấp
         /// - Số lượng quantity của các đơn hàng (ở đây chắc bằng với số order luôn á tại quantity = 1)
-        totalProductProvided: DefaultValueMapperConstants.defaultIntValue,
+        totalProductProvided: entity.used ?? 0,
 
         /// - Cung cấp thêm tổng doanh thu mà service đã thu về qua các đơn hàng
         /// - Giá này là giá mà chưa trừ đi phần hoa hồng cho cửa hàng
-        totalRevenue: DefaultValueMapperConstants.defaultDoubleValue,
+        totalRevenue: entity.totalRevenue ?? 0,
 
         /// - Cung cấp thêm tổng số đơn hàng đã được đặt
-        totalOrder: DefaultValueMapperConstants.defaultIntValue,
+        //TODO: Đang chưa có thông tin về đơn hàng
+        totalOrder: entity.used,
       ),
 
       /// Cung cấp thêm thông tin về doanh thu của service

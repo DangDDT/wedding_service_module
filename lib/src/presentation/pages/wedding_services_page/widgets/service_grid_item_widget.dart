@@ -180,7 +180,7 @@ class _ServiceInfos extends StatelessWidget {
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  service.price.toVietNamCurrency(),
+                  '${service.price.toVietNamCurrency()}/${service.unit}',
                   style: context.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w500,
                     color: Colors.white,

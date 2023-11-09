@@ -250,7 +250,7 @@ class _PriceAndRevenue extends GetView<ServiceDetailPageController> {
               kGapH12,
               _buildServiceInfoItem(
                 'Giá',
-                state.price.toVietNamCurrency(),
+                '${state.price.toVietNamCurrency()} /${state.unit}',
               ),
               kGapH4,
               _buildServiceInfoItem(

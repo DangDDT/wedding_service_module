@@ -250,7 +250,7 @@ class _ServiceGridView extends GetView<WeddingServicesPageController> {
       onRefresh: () async => controller.pagingController.refresh(),
       child: PagedGridView<int, WeddingServiceModel>(
         pagingController: controller.pagingController,
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.fromLTRB(12, 12, 12, 40),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: .66,

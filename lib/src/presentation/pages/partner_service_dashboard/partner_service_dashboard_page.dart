@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:wedding_service_module/core/constants/ui_constant.dart';
 import 'package:wedding_service_module/src/presentation/pages/partner_service_dashboard/partner_service_dashboard_page_controller.dart';
 import 'package:wedding_service_module/src/presentation/pages/partner_service_dashboard/widgets/recent_added_service.dart';
-import 'package:wedding_service_module/src/presentation/pages/partner_service_dashboard/widgets/recent_transactions_view.dart';
 import 'package:wedding_service_module/src/presentation/pages/partner_service_dashboard/widgets/revenue_stats.dart';
 import 'package:wedding_service_module/src/presentation/pages/partner_service_dashboard/widgets/week_service_calendar_view.dart';
 
@@ -31,8 +30,8 @@ class PartnerServiceDashboardPage extends StatelessWidget {
                 RevenueStats(),
                 kGapH24,
                 WeekCalendarView(),
-                kGapH24,
-                RecentTransactionsView()
+                // kGapH24,
+                // RecentTransactionsView()
               ],
             ),
           ),

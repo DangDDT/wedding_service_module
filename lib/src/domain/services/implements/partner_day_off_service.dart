@@ -17,7 +17,7 @@ class PartnerDayOffService implements IPartnerDayOffService {
       body: PostDayOffBody(
         day: partnerDayOff.date,
         reason: partnerDayOff.reason,
-        serviceId: partnerDayOff.id,
+        serviceId: partnerDayOff.weddingService.id,
       ),
     );
 

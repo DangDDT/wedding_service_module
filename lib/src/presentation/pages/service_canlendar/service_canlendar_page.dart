@@ -72,6 +72,11 @@ class _CalendarView extends GetView<ServiceCalendarPageController> {
           final range = NullableDateRange(start: startOfMonth, end: endOfMonth);
           controller.onViewingDateRangeChanged(range);
         },
+        eventLoader: (day) {
+          return controller.dayOffInMonth.value
+              .where((element) => isSameDay(element.date, day))
+              .toList();
+        },
         firstDay: DateTime(1900),
         lastDay: DateTime(2100),
       ),

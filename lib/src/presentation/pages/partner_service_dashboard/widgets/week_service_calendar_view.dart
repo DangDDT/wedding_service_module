@@ -65,6 +65,12 @@ class WeekCalendarView extends GetView<PartnerServiceDashboardPageController> {
               controller.dayOffCalendarDashboardController.selectedDate =
                   focusedDay;
             },
+            eventLoader: (day) {
+              return controller
+                  .dayOffCalendarDashboardController.dayOffInMonth.value
+                  .where((element) => isSameDay(element.date, day))
+                  .toList();
+            },
             currentDay: DateTime.now(),
             firstDay: DateTime(1900),
             lastDay: DateTime(2100),

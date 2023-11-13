@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wedding_service_module/core/utils/helpers/logger.dart';
 import 'package:wedding_service_module/core/utils/helpers/snack_bar_helper.dart';
 import 'package:wedding_service_module/src/domain/models/day_off_info_model.dart.dart';
+import 'package:wedding_service_module/src/domain/models/wedding_service_model.dart';
 import 'package:wedding_service_module/src/domain/requests/get_day_offs_param.dart';
 import 'package:wedding_service_module/src/domain/services/interfaces/i_partner_day_off_service.dart';
 import 'package:wedding_service_module/src/presentation/pages/service_canlendar/widgets/add_day_off_bottom_sheet.dart';
@@ -9,14 +11,25 @@ import 'package:wedding_service_module/src/presentation/view_models/nullable_dat
 import 'package:wedding_service_module/src/presentation/view_models/state_data_view_model.dart';
 
 class ServiceCalendarPageController extends GetxController {
+  ServiceCalendarPageController({this.currentService});
+
+  /// The service that is being viewed
+  ///
+  /// If null, the view will be in the mode of showing all services
+  final WeddingServiceModel? currentService;
+  //View data
+  final calendarKey = UniqueKey().obs;
   final viewingDateRange = const NullableDateRange().obs;
   final _partnerDayOffService = Get.find<IPartnerDayOffService>();
   final _selectedDate = DateTime.now().obs;
+  final focusDate = DateTime.now().obs;
   final selectedDayOffInfos = StateDataVM<List<DayOffInfoModel>>(null).obs;
-  final dayOffInMonth = RxList<DayOffInfoModel>().obs;
+  final dayOffInMonth = RxList<DayOffInfoModel>();
 
   @override
   void onInit() {
+    selectedDate = DateTime.now();
+
     final startOfMonth = DateTime(
       _selectedDate.value.year,
       _selectedDate.value.month,
@@ -32,17 +45,26 @@ class ServiceCalendarPageController extends GetxController {
       start: startOfMonth,
       end: endOfMonth,
     );
-    // selectedDate = DateTime.now();
+
+    super.onInit();
+  }
+
+  @override
+  void onReady() {
     _loadDayOffInMonth();
     loadDayOffInDay();
-    super.onInit();
+    super.onReady();
   }
 
   DateTime get selectedDateValue => _selectedDate.value;
 
-  Future<void> onViewingDateRangeChanged(NullableDateRange range) async {
-    viewingDateRange.value = range;
-    await _loadDayOffInMonth();
+  void onFocusDateChanged(DateTime date) {
+    focusDate.value = date;
+    viewingDateRange.value = NullableDateRange(
+      start: DateTime(date.year, date.month, 1),
+      end: DateTime(date.year, date.month + 1, 0),
+    );
+    _loadDayOffInMonth();
   }
 
   set selectedDate(DateTime date) {
@@ -53,15 +75,11 @@ class ServiceCalendarPageController extends GetxController {
   Future<void> _loadDayOffInMonth() async {
     try {
       final data = await _partnerDayOffService.getPartnerDayOffs(
-        GetDayOffParams(
-          dateRange: viewingDateRange.value,
-        ),
+        GetDayOffParams(dateRange: viewingDateRange.value),
       );
 
-      dayOffInMonth.update((val) {
-        val?.clear();
-        val?.addAll(data);
-      });
+      dayOffInMonth.call(data);
+      calendarKey.value = UniqueKey();
     } catch (e, stackTrace) {
       Logger.logCritical(e.toString(), stackTrace: stackTrace);
     }
@@ -95,7 +113,10 @@ class ServiceCalendarPageController extends GetxController {
 
   Future<void> addDayOffInfo() async {
     final newInfo = await Get.bottomSheet(
-      const AddDayOffBottomSheet(),
+      AddDayOffBottomSheet(
+        selectedDate: selectedDateValue,
+        selectedService: null,
+      ),
       isDismissible: true,
       isScrollControlled: true,
     );

@@ -27,7 +27,10 @@ class AddDayOffController extends GetxController {
   AddDayOffController({
     WeddingServiceModel? weddingService,
     DateTime? date,
-  });
+  }) : super() {
+    selectedWeddingService.value = weddingService;
+    selectedDate.value = date;
+  }
 
   @override
   void onInit() {

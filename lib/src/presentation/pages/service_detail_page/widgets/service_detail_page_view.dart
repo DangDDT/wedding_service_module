@@ -254,7 +254,7 @@ class _PriceAndRevenue extends GetView<ServiceDetailPageController> {
               ),
               kGapH4,
               _buildServiceInfoItem(
-                'Tỉ lệ hoa hồng:',
+                'Tỉ lệ chiết khấu:',
                 state.commissionRate == null
                     ? 'Chưa cập nhật'
                     : '${((state.commissionRate ?? 0) * 100).toStringAsFixed(2)}%',
@@ -268,7 +268,7 @@ class _PriceAndRevenue extends GetView<ServiceDetailPageController> {
               ),
               kGapH12,
               Text(
-                '* Doanh thu thực tế được tính dựa trên tỉ lệ hoa hồng và giá bán ra.',
+                '* Doanh thu thực tế được tính dựa trên tỉ lệ chiết khấu và giá bán ra.',
                 style: kTextTheme.labelMedium?.copyWith(
                   fontWeight: FontWeight.w400,
                   color: kTheme.hintColor,

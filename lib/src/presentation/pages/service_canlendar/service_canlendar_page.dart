@@ -2,90 +2,122 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:wedding_service_module/core/constants/ui_constant.dart';
+import 'package:wedding_service_module/core/routes/arguments/service_calendar_args.dart';
 import 'package:wedding_service_module/core/utils/extensions/datetime_ext.dart';
 import 'package:wedding_service_module/core/utils/extensions/objec_ext.dart';
 import 'package:wedding_service_module/src/domain/models/day_off_info_model.dart.dart';
 import 'package:wedding_service_module/src/presentation/pages/service_canlendar/service_calendar_page_controller.dart';
-import 'package:wedding_service_module/src/presentation/view_models/nullable_daterange.dart';
 import 'package:wedding_service_module/src/presentation/widgets/error_widget.dart';
 import 'package:wedding_service_module/src/presentation/widgets/loading_widget.dart';
 
-class ServiceCalendarPage extends GetView<ServiceCalendarPageController> {
+class ServiceCalendarPage extends StatelessWidget {
   const ServiceCalendarPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Lịch dịch vụ'),
-        scrolledUnderElevation: 0,
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: controller.addDayOffInfo,
-        child: const Icon(Icons.add),
-      ),
-      body: const Column(
-        children: [
-          _CalendarView(),
-          kGapH12,
-          Expanded(
-            child: _DayDetailInfo(),
+    final args = Get.arguments as ServiceCalendarArgs?;
+    final service = args?.service;
+    return GetBuilder<ServiceCalendarPageController>(
+      init: ServiceCalendarPageController(currentService: service),
+      global: false,
+      builder: (controller) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Lịch dịch vụ'),
+            scrolledUnderElevation: 0,
           ),
-        ],
-      ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: controller.addDayOffInfo,
+            child: const Icon(Icons.add),
+          ),
+          body: Column(
+            children: [
+              _CalendarView(controller),
+              kGapH12,
+              Expanded(
+                child: _DayDetailInfo(controller),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
 
-class _CalendarView extends GetView<ServiceCalendarPageController> {
-  const _CalendarView();
+class _CalendarView extends StatelessWidget {
+  const _CalendarView(this.controller);
+
+  final ServiceCalendarPageController controller;
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => TableCalendar(
-        locale: 'vi_VN',
-        calendarFormat: CalendarFormat.month,
-        calendarStyle: CalendarStyle(
-          selectedDecoration: BoxDecoration(
-            color: kTheme.colorScheme.primary,
-            shape: BoxShape.circle,
+    return StreamBuilder(
+      stream: controller.dayOffInMonth.stream,
+      builder: (context, snapshot) => Obx(() {
+        return TableCalendar(
+          // currentDay: DateTime.now(),
+          daysOfWeekHeight: 32,
+          eventLoader: _getDayOffInMonth,
+          firstDay: DateTime(1900),
+          lastDay: DateTime(2100),
+          startingDayOfWeek: StartingDayOfWeek.monday,
+          locale: 'vi_VN',
+          calendarFormat: CalendarFormat.month,
+          calendarStyle: CalendarStyle(
+            markerDecoration: BoxDecoration(
+              color: kTheme.colorScheme.secondary,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.white.withOpacity(0.5),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            selectedTextStyle: TextStyle(
+              color: kTheme.colorScheme.onPrimary,
+              fontWeight: FontWeight.bold,
+            ),
+            selectedDecoration: BoxDecoration(
+              color: kTheme.colorScheme.primary,
+              shape: BoxShape.circle,
+            ),
+            todayDecoration: BoxDecoration(
+              color: kTheme.colorScheme.primary.withOpacity(0.2),
+              shape: BoxShape.circle,
+            ),
+            todayTextStyle: TextStyle(
+              color: kTheme.colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          todayDecoration: BoxDecoration(
-            color: kTheme.colorScheme.primary.withOpacity(0.2),
-            shape: BoxShape.circle,
-          ),
-          todayTextStyle: TextStyle(
-            color: kTheme.colorScheme.primary,
-          ),
-        ),
-        availableCalendarFormats: const {CalendarFormat.month: 'Tháng'},
-        focusedDay: controller.selectedDateValue,
-        selectedDayPredicate: (day) =>
-            isSameDay(day, controller.selectedDateValue),
-        onDaySelected: (selectedDay, focusedDay) {
-          controller.selectedDate = selectedDay;
-        },
-        onPageChanged: (focusedDay) {
-          final startOfMonth = DateTime(focusedDay.year, focusedDay.month, 1);
-          final endOfMonth = DateTime(focusedDay.year, focusedDay.month + 1, 0);
-          final range = NullableDateRange(start: startOfMonth, end: endOfMonth);
-          controller.onViewingDateRangeChanged(range);
-        },
-        eventLoader: (day) {
-          return controller.dayOffInMonth.value
-              .where((element) => isSameDay(element.date, day))
-              .toList();
-        },
-        firstDay: DateTime(1900),
-        lastDay: DateTime(2100),
-      ),
+          availableCalendarFormats: const {CalendarFormat.month: 'Tháng'},
+          focusedDay: controller.focusDate.value,
+          selectedDayPredicate: (day) =>
+              isSameDay(day, controller.selectedDateValue),
+          onDaySelected: (selectedDay, focusedDay) {
+            controller.focusDate.value = focusedDay;
+            controller.selectedDate = selectedDay;
+          },
+          onPageChanged: controller.onFocusDateChanged,
+        );
+      }),
     );
+  }
+
+  List<DayOffInfoModel> _getDayOffInMonth(DateTime day) {
+    return controller.dayOffInMonth
+        .where((element) => isSameDay(element.date, day))
+        .toList();
   }
 }
 
-class _DayDetailInfo extends GetView<ServiceCalendarPageController> {
-  const _DayDetailInfo();
+class _DayDetailInfo extends StatelessWidget {
+  const _DayDetailInfo(this.controller);
+
+  final ServiceCalendarPageController controller;
 
   @override
   Widget build(BuildContext context) {

@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import 'package:wedding_service_module/core/constants/ui_constant.dart';
-import 'package:wedding_service_module/core/utils/extensions/num_ext.dart';
 import 'package:wedding_service_module/src/domain/enums/private/wedding_service_state.dart';
 import 'package:wedding_service_module/src/presentation/pages/service_detail_page/service_detail_page_controller.dart';
 
@@ -202,8 +201,8 @@ class _ActiveServiceView extends GetView<ServiceDetailPageController> {
     final partnerService = controller.state.value.data;
     final profitStatement = partnerService?.profitStatement;
     final data = [
-      ('Số Lượt Đặt', profitStatement?.totalOrder ?? 0, 'lượt'),
       ('Đã cung cấp', profitStatement?.totalProductProvided ?? 0, 'sp'),
+      ('Số Lượt Đặt', (profitStatement?.totalRevenue ?? 0).truncate(), 'đ'),
     ];
     return Column(
       children: [
@@ -214,11 +213,12 @@ class _ActiveServiceView extends GetView<ServiceDetailPageController> {
               style: kTextTheme.bodyMedium,
               children: [
                 const TextSpan(
-                  text: 'Bắt đầu kinh doanh từ ',
+                  text: 'Đăng ký vào ',
                 ),
                 TextSpan(
                   text: DateFormat('EEEE, HH:mm dd/MM/yyyy', 'vi')
-                      .format(partnerService!.registeredAt),
+                      .format(partnerService!.registeredAt)
+                      .toLowerCase(),
                   style: kTextTheme.bodyMedium,
                 ),
                 const TextSpan(
@@ -266,22 +266,22 @@ class _ActiveServiceView extends GetView<ServiceDetailPageController> {
               )
               .toList(),
         ),
-        kGapH8,
-        Text(
-          'Tổng doanh thu:',
-          style: kTextTheme.labelLarge?.copyWith(
-            fontWeight: FontWeight.w500,
-            color: kTheme.hintColor,
-          ),
-        ),
-        kGapH8,
-        Text(
-          (profitStatement?.totalRevenue ?? 0).toVietNamCurrency(),
-          style: kTextTheme.headlineMedium?.copyWith(
-            fontWeight: FontWeight.w500,
-            color: kTheme.colorScheme.primary,
-          ),
-        ),
+        // kGapH8,
+        // Text(
+        //   'Tổng doanh thu:',
+        //   style: kTextTheme.labelLarge?.copyWith(
+        //     fontWeight: FontWeight.w500,
+        //     color: kTheme.hintColor,
+        //   ),
+        // ),
+        // kGapH8,
+        // Text(
+        //   (profitStatement?.totalRevenue ?? 0).toVietNamCurrency(),
+        //   style: kTextTheme.headlineMedium?.copyWith(
+        //     fontWeight: FontWeight.w500,
+        //     color: kTheme.colorScheme.primary,
+        //   ),
+        // ),
         kGapH28,
         SizedBox(
           width: double.infinity,

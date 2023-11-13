@@ -13,10 +13,7 @@ import 'package:wedding_service_module/src/domain/services/interfaces/i_wedding_
 
 class WeddingServicesPageController extends GetxController {
   WeddingServicesPageController({
-    this.viewWeddingServiceStates = const [
-      WeddingServiceState.active,
-      WeddingServiceState.suspended,
-    ],
+    this.viewWeddingServiceStates = WeddingServiceState.values,
   });
   final _weddingServiceService = Get.find<IWeddingServiceService>();
 

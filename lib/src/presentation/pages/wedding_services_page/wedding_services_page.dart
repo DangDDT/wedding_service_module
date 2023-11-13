@@ -11,46 +11,57 @@ import 'package:wedding_service_module/src/domain/models/wedding_service_model.d
 import 'package:wedding_service_module/src/presentation/pages/wedding_services_page/wedding_services_page_controller.dart';
 import 'package:wedding_service_module/src/presentation/pages/wedding_services_page/widgets/service_grid_item_widget.dart';
 import 'package:wedding_service_module/src/presentation/widgets/auto_centerd_item_listview.dart';
-import 'package:wedding_service_module/src/presentation/widgets/expandable_fab.dart';
 import 'package:wedding_service_module/src/presentation/widgets/loading_widget.dart';
 import 'package:wedding_service_module/src/presentation/widgets/radio_filter_button.dart';
 
 import '../../widgets/empty_handler.dart';
 
-class WeddingServicesPage extends GetView<WeddingServicesPageController> {
+class WeddingServicesPage extends StatelessWidget {
   const WeddingServicesPage({super.key});
 
-  @override
-  String? get tag => bindingTag;
+  // @override
+  // String? get tag => bindingTag;
 
   static const bindingTag = 'WeddingServicesPage';
 
   @override
   Widget build(BuildContext context) {
-    return KeyboardDismisser(
-      child: Scaffold(
-        // appBar: _CustomAppBar(controller),
-        floatingActionButton: ExpandableFab(
-          directAction: ActionButton(
+    return GetBuilder(
+      init: WeddingServicesPageController(),
+      tag: bindingTag,
+      builder: (ctl) => KeyboardDismisser(
+        child: Scaffold(
+          // appBar: _CustomAppBar(controller),
+          floatingActionButton: FloatingActionButton.extended(
             onPressed: () => Get.toNamed(
               ModuleRouter.weddingServiceRegisterRoute,
             ),
             label: const Text('Thêm mới'),
-            icon: const Icon(CupertinoIcons.add),
+            icon: const Icon(Icons.add),
+            // child: const Text('Thêm mới'),
           ),
-          actions: [
-            ActionButton(
-              onPressed: () => Get.toNamed(
-                ModuleRouter.requestingServiceRoute,
-              ),
-              label: const Text('Danh sách chờ duyệt'),
-              icon: const Icon(Icons.pending_actions),
-            ),
-          ],
-        ),
-        body: const Scaffold(
-          appBar: _CustomAppBar(),
-          body: _ServiceGridView(),
+          // floatingActionButton: ExpandableFab(
+          //   directAction: ActionButton(
+          //     onPressed: () => Get.toNamed(
+          //       ModuleRouter.weddingServiceRegisterRoute,
+          //     ),
+          //     label: const Text('Thêm mới'),
+          //     icon: const Icon(CupertinoIcons.add),
+          //   ),
+          //   actions: [
+          //     ActionButton(
+          //       onPressed: () => Get.toNamed(
+          //         ModuleRouter.requestingServiceRoute,
+          //       ),
+          //       label: const Text('Danh sách chờ duyệt'),
+          //       icon: const Icon(Icons.pending_actions),
+          //     ),
+          //   ],
+          // ),
+          body: const Scaffold(
+            appBar: _CustomAppBar(),
+            body: _ServiceGridView(),
+          ),
         ),
       ),
     );
@@ -249,8 +260,10 @@ class _ServiceGridView extends GetView<WeddingServicesPageController> {
     return RefreshIndicator(
       onRefresh: () async => controller.pagingController.refresh(),
       child: PagedGridView<int, WeddingServiceModel>(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         pagingController: controller.pagingController,
-        padding: const EdgeInsets.fromLTRB(12, 12, 12, 40),
+        showNoMoreItemsIndicatorAsGridChild: false,
+        padding: const EdgeInsets.fromLTRB(12, 12, 12, 72),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: .66,

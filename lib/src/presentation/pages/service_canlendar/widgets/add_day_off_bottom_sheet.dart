@@ -11,12 +11,22 @@ import 'package:wedding_service_module/src/presentation/widgets/loading_widget.d
 import 'package:wedding_service_module/src/presentation/widgets/selection_button.dart';
 
 class AddDayOffBottomSheet extends StatelessWidget {
-  const AddDayOffBottomSheet({super.key});
+  const AddDayOffBottomSheet({
+    super.key,
+    this.selectedService,
+    this.selectedDate,
+  });
+
+  final WeddingServiceModel? selectedService;
+  final DateTime? selectedDate;
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AddDayOffController>(
-      init: AddDayOffController(),
+      init: AddDayOffController(
+        weddingService: selectedService,
+        date: selectedDate,
+      ),
       builder: (controller) => SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
         child: KeyboardDismisser(

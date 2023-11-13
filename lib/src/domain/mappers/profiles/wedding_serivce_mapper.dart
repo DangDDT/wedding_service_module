@@ -58,7 +58,7 @@ class WeddingServiceMapper
         totalProductProvided: entity.used ?? 0,
 
         /// - Cung cấp thêm tổng doanh thu mà service đã thu về qua các đơn hàng
-        /// - Giá này là giá mà chưa trừ đi phần hoa hồng cho cửa hàng
+        /// - Giá này là giá mà chưa trừ đi phần chiết khấu cho cửa hàng
         totalRevenue: entity.totalRevenue ?? 0,
 
         /// - Cung cấp thêm tổng số đơn hàng đã được đặt
@@ -67,14 +67,14 @@ class WeddingServiceMapper
       ),
 
       /// Cung cấp thêm thông tin về doanh thu của service
-      /// - Giá này là giá đã trừ đi phần hoa hồng cho cửa hàng
+      /// - Giá này là giá đã trừ đi phần chiết khấu cho cửa hàng
       actualRevenue: DefaultValueMapperConstants.defaultDoubleValue,
 
       /// Cung cấp thêm đơn vị tính của service
       unit: entity.unit?.toString() ??
           DefaultValueMapperConstants.defaultStringValue,
 
-      /// Cung cấp thêm thông tin về tỉ lệ hoa hồng của service (bằng với category luôn á)
+      /// Cung cấp thêm thông tin về tỉ lệ chiết khấu của service (bằng với category luôn á)
       commissionRate: DefaultValueMapperConstants.defaultDoubleValue,
     );
   }

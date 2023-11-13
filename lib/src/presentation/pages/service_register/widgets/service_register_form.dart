@@ -111,7 +111,7 @@ class _ServiceCategory extends GetView<ServiceRegisterPageController> {
                             ),
                           ),
                           Text(
-                            'Tỉ lệ hoa hồng: ${controller.category.value.data!.commissionRate}%',
+                            'Tỉ lệ chiết khấu: ${controller.category.value.data!.commissionRate}%',
                             style: kTextTheme.bodyMedium,
                           ),
                           Text(
@@ -296,7 +296,7 @@ class _ServicePriceInput extends GetView<ServiceRegisterPageController> {
           },
         ),
         Text(
-          '* Lợi nhuận thực tế = Giá dịch vụ - (Giá dịch vụ * Tỉ lệ hoa hồng)',
+          '* Lợi nhuận thực tế = Giá dịch vụ - (Giá dịch vụ * Tỉ lệ chiết khấu)',
           style: TextStyle(
             color: kTheme.hintColor,
           ),

@@ -92,7 +92,8 @@ class _Header extends GetView<AddDayOffController> {
           child: Obx(
             () => AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
-              child: controller.selectedWeddingService.value == null
+              child: (controller.selectedWeddingService.value == null ||
+                      !controller.canPickService.value)
                   ? const SizedBox.shrink()
                   : TextButton.icon(
                       onPressed: () =>

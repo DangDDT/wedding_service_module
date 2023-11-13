@@ -6,6 +6,7 @@ import 'package:wedding_service_module/core/utils/helpers/snack_bar_helper.dart'
 import 'package:wedding_service_module/src/domain/models/wedding_service_model.dart';
 import 'package:wedding_service_module/src/domain/services/interfaces/i_wedding_service_service.dart';
 import 'package:wedding_service_module/src/presentation/view_models/state_data_view_model.dart';
+import 'package:wedding_service_module/src/presentation/widgets/contact_us_bottom_sheet.dart';
 
 class ServiceDetailPageController extends GetxController {
   ServiceDetailPageController({
@@ -111,6 +112,18 @@ class ServiceDetailPageController extends GetxController {
   }
 
   Future<void> suspendService() async {
+    final choose = await Get.defaultDialog<bool>(
+      title: 'Ngừng dịch vụ',
+      middleText: 'Bạn có chắc muốn ngừng dịch vụ này không?',
+      textConfirm: 'Đồng ý',
+      textCancel: 'Hủy',
+      contentPadding: const EdgeInsets.all(16),
+    );
+
+    if (choose != true) {
+      return;
+    }
+
     try {
       final results = await _weddingServiceService.suspendService(serviceId);
       if (results) {
@@ -131,8 +144,7 @@ class ServiceDetailPageController extends GetxController {
   }
 
   Future<void> contactUs() async {
-    //TODO: implement contact us
-    throw UnimplementedError();
+    await ContactUsBottomSheet.show();
   }
 
   Future<void> pushToSalesHistoryPage() async {

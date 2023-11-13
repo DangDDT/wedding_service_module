@@ -75,7 +75,10 @@ class ServiceCalendarPageController extends GetxController {
   Future<void> _loadDayOffInMonth() async {
     try {
       final data = await _partnerDayOffService.getPartnerDayOffs(
-        GetDayOffParams(dateRange: viewingDateRange.value),
+        GetDayOffParams(
+          serviceId: currentService?.id,
+          dateRange: viewingDateRange.value,
+        ),
       );
 
       dayOffInMonth.call(data);
@@ -101,7 +104,10 @@ class ServiceCalendarPageController extends GetxController {
         isUtc: true,
       );
       final data = await _partnerDayOffService.getPartnerDayOffs(
-        GetDayOffParams(dateRange: NullableDateRange(start: start, end: end)),
+        GetDayOffParams(
+          serviceId: currentService?.id,
+          dateRange: NullableDateRange(start: start, end: end),
+        ),
       );
 
       selectedDayOffInfos.success(data);
@@ -115,7 +121,7 @@ class ServiceCalendarPageController extends GetxController {
     final newInfo = await Get.bottomSheet(
       AddDayOffBottomSheet(
         selectedDate: selectedDateValue,
-        selectedService: null,
+        selectedService: currentService,
       ),
       isDismissible: true,
       isScrollControlled: true,

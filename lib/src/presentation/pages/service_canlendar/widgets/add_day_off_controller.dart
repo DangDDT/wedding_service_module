@@ -14,7 +14,8 @@ import 'package:wedding_service_module/src/domain/services/interfaces/i_wedding_
 
 class AddDayOffController extends GetxController {
   final _weddingServiceService = Get.find<IWeddingServiceService>();
-
+  //view data
+  final canPickService = true.obs;
   final _partnerDayOffService = Get.find<IPartnerDayOffService>();
   final selectedWeddingService = Rxn<WeddingServiceModel>();
   final selectedDate = Rxn<DateTime>();
@@ -30,6 +31,9 @@ class AddDayOffController extends GetxController {
   }) : super() {
     selectedWeddingService.value = weddingService;
     selectedDate.value = date;
+    if (weddingService != null) {
+      canPickService.value = false;
+    }
   }
 
   @override

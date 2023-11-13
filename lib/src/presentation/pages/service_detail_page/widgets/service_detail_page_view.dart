@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:photo_browser/photo_browser.dart';
 import 'package:wedding_service_module/core/constants/ui_constant.dart';
+import 'package:wedding_service_module/core/routes/arguments/service_calendar_args.dart';
+import 'package:wedding_service_module/core/routes/module_router.dart';
 import 'package:wedding_service_module/core/utils/extensions/num_ext.dart';
+import 'package:wedding_service_module/src/domain/enums/private/wedding_service_state.dart';
 import 'package:wedding_service_module/src/presentation/pages/service_detail_page/service_detail_page_controller.dart';
 import 'package:wedding_service_module/src/presentation/pages/service_detail_page/widgets/service_bussiness_situation_view.dart';
 import 'package:wedding_service_module/src/presentation/widgets/page_count_widget.dart';
@@ -73,6 +76,31 @@ class _AppBar extends GetView<ServiceDetailPageController> {
             ),
           ),
         ),
+        actions: [
+          if (controller.state.value.data?.state.isActive == true)
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withOpacity(
+                  (1 - controller.appBarOpacity.value).clamp(0, 1).toDouble(),
+                ),
+              ),
+              margin: const EdgeInsets.only(right: 8),
+              child: IconButton(
+                tooltip: 'Lịch bận',
+                onPressed: () => Get.toNamed(
+                  ModuleRouter.weddingServiceCalendarRoute,
+                  arguments: ServiceCalendarArgs(
+                    service: controller.state.value.data!,
+                  ),
+                ),
+                icon: Icon(
+                  Icons.calendar_month,
+                  color: context.theme.colorScheme.primary,
+                ),
+              ),
+            ),
+        ],
         scrolledUnderElevation: 0,
         elevation: 0,
         foregroundColor: controller.appBarOpacity.value > 0.5
@@ -108,28 +136,13 @@ class _ServiceImages extends GetView<ServiceDetailPageController> {
       controller: PhotoBrowserController(),
       allowTapToPop: false,
       allowSwipeDownToPop: false,
-      // If allowPullDownToPop is true, the allowTapToPop setting is invalid.
-      // 如果allowPullDownToPop为true，则allowTapToPop设置无效
       allowPullDownToPop: true,
       heroTagBuilder: (int index) {
         return images[index].imageUrl;
       },
-      // Large images setting.
-      // 大图设置
       imageUrlBuilder: (int index) {
         return images[index].imageUrl;
       },
-      // Thumbnails setting.
-      // 缩略图设置
-      // thumbImageUrlBuilder: (int index) {
-      // return _thumbPhotos[index];
-      // },
-      // positions: (BuildContext context) =>
-      //     <Positioned>[_buildCloseBtn(context)],
-      // positionBuilders: <PositionBuilder>[
-      //   _buildSaveImageBtn,
-      //   _buildGuide,
-      // ],
       loadFailedChild: const Center(
         child: Icon(
           Icons.image_not_supported_outlined,
@@ -160,7 +173,7 @@ class _ServiceImages extends GetView<ServiceDetailPageController> {
                 return GestureDetector(
                   onTap: () => viewImage(index),
                   child: Hero(
-                    tag: image.imageUrl,
+                    tag: Key(image.imageUrl),
                     child: ExtendedImage.network(image.imageUrl,
                         fit: BoxFit.cover,
                         loadStateChanged: (state) =>

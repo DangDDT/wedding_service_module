@@ -6,36 +6,53 @@ import 'package:wedding_service_module/core/constants/ui_constant.dart';
 import 'package:wedding_service_module/src/presentation/pages/partner_service_dashboard/partner_service_dashboard_page_controller.dart';
 import 'package:wedding_service_module/src/presentation/widgets/stats_date_range_picker.dart';
 
-class RevenueStats extends GetView<PartnerServiceDashboardPageController> {
-  const RevenueStats({super.key});
+class RevenueStats extends StatelessWidget {
+  const RevenueStats({
+    super.key,
+    this.controller,
+  });
+
+  final PartnerServiceDashboardPageController? controller;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Doanh thu',
-          style: Get.textTheme.titleLarge,
-        ),
-        kGapH8,
-        Obx(
-          () => StatsDateRangePicker(
-            value: controller.dateRange.value,
-            onDateRangeChanged: controller.dateRange,
-          ),
-        ),
-        kGapH24,
-        const _TotalRevenueStat(),
-        kGapH32,
-        const _RevenueColChart(),
-      ],
+    return GetBuilder<PartnerServiceDashboardPageController>(
+      init: controller ?? PartnerServiceDashboardPageController(),
+      initState: (_) {},
+      builder: (controller) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Doanh thu',
+              style: Get.textTheme.titleLarge,
+            ),
+            kGapH8,
+            Obx(
+              () => StatsDateRangePicker(
+                value: controller.dateRange.value,
+                onDateRangeChanged: controller.dateRange,
+              ),
+            ),
+            kGapH24,
+            _TotalRevenueStat(
+              controller: controller,
+            ),
+            kGapH32,
+            _RevenueColChart(controller),
+          ],
+        );
+      },
     );
   }
 }
 
 class _TotalRevenueStat extends StatelessWidget {
-  const _TotalRevenueStat();
+  const _TotalRevenueStat({
+    this.controller,
+  });
+
+  final PartnerServiceDashboardPageController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -81,8 +98,10 @@ class _TotalRevenueStat extends StatelessWidget {
   }
 }
 
-class _RevenueColChart extends GetView<PartnerServiceDashboardPageController> {
-  const _RevenueColChart();
+class _RevenueColChart extends StatelessWidget {
+  const _RevenueColChart(this.controller);
+
+  final PartnerServiceDashboardPageController controller;
 
   @override
   Widget build(BuildContext context) {

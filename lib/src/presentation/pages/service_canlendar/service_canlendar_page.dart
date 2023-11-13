@@ -6,6 +6,7 @@ import 'package:wedding_service_module/core/routes/arguments/service_calendar_ar
 import 'package:wedding_service_module/core/utils/extensions/datetime_ext.dart';
 import 'package:wedding_service_module/core/utils/extensions/objec_ext.dart';
 import 'package:wedding_service_module/src/domain/models/day_off_info_model.dart.dart';
+import 'package:wedding_service_module/src/domain/models/wedding_service_model.dart';
 import 'package:wedding_service_module/src/presentation/pages/service_canlendar/service_calendar_page_controller.dart';
 import 'package:wedding_service_module/src/presentation/widgets/error_widget.dart';
 import 'package:wedding_service_module/src/presentation/widgets/loading_widget.dart';
@@ -15,8 +16,11 @@ class ServiceCalendarPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final args = Get.arguments as ServiceCalendarArgs?;
-    final service = args?.service;
+    final args = Get.arguments;
+    WeddingServiceModel? service;
+    if (args is ServiceCalendarArgs) {
+      service = args.service;
+    }
     return GetBuilder<ServiceCalendarPageController>(
       init: ServiceCalendarPageController(currentService: service),
       global: false,

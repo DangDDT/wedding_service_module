@@ -205,7 +205,9 @@ class _ActiveServiceView extends GetView<ServiceDetailPageController> {
       ('Đã cung cấp', profitStatement?.totalProductProvided ?? 0, 'sp'),
       (
         'Tổng doanh thu',
-        (profitStatement?.totalRevenue ?? 0).truncate().toVietNamCurrency(),
+        (profitStatement?.totalRevenue ?? 0)
+            .truncate()
+            .toVietNamCurrency(withSymbol: false),
         'đ'
       ),
     ];

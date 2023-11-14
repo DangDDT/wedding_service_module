@@ -75,8 +75,9 @@ extension IntNullExt on int? {
 }
 
 extension NumExt on num {
-  String toVietNamCurrency() {
-    return NumberFormat.currency(locale: 'vi', symbol: 'đ', decimalDigits: 0)
+  String toVietNamCurrency({bool withSymbol = true}) {
+    return NumberFormat.currency(
+            locale: 'vi', symbol: withSymbol ? 'đ' : '', decimalDigits: 0)
         .format(this);
   }
 }

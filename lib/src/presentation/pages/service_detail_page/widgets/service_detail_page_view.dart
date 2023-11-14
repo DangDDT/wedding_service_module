@@ -270,7 +270,7 @@ class _PriceAndRevenue extends GetView<ServiceDetailPageController> {
                 'Tỉ lệ chiết khấu:',
                 state.commissionRate == null
                     ? 'Chưa cập nhật'
-                    : '${((state.commissionRate ?? 0) * 100).toStringAsFixed(2)}%',
+                    : '${((state.commissionRate ?? 0)).toStringAsFixed(2)}%',
               ),
               kGapH4,
               _buildServiceInfoItem(

@@ -202,7 +202,7 @@ class _ActiveServiceView extends GetView<ServiceDetailPageController> {
     final profitStatement = partnerService?.profitStatement;
     final data = [
       ('Đã cung cấp', profitStatement?.totalProductProvided ?? 0, 'sp'),
-      ('Số Lượt Đặt', (profitStatement?.totalRevenue ?? 0).truncate(), 'đ'),
+      ('Tổng doanh thu', (profitStatement?.totalRevenue ?? 0).truncate(), 'đ'),
     ];
     return Column(
       children: [

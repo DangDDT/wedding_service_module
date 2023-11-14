@@ -8,6 +8,7 @@ import 'package:wedding_service_module/src/domain/requests/get_wedding_service_p
 import 'package:wedding_service_module/src/domain/services/interfaces/i_wedding_service_service.dart';
 import 'package:wss_repository/entities/category.dart' show Category;
 import 'package:wss_repository/entities/service.dart' show Service;
+import 'package:wss_repository/requests/put_status_service_body.dart';
 import 'package:wss_repository/wss_repository.dart';
 
 class WeddingServiceService extends IWeddingServiceService {
@@ -75,7 +76,13 @@ class WeddingServiceService extends IWeddingServiceService {
 
   @override
   Future<bool> reActiveService(String id) async {
-    throw UnimplementedError();
+    final result = await _serviceRepository.putStatusService(
+      id: id,
+      body: PutStatusServiceBody(
+        status: WeddingServiceState.active.toStringCode(),
+      ),
+    );
+    return result;
   }
 
   @override

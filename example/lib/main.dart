@@ -86,7 +86,7 @@ class MyApp extends StatelessWidget {
 
 class PageViewController extends GetxController {
   final pages = <Widget>[
-    const wds.PartnerServiceDashboardPage(),
+    // const wds.PartnerServiceDashboardPage(),
     const DashboardPage(),
   ];
   final currentIndex = 0.obs;

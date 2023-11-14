@@ -19,9 +19,6 @@ class WeddingServiceMapper
           DefaultValueMapperConstants.defaultStringValue,
       rating: entity.rating?.toDouble() ??
           DefaultValueMapperConstants.defaultDoubleValue,
-      // category: (entity.category != null)
-      //     ? mapper.mapData<Category, ServiceCategoryModel>(entity.category!)
-      //     : ServiceCategoryModel.empty(),
       category: entity.category == null
           ? ServiceCategoryModel.empty()
           : ServiceCategoryModel(
@@ -49,7 +46,8 @@ class WeddingServiceMapper
           [],
 
       /// Cung cấp thêm data của ngày tạo của service (nếu có ngày duyệt càng tốt)
-      registeredAt: DefaultValueMapperConstants.defaultDateTimeValue,
+      registeredAt:
+          entity.createDate ?? DefaultValueMapperConstants.defaultDateTimeValue,
 
       ///Cung cấp thêm thông tin về thống kê của service
       profitStatement: ProfitStatementModel(
@@ -62,20 +60,22 @@ class WeddingServiceMapper
         totalRevenue: entity.totalRevenue ?? 0,
 
         /// - Cung cấp thêm tổng số đơn hàng đã được đặt
-        //TODO: Đang chưa có thông tin về đơn hàng
         totalOrder: entity.used,
       ),
 
       /// Cung cấp thêm thông tin về doanh thu của service
       /// - Giá này là giá đã trừ đi phần chiết khấu cho cửa hàng
-      actualRevenue: DefaultValueMapperConstants.defaultDoubleValue,
+      actualRevenue: (entity.currentPrices?.price ?? 0) -
+          (entity.currentPrices?.price ?? 0) *
+              ((entity.category?.commission?.commisionValue?.toDouble() ?? 0) /
+                  100),
 
       /// Cung cấp thêm đơn vị tính của service
       unit: entity.unit?.toString() ??
           DefaultValueMapperConstants.defaultStringValue,
 
-      /// Cung cấp thêm thông tin về tỉ lệ chiết khấu của service (bằng với category luôn á)
-      commissionRate: DefaultValueMapperConstants.defaultDoubleValue,
+      commissionRate: entity.category?.commission?.commisionValue?.toDouble() ??
+          DefaultValueMapperConstants.defaultDoubleValue,
     );
   }
 }

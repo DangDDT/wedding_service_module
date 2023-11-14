@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import 'package:wedding_service_module/core/constants/ui_constant.dart';
+import 'package:wedding_service_module/core/utils/extensions/num_ext.dart';
 import 'package:wedding_service_module/src/domain/enums/private/wedding_service_state.dart';
 import 'package:wedding_service_module/src/presentation/pages/service_detail_page/service_detail_page_controller.dart';
 
@@ -202,7 +203,11 @@ class _ActiveServiceView extends GetView<ServiceDetailPageController> {
     final profitStatement = partnerService?.profitStatement;
     final data = [
       ('Đã cung cấp', profitStatement?.totalProductProvided ?? 0, 'sp'),
-      ('Tổng doanh thu', (profitStatement?.totalRevenue ?? 0).truncate(), 'đ'),
+      (
+        'Tổng doanh thu',
+        (profitStatement?.totalRevenue ?? 0).truncate().toVietNamCurrency(),
+        'đ'
+      ),
     ];
     return Column(
       children: [

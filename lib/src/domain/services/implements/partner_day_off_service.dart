@@ -36,6 +36,7 @@ class PartnerDayOffService implements IPartnerDayOffService {
     final result = await _dayOffRepo.getDayOffs(
       param: GetDayOffParam(
         //TODO: get by serviceId
+        serviceId: params.serviceId,
         fromDate: params.dateRange.start,
         toDate: params.dateRange.end,
         status: null,

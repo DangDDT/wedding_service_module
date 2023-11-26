@@ -26,6 +26,7 @@ class RequestingServicePage extends GetView<WeddingServicesPageController> {
       child: Scaffold(
         appBar: const _CustomAppBar(),
         floatingActionButton: FloatingActionButton(
+          heroTag: UniqueKey(),
           onPressed: () => Get.toNamed(
             ModuleRouter.weddingServiceRegisterRoute,
           ),

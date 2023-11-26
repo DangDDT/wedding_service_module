@@ -137,9 +137,6 @@ class _ServiceImages extends GetView<ServiceDetailPageController> {
       allowTapToPop: false,
       allowSwipeDownToPop: false,
       allowPullDownToPop: true,
-      heroTagBuilder: (int index) {
-        return images[index].imageUrl;
-      },
       imageUrlBuilder: (int index) {
         return images[index].imageUrl;
       },
@@ -172,21 +169,18 @@ class _ServiceImages extends GetView<ServiceDetailPageController> {
                 final image = controller.state.value.data!.images[index];
                 return GestureDetector(
                   onTap: () => viewImage(index),
-                  child: Hero(
-                    tag: Key(image.imageUrl),
-                    child: ExtendedImage.network(image.imageUrl,
-                        fit: BoxFit.cover,
-                        loadStateChanged: (state) =>
-                            state.extendedImageLoadState == LoadState.failed
-                                ? const Center(
-                                    child: Icon(
-                                      Icons.image_not_supported_outlined,
-                                      size: 48,
-                                      color: Colors.grey,
-                                    ),
-                                  )
-                                : null),
-                  ),
+                  child: ExtendedImage.network(image.imageUrl,
+                      fit: BoxFit.cover,
+                      loadStateChanged: (state) =>
+                          state.extendedImageLoadState == LoadState.failed
+                              ? const Center(
+                                  child: Icon(
+                                    Icons.image_not_supported_outlined,
+                                    size: 48,
+                                    color: Colors.grey,
+                                  ),
+                                )
+                              : null),
                 );
               },
             ),

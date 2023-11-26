@@ -29,6 +29,7 @@ class WeddingServiceService extends IWeddingServiceService {
       param: GetServiceParam(
         status: param.status != null ? [param.status!.toStringCode()] : null,
         //TODO: check to change from date to date
+        categoryId: param.categoryId,
         checkDate: null,
         priceFrom: param.priceFrom,
         priceTo: param.priceTo,

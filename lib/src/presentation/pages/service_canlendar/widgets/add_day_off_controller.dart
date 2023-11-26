@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_workers/utils/debouncer.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:wedding_service_module/core/module_configs.dart';
 import 'package:wedding_service_module/core/utils/extensions/paging_controller_ext.dart';
 import 'package:wedding_service_module/core/utils/helpers/logger.dart';
 import 'package:wedding_service_module/src/domain/enums/private/loading_enum.dart';
@@ -13,6 +14,7 @@ import 'package:wedding_service_module/src/domain/services/interfaces/i_partner_
 import 'package:wedding_service_module/src/domain/services/interfaces/i_wedding_service_service.dart';
 
 class AddDayOffController extends GetxController {
+  final config = ModuleConfig.instance;
   final _weddingServiceService = Get.find<IWeddingServiceService>();
   //view data
   final canPickService = true.obs;
@@ -54,12 +56,13 @@ class AddDayOffController extends GetxController {
 
   Future<List<WeddingServiceModel>> fetchServices(int pageKey) async {
     try {
+      final String? categoryId = await config.getMyCategoryIdCallback?.call();
       final data = await _weddingServiceService.getServices(
         GetWeddingServiceParam(
           status: WeddingServiceState.active,
           fromDate: null,
           toDate: null,
-          categoryId: null,
+          categoryId: categoryId,
           name: null,
           priceFrom: null,
           priceTo: null,

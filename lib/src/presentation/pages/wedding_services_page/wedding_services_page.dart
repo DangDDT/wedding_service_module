@@ -33,6 +33,7 @@ class WeddingServicesPage extends StatelessWidget {
         child: Scaffold(
           // appBar: _CustomAppBar(controller),
           floatingActionButton: FloatingActionButton.extended(
+            heroTag: UniqueKey(),
             onPressed: () => Get.toNamed(
               ModuleRouter.weddingServiceRegisterRoute,
             ),

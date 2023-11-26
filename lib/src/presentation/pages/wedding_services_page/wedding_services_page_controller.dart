@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_workers/utils/debouncer.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:wedding_service_module/core/module_configs.dart';
 import 'package:wedding_service_module/core/utils/extensions/paging_controller_ext.dart';
 import 'package:wedding_service_module/core/utils/helpers/logger.dart';
 import 'package:wedding_service_module/src/domain/enums/private/wedding_service_state.dart';
@@ -16,7 +17,7 @@ class WeddingServicesPageController extends GetxController {
     this.viewWeddingServiceStates = WeddingServiceState.values,
   });
   final _weddingServiceService = Get.find<IWeddingServiceService>();
-
+  final config = ModuleConfig.instance;
   late final PagingController<int, WeddingServiceModel> pagingController;
   final List<WeddingServiceState> viewWeddingServiceStates;
   final isShowSearch = false.obs;
@@ -94,12 +95,13 @@ class WeddingServicesPageController extends GetxController {
 
   Future<List<WeddingServiceModel>> fetchServices(int pageKey) async {
     try {
+      final String? categoryId = await config.getMyCategoryIdCallback?.call();
       final data = await _weddingServiceService.getServices(
         GetWeddingServiceParam(
           status: currentStateTab.value,
           fromDate: filterData.value?.dateRange?.start,
           toDate: filterData.value?.dateRange?.end,
-          categoryId: null,
+          categoryId: categoryId,
           name: searchController.text,
           priceFrom: filterData.value?.revenueRange.start,
           priceTo: filterData.value?.revenueRange.end,

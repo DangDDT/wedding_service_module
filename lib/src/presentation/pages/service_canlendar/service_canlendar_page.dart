@@ -31,6 +31,7 @@ class ServiceCalendarPage extends StatelessWidget {
             scrolledUnderElevation: 0,
           ),
           floatingActionButton: FloatingActionButton(
+            heroTag: UniqueKey(),
             onPressed: controller.addDayOffInfo,
             child: const Icon(Icons.add),
           ),

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:wedding_service_module/core/module_configs.dart';
 import 'package:wedding_service_module/core/utils/helpers/logger.dart';
 import 'package:wedding_service_module/src/domain/enums/private/stats_time_range_type_enum.dart';
 import 'package:wedding_service_module/src/domain/enums/private/wedding_service_state.dart';
@@ -10,6 +11,8 @@ import 'package:wedding_service_module/src/presentation/view_models/nullable_dat
 import 'package:wedding_service_module/src/presentation/view_models/state_data_view_model.dart';
 
 class PartnerServiceDashboardPageController extends GetxController {
+  final config = ModuleConfig.instance;
+
   final _weddingServiceService = Get.find<IWeddingServiceService>();
   //Recent added services
   final _maxRecentAddedServiceCount = 5;
@@ -40,12 +43,13 @@ class PartnerServiceDashboardPageController extends GetxController {
   Future<void> fetchRecentAddedServices() async {
     try {
       recentAddedServices.loading();
+      final String? categoryId = await config.getMyCategoryIdCallback?.call();
       final services = await _weddingServiceService.getServices(
         GetWeddingServiceParam(
           status: WeddingServiceState.active,
           fromDate: null,
           toDate: null,
-          categoryId: null,
+          categoryId: categoryId,
           name: null,
           priceFrom: null,
           priceTo: null,

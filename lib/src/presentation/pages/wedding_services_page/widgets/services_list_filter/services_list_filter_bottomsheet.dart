@@ -181,7 +181,6 @@ class _DateRangePicker extends GetView<ServicesListFilterController> {
                 label: 'Từ',
                 content: controller.filterData.value.dateRange?.start
                     .toDateReadable(),
-                isNull: controller.filterData.value.dateRange?.start == null,
                 onPressed: controller.pickRegisterStartDate,
               ),
             ),
@@ -192,7 +191,6 @@ class _DateRangePicker extends GetView<ServicesListFilterController> {
                 label: 'Đến',
                 content:
                     controller.filterData.value.dateRange?.end.toDateReadable(),
-                isNull: controller.filterData.value.dateRange?.end == null,
                 onPressed: controller.pickRegisterEndDate,
               ),
             ),

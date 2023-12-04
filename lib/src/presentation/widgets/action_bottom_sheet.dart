@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ActionBottomSheet<T> extends StatelessWidget {
   const ActionBottomSheet({
@@ -28,6 +29,25 @@ class ActionBottomSheet<T> extends StatelessWidget {
   final double? draggerHeight;
   final double? draggerWidth;
   final Color? draggerColor;
+
+  Future<T?> show() async {
+    final result = await Get.bottomSheet(
+      this,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(12),
+          topRight: Radius.circular(12),
+        ),
+      ),
+    );
+
+    if (result == null) {
+      return null;
+    }
+
+    return result as T;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +98,12 @@ class ActionBottomSheet<T> extends StatelessWidget {
                           child: Text(
                             title!,
                             style: titleTextStyle ??
-                                Theme.of(context).textTheme.titleMedium,
+                                Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
                           ),
                         ),
                       if (subTitle != null)

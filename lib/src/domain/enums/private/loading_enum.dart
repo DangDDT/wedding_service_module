@@ -1,5 +1,5 @@
 enum LoadingState {
-  idle,
+  initial,
   loading,
   success,
   error,
@@ -13,5 +13,5 @@ enum LoadingState {
 
   bool get isEmpty => this == LoadingState.empty;
 
-  bool get isInitial => this == LoadingState.idle;
+  bool get isInitial => this == LoadingState.initial;
 }

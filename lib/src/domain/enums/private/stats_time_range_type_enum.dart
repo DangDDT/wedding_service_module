@@ -1,8 +1,8 @@
 import 'package:wedding_service_module/src/presentation/view_models/nullable_daterange.dart';
 
 enum StatsTimeRangeType {
-  /// The last 365 days
-  last365Days,
+  /// The last 7 days
+  last7Days,
 
   /// The last 30 days
   last30Days,
@@ -10,8 +10,8 @@ enum StatsTimeRangeType {
   /// The last 90 days
   last90Days,
 
-  /// The last 7 days
-  last7Days,
+  /// The last 365 days
+  last365Days,
 
   /// All time
   allTime,
@@ -29,7 +29,7 @@ extension StatsTimeRangeTypeExtension on StatsTimeRangeType {
       case StatsTimeRangeType.last30Days:
         return '1 Tháng';
       case StatsTimeRangeType.last90Days:
-        return '1 Quý';
+        return '3 Tháng';
       case StatsTimeRangeType.last365Days:
         return '1 Năm';
       case StatsTimeRangeType.allTime:

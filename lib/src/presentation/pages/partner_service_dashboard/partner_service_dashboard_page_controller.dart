@@ -3,6 +3,8 @@ import 'package:wedding_service_module/core/module_configs.dart';
 import 'package:wedding_service_module/core/utils/helpers/logger.dart';
 import 'package:wedding_service_module/src/domain/enums/private/stats_time_range_type_enum.dart';
 import 'package:wedding_service_module/src/domain/enums/private/wedding_service_state.dart';
+import 'package:wedding_service_module/src/domain/mock/dummy.dart';
+import 'package:wedding_service_module/src/domain/models/transaction_model.dart';
 import 'package:wedding_service_module/src/domain/models/wedding_service_model.dart';
 import 'package:wedding_service_module/src/domain/requests/get_wedding_service_param.dart';
 import 'package:wedding_service_module/src/domain/services/interfaces/i_wedding_service_service.dart';
@@ -20,8 +22,11 @@ class PartnerServiceDashboardPageController extends GetxController {
 
   //RevenueStats
   final dateRange = const NullableDateRange().obs;
-
   final dayOffCalendarDashboardController = ServiceCalendarPageController();
+
+  //Recent Transactions
+  final _maxRecentTransactionCount = 5;
+  final recentTransactions = StateDataVM<List<TransactionModel>>(null).obs;
 
   @override
   void onInit() {
@@ -32,6 +37,7 @@ class PartnerServiceDashboardPageController extends GetxController {
     );
     dayOffCalendarDashboardController.selectedDate = DateTime.now();
     fetchRecentAddedServices();
+    fetchRecentTransactions();
     super.onInit();
   }
 
@@ -64,6 +70,35 @@ class PartnerServiceDashboardPageController extends GetxController {
     } catch (e, stackTrace) {
       Logger.logCritical(e.toString(), stackTrace: stackTrace);
       recentAddedServices.error('Có lỗi xảy ra, vui lòng thử lại sau');
+    }
+  }
+
+  Future<void> fetchRecentTransactions() async {
+    try {
+      recentTransactions.loading();
+
+      // final transactions = await _weddingServiceService.getTransactions(
+      //   GetWeddingServiceParam(
+      //     status: WeddingServiceState.active,
+      //     fromDate: dateRange.value?.start,
+      //     toDate: dateRange.value?.end,
+      //     categoryId: null,
+      //     name: null,
+      //     priceFrom: null,
+      //     priceTo: null,
+      //     pageIndex: 0,
+      //     pageSize: _maxRecentTransactionCount,
+      //     orderBy: 'PaidAt',
+      //     orderType: 'DESC',
+      //   ),
+      // );
+      final transactions =
+          DummyData().transactions.take(_maxRecentTransactionCount).toList();
+
+      recentTransactions.success(transactions);
+    } catch (e, stackTrace) {
+      Logger.logCritical(e.toString(), stackTrace: stackTrace);
+      recentTransactions.error('Có lỗi xảy ra, vui lòng thử lại sau');
     }
   }
 }

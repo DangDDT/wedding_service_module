@@ -166,7 +166,6 @@ class _StatsDateRangePickerState extends State<StatsDateRangePicker> {
                                   child: SelectionButton(
                                     icon: Icons.calendar_today_outlined,
                                     content: widget.value?.start?.toReadable(),
-                                    isNull: widget.value?.start == null,
                                     onPressed: () => _pickDate(true),
                                   ),
                                 ),
@@ -175,7 +174,6 @@ class _StatsDateRangePickerState extends State<StatsDateRangePicker> {
                                   child: SelectionButton(
                                     icon: Icons.calendar_today_outlined,
                                     content: widget.value?.end?.toReadable(),
-                                    isNull: widget.value?.end == null,
                                     onPressed: () => _pickDate(false),
                                   ),
                                 ),

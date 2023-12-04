@@ -22,7 +22,7 @@ class AddDayOffController extends GetxController {
   final selectedWeddingService = Rxn<WeddingServiceModel>();
   final selectedDate = Rxn<DateTime>();
   final reason = RxString('');
-  final addingState = Rx<LoadingState>(LoadingState.idle);
+  final addingState = Rx<LoadingState>(LoadingState.initial);
   late final PagingController<int, WeddingServiceModel> pagingController;
   late final TextEditingController searchController;
   final _debouncer = Debouncer(delay: const Duration(milliseconds: 500));

@@ -229,7 +229,6 @@ class _AddDayOffForm extends GetView<AddDayOffController> {
                       SelectionButton(
                         content: controller.selectedDate.value?.toReadable() ??
                             'Chọn ngày nghỉ',
-                        isNull: controller.selectedDate.value == null,
                         onPressed: controller.pickDayOff,
                       ),
                       kGapH12,

@@ -7,7 +7,7 @@ class StateDataVM<T> {
   StateDataVM(
     this.data, {
     this.message,
-    this.status = LoadingState.idle,
+    this.status = LoadingState.initial,
   });
 
   final LoadingState status;
@@ -75,7 +75,7 @@ class StateDataVM<T> {
     );
   }
 
-  bool get isInitial => status == LoadingState.idle;
+  bool get isInitial => status == LoadingState.initial;
 
   bool get isLoading => status == LoadingState.loading;
 
@@ -128,6 +128,9 @@ extension StateDataVmRxX<T> on Rx<StateDataVM<T>> {
       value.data != [] ||
       value.data != {} ||
       (value.data).toString().trim() != '';
+
+  /// Check if the state is initial or loading and has no data
+  bool get isInitialLoading => (value.isInitial || value.isLoading) && !hasData;
 
   void loading({String? message}) {
     value = value.loading(message: message);

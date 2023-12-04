@@ -7,6 +7,8 @@ import 'package:wedding_service_module/src/presentation/pages/service_detail_pag
 import 'package:wedding_service_module/src/presentation/pages/service_detail_page/service_detail_page.dart';
 import 'package:wedding_service_module/src/presentation/pages/service_register/service_register_page.dart';
 import 'package:wedding_service_module/src/presentation/pages/service_register/service_register_page_binding.dart';
+import 'package:wedding_service_module/src/presentation/pages/transactions_page/transactions_page.dart';
+import 'package:wedding_service_module/src/presentation/pages/transactions_page/transactions_page_binding.dart';
 import 'package:wedding_service_module/src/presentation/pages/wedding_services_page/wedding_servicce_page_binding.dart';
 import 'package:wedding_service_module/src/presentation/pages/wedding_services_page/wedding_services_page.dart';
 
@@ -18,6 +20,7 @@ class ModuleRouter {
   static String weddingServiceRegisterRoute = '/wedding_service_register';
   static String weddingServiceCalendarRoute = '/wedding_service_calendar';
   static String requestingServiceRoute = '/requesting_service';
+  static String transactionsRoute = '/transactions';
 
   static final List<GetPage> routes = [
     GetPage<dynamic>(
@@ -44,6 +47,11 @@ class ModuleRouter {
       name: requestingServiceRoute,
       binding: RequestingServicePageBinding(),
       page: () => const RequestingServicePage(),
+    ),
+    GetPage(
+      name: transactionsRoute,
+      binding: TransactionsPageBinding(),
+      page: () => const TransactionsPage(),
     ),
   ];
 }

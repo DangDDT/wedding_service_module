@@ -109,3 +109,38 @@
 //     },
 //   );
 // }
+
+import 'package:wedding_service_module/src/domain/enums/private/transaction_status.dart';
+import 'package:wedding_service_module/src/domain/models/transaction_model.dart';
+
+class DummyData {
+  final transactions = [
+    TransactionModel(
+      id: '1',
+      title: 'Xe Vinfast VF e34',
+      description: 'Thanh toán dịch vụ 145A',
+      amount: 1000000,
+      createdAt: DateTime.now(),
+      paidAt: DateTime.now(),
+      status: TransactionStatus.paid,
+    ),
+    TransactionModel(
+      id: '2',
+      title: 'Xe Vinfast 4 chỗ',
+      description: 'Thanh toán dịch vụ 145A',
+      amount: 4000000,
+      createdAt: DateTime.now().subtract(const Duration(days: 8)),
+      paidAt: DateTime.now().subtract(const Duration(days: 1)),
+      status: TransactionStatus.paid,
+    ),
+    TransactionModel(
+      id: '3',
+      title: 'Xe Vinfast 7 chỗ',
+      description: 'Thanh toán dịch vụ 145A',
+      amount: 7000000,
+      createdAt: DateTime.now().subtract(const Duration(days: 8)),
+      paidAt: null,
+      status: TransactionStatus.pending,
+    ),
+  ];
+}

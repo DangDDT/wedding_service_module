@@ -9,7 +9,7 @@ class StateModel<T> {
   StateModel({
     required this.data,
   })  : errorMessage = Rxn(),
-        state = Rx<LoadingState>(LoadingState.idle);
+        state = Rx<LoadingState>(LoadingState.initial);
 
   bool get isLoading => state.value.isLoading;
 

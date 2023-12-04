@@ -57,7 +57,7 @@ class WeddingServiceService extends IWeddingServiceService {
     final addedService = await _serviceRepository.postService(
       body: PostServiceBody(
         name: service.name,
-        quantity: null,
+        quantity: 1,
         imageUrls: service.images.map((e) => e.imageUrl).toList(),
         categoryid: service.category.id,
         unit: service.unit,

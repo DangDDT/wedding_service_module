@@ -77,8 +77,7 @@ class WeddingServiceMapper
       commissionRate: entity.category?.commission?.commisionValue?.toDouble() ??
           DefaultValueMapperConstants.defaultDoubleValue,
       suspendedReason: entity.reason,
-      //TODO: add registerRejectedReason
-      registerRejectedReason: null,
+      registerRejectedReason: entity.reason,
     );
   }
 }

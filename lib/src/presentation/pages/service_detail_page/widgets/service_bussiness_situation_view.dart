@@ -181,7 +181,7 @@ class _RejectedServiceBuild extends GetView<ServiceDetailPageController> {
               children: [
                 TextSpan(
                   text: controller.state.value.data?.registerRejectedReason ??
-                      'Không rõ lý do từ chối đăng ký dịch vụ.',
+                      'Không có lý do từ chối đăng ký dịch vụ.',
                   style: kTextTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w500,
                   ),
@@ -365,7 +365,7 @@ class _SuspendedServiceView extends GetView<ServiceDetailPageController> {
               children: [
                 TextSpan(
                   text: controller.state.value.data?.suspendedReason ??
-                      'Không rõ lý do tạm ngưng kinh doanh dịch vụ.',
+                      'Không có lý do tạm ngưng kinh doanh dịch vụ.',
                   style: kTextTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w500,
                   ),

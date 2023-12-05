@@ -1,10 +1,12 @@
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:wedding_service_module/src/domain/enums/private/transaction_status.dart';
 import 'package:wedding_service_module/src/domain/mock/dummy.dart';
 import 'package:wedding_service_module/src/domain/models/transaction_model.dart';
 
 class TransactionsPageController extends GetxController {
   static const _pageSize = 20;
+  final status = 0.obs;
   final pagingController = PagingController<int, TransactionModel>(
     firstPageKey: 0,
   );
@@ -15,10 +17,17 @@ class TransactionsPageController extends GetxController {
     pagingController.addPageRequestListener(_onLoadMore);
   }
 
+  void changeStatus(int index) {
+    status.value = index;
+    pagingController.refresh();
+  }
+
   Future<void> _onLoadMore(int pageKey) async {
     // final newItems = await _fetchPage(pageKey);
+    final status = TransactionStatus.values[this.status.value];
     final newItems = DummyData()
         .transactions
+        .where((element) => status.isUnknown || element.status == status)
         .skip(pageKey * _pageSize)
         .take(_pageSize)
         .toList();

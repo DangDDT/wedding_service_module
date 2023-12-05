@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 enum TransactionStatus {
+  unknown,
   pending,
   paid,
-  unknown,
 }
 
 extension TransactionStatusX on TransactionStatus {

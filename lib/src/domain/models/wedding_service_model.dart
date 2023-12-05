@@ -19,6 +19,8 @@ class WeddingServiceModel {
     required this.state,
     required this.rating,
     required this.registeredAt,
+    required this.suspendedReason,
+    required this.registerRejectedReason,
   });
 
   factory WeddingServiceModel.onRegister({
@@ -44,6 +46,8 @@ class WeddingServiceModel {
       state: WeddingServiceState.active,
       rating: null,
       registeredAt: DateTime.now(),
+      suspendedReason: null,
+      registerRejectedReason: null,
     );
   }
 
@@ -73,4 +77,8 @@ class WeddingServiceModel {
   final DateTime registeredAt;
 
   final double? rating;
+
+  final String? suspendedReason;
+
+  final String? registerRejectedReason;
 }

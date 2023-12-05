@@ -9,5 +9,5 @@ abstract class IWeddingServiceService {
   Future<List<WeddingServiceModel>> getServices(GetWeddingServiceParam param);
   Future<bool> updateService(WeddingServiceModel service);
   Future<bool> reActiveService(String id);
-  Future<bool> suspendService(String id);
+  Future<bool> suspendService(String id, String reason);
 }

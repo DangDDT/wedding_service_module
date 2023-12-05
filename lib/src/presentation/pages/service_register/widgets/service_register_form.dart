@@ -165,7 +165,7 @@ class _ServiceNameInput extends GetView<ServiceRegisterPageController> {
         },
         onChanged: controller.serviceName,
         decoration: const InputDecoration(
-          hintText: 'Ví dụ: Máy ảnh, trang phục, ...',
+          hintText: 'Ví dụ: Xe Vinfast Lux SA2.0, Ban nhạc khai tiệc, ...',
         ),
       ),
     );

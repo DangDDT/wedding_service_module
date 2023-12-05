@@ -87,13 +87,13 @@ class WeddingServiceService extends IWeddingServiceService {
   }
 
   @override
-  Future<bool> suspendService(String id) async {
+  Future<bool> suspendService(String id, String reason) async {
     //TODO: check to change status
     final result = await _serviceRepository.putServiceStatus(
       id: id,
       body: PutServiceStatusBody(
         // : WeddingServiceState.active.toStringCode(),
-        reason: null,
+        reason: reason,
       ),
     );
 

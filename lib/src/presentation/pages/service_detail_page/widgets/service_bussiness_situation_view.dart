@@ -170,6 +170,25 @@ class _RejectedServiceBuild extends GetView<ServiceDetailPageController> {
               color: kTheme.colorScheme.error,
             ),
           ),
+          kGapH12,
+          Text.rich(
+            TextSpan(
+              text: 'Lý do: ',
+              style: kTextTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w500,
+                color: kTheme.hintColor,
+              ),
+              children: [
+                TextSpan(
+                  text: controller.state.value.data?.registerRejectedReason ??
+                      'Không rõ lý do từ chối đăng ký dịch vụ.',
+                  style: kTextTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                )
+              ],
+            ),
+          ),
           kGapH4,
           Text(
             'Vui lòng đăng ký lại hoặc liên hệ với chúng tôi để biết thêm chi tiết, xin cảm ơn!',
@@ -334,6 +353,24 @@ class _SuspendedServiceView extends GetView<ServiceDetailPageController> {
             style: kTextTheme.labelLarge?.copyWith(
               fontWeight: FontWeight.w500,
               color: kTheme.hintColor,
+            ),
+          ),
+          Text.rich(
+            TextSpan(
+              text: 'Lý do: ',
+              style: kTextTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w500,
+                color: kTheme.hintColor,
+              ),
+              children: [
+                TextSpan(
+                  text: controller.state.value.data?.suspendedReason ??
+                      'Không rõ lý do tạm ngưng kinh doanh dịch vụ.',
+                  style: kTextTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                )
+              ],
             ),
           ),
           kGapH8,

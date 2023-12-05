@@ -5,6 +5,7 @@ import 'package:wedding_service_module/core/utils/helpers/logger.dart';
 import 'package:wedding_service_module/core/utils/helpers/snack_bar_helper.dart';
 import 'package:wedding_service_module/src/domain/models/wedding_service_model.dart';
 import 'package:wedding_service_module/src/domain/services/interfaces/i_wedding_service_service.dart';
+import 'package:wedding_service_module/src/presentation/pages/service_detail_page/widgets/suspended_service/suspend_service_bottomsheet.dart';
 import 'package:wedding_service_module/src/presentation/view_models/state_data_view_model.dart';
 import 'package:wedding_service_module/src/presentation/widgets/contact_us_bottom_sheet.dart';
 
@@ -112,35 +113,14 @@ class ServiceDetailPageController extends GetxController {
   }
 
   Future<void> suspendService() async {
-    final choose = await Get.defaultDialog<bool>(
-      title: 'Ngừng dịch vụ',
-      middleText: 'Bạn có chắc muốn ngừng dịch vụ này không?',
-      textConfirm: 'Đồng ý',
-      textCancel: 'Hủy',
-      contentPadding: const EdgeInsets.all(16),
-    );
+    final isSuspended = await SuspendServiceBottomSheet(
+      serviceId: serviceId,
+    ).show();
 
-    if (choose != true) {
+    if (isSuspended != true) {
       return;
     }
-
-    try {
-      final results = await _weddingServiceService.suspendService(serviceId);
-      if (results) {
-        await fetchData();
-        SnackBarHelper.show(message: 'Đã ngừng dịch vụ thành công');
-      }
-    } catch (error, exception) {
-      SnackBarHelper.show(
-        message: 'Có lỗi xảy ra, vui lòng thử lại',
-        type: SnackBarType.error,
-      );
-      Logger.logCritical(
-        error.toString(),
-        stackTrace: exception,
-        name: 'ServiceDetailPageController.deActive',
-      );
-    }
+    await fetchData();
   }
 
   Future<void> contactUs() async {

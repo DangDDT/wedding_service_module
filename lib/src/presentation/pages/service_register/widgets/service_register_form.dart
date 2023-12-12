@@ -29,6 +29,7 @@ class RegisterForm extends GetView<ServiceRegisterPageController> {
               'Thông tin dịch vụ',
               style: kTextTheme.titleLarge?.copyWith(
                 color: kTheme.hintColor,
+                fontWeight: FontWeight.bold,
               ),
             ),
             Text(
@@ -50,6 +51,7 @@ class RegisterForm extends GetView<ServiceRegisterPageController> {
               'Hình ảnh dịch vụ',
               style: kTextTheme.titleMedium?.copyWith(
                 color: kTheme.hintColor,
+                fontWeight: FontWeight.bold,
               ),
             ),
             Text(
@@ -158,6 +160,7 @@ class _ServiceNameInput extends GetView<ServiceRegisterPageController> {
         'Tên dịch vụ *',
         style: kTextTheme.titleMedium?.copyWith(
           color: kTheme.hintColor,
+          fontWeight: FontWeight.bold,
         ),
       ),
       child: TextFormField(
@@ -191,6 +194,7 @@ class _ServiceDescriptionInput extends GetView<ServiceRegisterPageController> {
         'Mô tả dịch vụ *',
         style: kTextTheme.titleMedium?.copyWith(
           color: kTheme.hintColor,
+          fontWeight: FontWeight.bold,
         ),
       ),
       child: TextFormField(
@@ -221,6 +225,7 @@ class _ServiceUnitInput extends GetView<ServiceRegisterPageController> {
         'Đơn vị tính *',
         style: kTextTheme.titleMedium?.copyWith(
           color: kTheme.hintColor,
+          fontWeight: FontWeight.bold,
         ),
       ),
       child: TextFormField(
@@ -253,6 +258,7 @@ class _ServicePriceInput extends GetView<ServiceRegisterPageController> {
             'Giá dịch vụ *',
             style: kTextTheme.titleMedium?.copyWith(
               color: kTheme.hintColor,
+              fontWeight: FontWeight.bold,
             ),
           ),
           child: TextFormField(

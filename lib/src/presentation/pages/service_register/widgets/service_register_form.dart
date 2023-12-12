@@ -367,7 +367,7 @@ class _ServiceImageAttachments extends GetView<ServiceRegisterPageController> {
                     scrollDirection: Axis.horizontal,
                     itemCount: controller.attachments.length >
                             controller.attachmentPicker.maxAttachment
-                        ? controller.attachmentPicker.maxAttachment
+                        ? controller.attachmentPicker.maxAttachment + 1
                         : controller.attachments.length + 1,
                     itemBuilder: (context, index) {
                       if (index == controller.attachments.length &&

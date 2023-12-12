@@ -81,10 +81,17 @@ class _AttachmentPicker {
     if (result == null) return;
 
     if (result.data.isEmpty) return;
-
+    AttachmentResult? finalResult;
+    if (result.data.length > maxAttachment) {
+      finalResult = AttachmentResult(
+        data: result.data.take(maxAttachment).toList(),
+        type: result.type,
+      );
+    } else {
+      finalResult = result;
+    }
     try {
-      final medias = result.getImageAttachmentData();
-
+      final medias = finalResult.getImageAttachmentData();
       for (final item in medias) {
         final file = item.file;
         if (file == null) continue;

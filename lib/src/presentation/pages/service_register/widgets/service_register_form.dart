@@ -370,7 +370,9 @@ class _ServiceImageAttachments extends GetView<ServiceRegisterPageController> {
                         ? controller.attachmentPicker.maxAttachment
                         : controller.attachments.length + 1,
                     itemBuilder: (context, index) {
-                      if (index == controller.attachments.length) {
+                      if (index == controller.attachments.length &&
+                          controller.attachments.length <
+                              controller.attachmentPicker.maxAttachment) {
                         return AspectRatio(
                           aspectRatio: 1,
                           child: WrappedInkWell(

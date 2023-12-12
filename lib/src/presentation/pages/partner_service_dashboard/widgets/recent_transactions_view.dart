@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wedding_service_module/core/constants/ui_constant.dart';
-import 'package:wedding_service_module/core/routes/module_router.dart';
 import 'package:wedding_service_module/src/domain/enums/private/loading_enum.dart';
 import 'package:wedding_service_module/src/presentation/pages/partner_service_dashboard/partner_service_dashboard_page_controller.dart';
 import 'package:wedding_service_module/src/presentation/widgets/transaction_list_item.dart';
@@ -17,6 +16,7 @@ class RecentTransactionsView
       child: Column(
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
                 child: Text(
@@ -24,10 +24,10 @@ class RecentTransactionsView
                   style: context.textTheme.titleLarge,
                 ),
               ),
-              TextButton(
-                onPressed: () => Get.toNamed(ModuleRouter.transactionsRoute),
-                child: const Text('Xem tất cả'),
-              ),
+              // TextButton(
+              //   onPressed: () => Get.toNamed(ModuleRouter.transactionsRoute),
+              //   child: const Text('Xem tất cả'),
+              // ),
             ],
           ),
           kGapH8,

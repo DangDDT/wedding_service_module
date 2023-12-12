@@ -365,11 +365,13 @@ class _ServiceImageAttachments extends GetView<ServiceRegisterPageController> {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     separatorBuilder: (_, __) => kGapW8,
                     scrollDirection: Axis.horizontal,
-                    itemCount: controller.attachments.length + 1,
+                    itemCount: controller.attachments.length >
+                            controller.attachmentPicker.maxAttachment
+                        ? controller.attachmentPicker.maxAttachment
+                        : controller.attachments.length + 1,
                     itemBuilder: (context, index) {
                       if (index == controller.attachments.length &&
-                          index <=
-                              controller.attachmentPicker.maxAttachment - 1) {
+                          index < controller.attachmentPicker.maxAttachment) {
                         return AspectRatio(
                           aspectRatio: 1,
                           child: WrappedInkWell(

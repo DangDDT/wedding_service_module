@@ -79,19 +79,9 @@ class _AttachmentPicker {
     );
 
     if (result == null) return;
-
     if (result.data.isEmpty) return;
-    AttachmentResult? finalResult;
-    if (result.data.length > maxAttachment) {
-      finalResult = AttachmentResult(
-        data: result.data.take(maxAttachment).toList(),
-        type: result.type,
-      );
-    } else {
-      finalResult = result;
-    }
     try {
-      final medias = finalResult.getImageAttachmentData();
+      final medias = result.getImageAttachmentData();
       for (final item in medias) {
         final file = item.file;
         if (file == null) continue;
@@ -127,7 +117,10 @@ class _AttachmentPicker {
   Future<void> uploadAll() async {
     try {
       final uploadTasks = <Future>[];
-
+      if (attachments.isEmpty) return;
+      if (attachments.length > maxAttachment) {
+        attachments.removeRange(maxAttachment, attachments.length);
+      }
       for (int i = 0; i < attachments.length; i++) {
         if (attachments[i].state.isUploading ||
             attachments[i].state.isUploaded) {

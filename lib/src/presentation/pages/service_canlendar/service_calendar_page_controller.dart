@@ -133,4 +133,33 @@ class ServiceCalendarPageController extends GetxController {
       loadDayOffInDay();
     }
   }
+
+  Future<void> deleteDayOffInfo(DayOffInfoModel info) async {
+    try {
+      final isConfirm = await Get.dialog(
+        AlertDialog(
+          title: const Text('Xác nhận'),
+          content: const Text('Bạn có chắc chắn muốn xóa ngày nghỉ này?'),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(result: false),
+              child: const Text('Hủy'),
+            ),
+            TextButton(
+              onPressed: () => Get.back(result: true),
+              child: const Text('Xóa'),
+            ),
+          ],
+        ),
+      );
+      if (isConfirm != true) return;
+      await _partnerDayOffService.deletePartnerDayOff(info.id);
+      SnackBarHelper.show(message: 'Xóa ngày nghỉ thành công');
+      _loadDayOffInMonth();
+      loadDayOffInDay();
+    } catch (e, stackTrace) {
+      Logger.logCritical(e.toString(), stackTrace: stackTrace);
+      SnackBarHelper.show(message: 'Có lỗi xảy ra, vui lòng thử lại sau!');
+    }
+  }
 }

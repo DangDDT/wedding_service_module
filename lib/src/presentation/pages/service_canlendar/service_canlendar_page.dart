@@ -181,47 +181,70 @@ class _DayDetailInfo extends StatelessWidget {
   }
 
   Widget _buildDayOffInfo(DayOffInfoModel dayOffInfo) {
-    return Card(
-      elevation: 1,
-      child: Row(
-        children: [
-          Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              image: DecorationImage(
-                image: NetworkImage(
-                  dayOffInfo.weddingService.listImage.firstOrNull?.imageUrl ??
-                      '',
-                ),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          kGapW12,
-          Expanded(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  dayOffInfo.weddingService.name,
-                  style: kTextTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+    final isToDaOrAfter = dayOffInfo.date.isToDayOrAfter;
+    return Stack(
+      children: [
+        Card(
+          elevation: 1,
+          child: Row(
+            children: [
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      dayOffInfo
+                              .weddingService.listImage.firstOrNull?.imageUrl ??
+                          '',
+                    ),
+                    fit: BoxFit.cover,
                   ),
                 ),
-                kGapH4,
-                Text(
-                  'Lý do bận: ${dayOffInfo.reason} ',
-                  style: kTextTheme.bodyMedium,
+              ),
+              kGapW12,
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      dayOffInfo.weddingService.name,
+                      style: kTextTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    kGapH4,
+                    Text(
+                      'Lý do bận: ${dayOffInfo.reason} ',
+                      style: kTextTheme.bodyMedium,
+                    ),
+                    kGapH4,
+                  ],
                 ),
-                kGapH4,
-              ],
+              ),
+            ],
+          ),
+        ),
+        //Show delete button if is today or after
+        if (isToDaOrAfter)
+          Positioned(
+            top: 0,
+            right: 0,
+            child: IconButton.filledTonal(
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+              onPressed: () => controller.deleteDayOffInfo(dayOffInfo),
+              icon: const Icon(Icons.delete),
             ),
           ),
-        ],
-      ),
+      ],
     );
   }
 }

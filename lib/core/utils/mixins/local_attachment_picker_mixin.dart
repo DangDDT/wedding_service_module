@@ -92,6 +92,9 @@ class _AttachmentPicker {
           localPath: file.path,
           state: LocalAttachmentState.idle,
         );
+        if (attachments.length >= maxAttachment) {
+          break;
+        }
         attachments.add(attachment);
         formFieldKey.currentState?.didChange(attachments);
       }

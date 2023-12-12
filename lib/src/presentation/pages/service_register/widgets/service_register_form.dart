@@ -27,7 +27,9 @@ class RegisterForm extends GetView<ServiceRegisterPageController> {
             kGapH24,
             Text(
               'Thông tin dịch vụ',
-              style: kTextTheme.titleMedium,
+              style: kTextTheme.titleLarge?.copyWith(
+                color: kTheme.hintColor,
+              ),
             ),
             Text(
               'Các thông tin này sẽ được hiển thị cho khách hàng khi họ xem dịch vụ của bạn.',
@@ -46,10 +48,12 @@ class RegisterForm extends GetView<ServiceRegisterPageController> {
             kGapH24,
             Text(
               'Hình ảnh dịch vụ',
-              style: kTextTheme.titleMedium,
+              style: kTextTheme.titleMedium?.copyWith(
+                color: kTheme.hintColor,
+              ),
             ),
             Text(
-              'Chọn tối đa 5 hình ảnh cho dịch vụ của bạn. Hình ảnh đầu tiên sẽ được sử dụng làm ảnh đại diện cho dịch vụ.',
+              'Chọn tối đa ${controller.attachmentPicker.maxAttachment} hình ảnh cho dịch vụ của bạn. Hình ảnh đầu tiên sẽ được sử dụng làm ảnh đại diện cho dịch vụ.',
               style: TextStyle(
                 color: kTheme.hintColor,
               ),
@@ -150,7 +154,12 @@ class _ServiceNameInput extends GetView<ServiceRegisterPageController> {
   @override
   Widget build(BuildContext context) {
     return _LabelOnFieldWrapper(
-      title: const Text('Tên dịch vụ *'),
+      title: Text(
+        'Tên dịch vụ *',
+        style: kTextTheme.titleMedium?.copyWith(
+          color: kTheme.hintColor,
+        ),
+      ),
       child: TextFormField(
         textInputAction: TextInputAction.next,
         validator: (value) {
@@ -178,8 +187,11 @@ class _ServiceDescriptionInput extends GetView<ServiceRegisterPageController> {
   @override
   Widget build(BuildContext context) {
     return _LabelOnFieldWrapper(
-      title: const Text(
+      title: Text(
         'Mô tả dịch vụ *',
+        style: kTextTheme.titleMedium?.copyWith(
+          color: kTheme.hintColor,
+        ),
       ),
       child: TextFormField(
         maxLines: 5,
@@ -205,7 +217,12 @@ class _ServiceUnitInput extends GetView<ServiceRegisterPageController> {
   @override
   Widget build(BuildContext context) {
     return _LabelOnFieldWrapper(
-      title: const Text('Đơn vị tính *'),
+      title: Text(
+        'Đơn vị tính *',
+        style: kTextTheme.titleMedium?.copyWith(
+          color: kTheme.hintColor,
+        ),
+      ),
       child: TextFormField(
         textInputAction: TextInputAction.next,
         validator: (value) {
@@ -232,7 +249,12 @@ class _ServicePriceInput extends GetView<ServiceRegisterPageController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _LabelOnFieldWrapper(
-          title: const Text('Giá dịch vụ *'),
+          title: Text(
+            'Giá dịch vụ *',
+            style: kTextTheme.titleMedium?.copyWith(
+              color: kTheme.hintColor,
+            ),
+          ),
           child: TextFormField(
             textInputAction: TextInputAction.next,
             keyboardType: TextInputType.number,
@@ -329,7 +351,8 @@ class _ServiceImageAttachments extends GetView<ServiceRegisterPageController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (controller.attachments.isNotEmpty)
-                  Text('Đã chọn ${controller.attachments.length}/5 hình ảnh'),
+                  Text(
+                      'Đã chọn ${controller.attachments.length}/${controller.attachmentPicker.maxAttachment} hình ảnh'),
                 SizedBox(
                   height: 130,
                   child: ListView.separated(

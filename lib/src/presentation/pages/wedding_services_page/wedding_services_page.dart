@@ -37,7 +37,7 @@ class WeddingServicesPage extends StatelessWidget {
             onPressed: () => Get.toNamed(
               ModuleRouter.weddingServiceRegisterRoute,
             ),
-            label: const Text('Thêm mới'),
+            label: const Text('Đăng ký'),
             icon: const Icon(Icons.add),
             // child: const Text('Thêm mới'),
           ),

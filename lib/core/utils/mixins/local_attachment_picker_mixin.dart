@@ -19,7 +19,7 @@ class _AttachmentPicker {
   // final _fileService = Get.find<IAccountRepository>()
   ///This key can be add to [FormField.key] to make it work with [FormField]
   final formFieldKey = GlobalKey<FormFieldState<List<LocalAttachmentModel>>>();
-  int _maxAttachment = 5;
+  int maxAttachment = 6;
 
   final attachments = RxList<LocalAttachmentModel>();
 
@@ -27,7 +27,7 @@ class _AttachmentPicker {
 
   ///Set max attachment can be picked
   void setMaxAttachment(int maxAttachment) {
-    _maxAttachment = maxAttachment;
+    maxAttachment = maxAttachment;
   }
 
   Future<void> pickAttachment() async {
@@ -48,7 +48,7 @@ class _AttachmentPicker {
       return;
     }
 
-    final int remainAttachment = _maxAttachment - attachments.length;
+    final int remainAttachment = maxAttachment - attachments.length;
 
     if (remainAttachment <= 0) {
       await Get.dialog(AlertDialog(

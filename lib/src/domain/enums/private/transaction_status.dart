@@ -43,4 +43,15 @@ extension TransactionStatusX on TransactionStatus {
         return Colors.grey;
     }
   }
+
+  static TransactionStatus fromCode(String? code) {
+    switch (code) {
+      case 'INACTIVE':
+        return TransactionStatus.pending;
+      case 'ACTIVE':
+        return TransactionStatus.paid;
+      default:
+        return TransactionStatus.unknown;
+    }
+  }
 }

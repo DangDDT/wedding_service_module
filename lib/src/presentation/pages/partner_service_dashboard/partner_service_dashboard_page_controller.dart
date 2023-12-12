@@ -3,7 +3,6 @@ import 'package:wedding_service_module/core/module_configs.dart';
 import 'package:wedding_service_module/core/utils/helpers/logger.dart';
 import 'package:wedding_service_module/src/domain/enums/private/stats_time_range_type_enum.dart';
 import 'package:wedding_service_module/src/domain/enums/private/wedding_service_state.dart';
-import 'package:wedding_service_module/src/domain/mock/dummy.dart';
 import 'package:wedding_service_module/src/domain/models/transaction_model.dart';
 import 'package:wedding_service_module/src/domain/models/wedding_service_model.dart';
 import 'package:wedding_service_module/src/domain/requests/get_wedding_service_param.dart';
@@ -11,6 +10,7 @@ import 'package:wedding_service_module/src/domain/services/interfaces/i_wedding_
 import 'package:wedding_service_module/src/presentation/pages/service_canlendar/service_calendar_page_controller.dart';
 import 'package:wedding_service_module/src/presentation/view_models/nullable_daterange.dart';
 import 'package:wedding_service_module/src/presentation/view_models/state_data_view_model.dart';
+import 'package:wss_repository/wss_repository.dart';
 
 class PartnerServiceDashboardPageController extends GetxController {
   final config = ModuleConfig.instance;
@@ -44,6 +44,7 @@ class PartnerServiceDashboardPageController extends GetxController {
   @override
   Future<void> refresh() => Future.wait([
         fetchRecentAddedServices(),
+        fetchRecentTransactions(),
       ]);
 
   Future<void> fetchRecentAddedServices() async {
@@ -76,25 +77,17 @@ class PartnerServiceDashboardPageController extends GetxController {
   Future<void> fetchRecentTransactions() async {
     try {
       recentTransactions.loading();
-
-      // final transactions = await _weddingServiceService.getTransactions(
-      //   GetWeddingServiceParam(
-      //     status: WeddingServiceState.active,
-      //     fromDate: dateRange.value?.start,
-      //     toDate: dateRange.value?.end,
-      //     categoryId: null,
-      //     name: null,
-      //     priceFrom: null,
-      //     priceTo: null,
-      //     pageIndex: 0,
-      //     pageSize: _maxRecentTransactionCount,
-      //     orderBy: 'PaidAt',
-      //     orderType: 'DESC',
-      //   ),
-      // );
-      final transactions =
-          DummyData().transactions.take(_maxRecentTransactionCount).toList();
-
+      final transactionsData = await _weddingServiceService.getTransactions(
+        GetPartnerPaymentHistoryParam(
+          page: 0,
+          pageSize: _maxRecentTransactionCount,
+          sortKey: 'CreateDate',
+          sortOrder: 'DESC',
+        ),
+      );
+      transactionsData.sort((a, b) => b.paidAt!.compareTo(a.paidAt!));
+      final transactions = transactionsData;
+      // DummyData().transactions.take(_maxRecentTransactionCount).toList();
       recentTransactions.success(transactions);
     } catch (e, stackTrace) {
       Logger.logCritical(e.toString(), stackTrace: stackTrace);

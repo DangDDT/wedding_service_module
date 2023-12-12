@@ -3,10 +3,12 @@ import 'package:wedding_service_module/core/utils/extensions/objec_ext.dart';
 import 'package:wedding_service_module/src/domain/enums/private/wedding_service_state.dart';
 import 'package:wedding_service_module/src/domain/mappers/z_mapper.dart';
 import 'package:wedding_service_module/src/domain/models/service_category_model.dart';
+import 'package:wedding_service_module/src/domain/models/transaction_model.dart';
 import 'package:wedding_service_module/src/domain/models/wedding_service_model.dart';
 import 'package:wedding_service_module/src/domain/requests/get_wedding_service_param.dart';
 import 'package:wedding_service_module/src/domain/services/interfaces/i_wedding_service_service.dart';
 import 'package:wss_repository/entities/category.dart' show Category;
+import 'package:wss_repository/entities/partner_payment_history.dart';
 import 'package:wss_repository/entities/service.dart' show Service;
 import 'package:wss_repository/requests/put_status_service_body.dart';
 import 'package:wss_repository/wss_repository.dart';
@@ -14,6 +16,8 @@ import 'package:wss_repository/wss_repository.dart';
 class WeddingServiceService extends IWeddingServiceService {
   final _categoryRepository = Get.find<ICategoryRepository>();
   final _serviceRepository = Get.find<IServiceRepository>();
+  final _paymentHistoryRepository =
+      Get.find<IPartnerPaymentHistoryRepository>();
   final Mapper mapper = Mapper.instance;
   @override
   Future<ServiceCategoryModel> getCategory(String id) async {
@@ -117,5 +121,16 @@ class WeddingServiceService extends IWeddingServiceService {
     );
 
     return result;
+  }
+
+  @override
+  Future<List<TransactionModel>> getTransactions(
+      GetPartnerPaymentHistoryParam param) async {
+    final result = await _paymentHistoryRepository.getPartnerPaymentHistories(
+      param: param,
+    );
+    return mapper.mapListData<PartnerPaymentHistory, TransactionModel>(
+      result.data!,
+    );
   }
 }

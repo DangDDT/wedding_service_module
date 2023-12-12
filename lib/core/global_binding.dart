@@ -2,6 +2,7 @@
 import 'package:get/get.dart';
 import 'package:wedding_service_module/src/domain/mappers/profiles/category_mapper.dart';
 import 'package:wedding_service_module/src/domain/mappers/profiles/day_off_info_mapper.dart';
+import 'package:wedding_service_module/src/domain/mappers/profiles/transaction_mapper.dart';
 import 'package:wedding_service_module/src/domain/mappers/profiles/wedding_serivce_mapper.dart';
 import 'package:wedding_service_module/src/domain/services/implements/partner_day_off_service.dart';
 import 'package:wedding_service_module/src/domain/services/implements/wedding_service_service.dart';
@@ -29,6 +30,7 @@ class GlobalBinding {
         WeddingServiceMapper(),
         DayOffInfoMapper(),
         CategoryMapper(),
+        TransactionMapper(),
       ],
     );
     Get.put<IWeddingServiceService>(

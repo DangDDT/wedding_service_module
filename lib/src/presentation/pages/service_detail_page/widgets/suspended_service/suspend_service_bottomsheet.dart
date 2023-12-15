@@ -79,7 +79,7 @@ class SuspendServiceBottomSheet extends StatelessWidget {
                           ),
                           kGapH16,
                           const Text(
-                            'Lưu ý rằng, sau khi ngừng kinh doanh, trong trường hợp bạn muốn tiếp tục kinh doanh dịch vụ, bạn sẽ phải trải qua khâu xét duyệt lại lần nữa.',
+                            'Lưu ý rằng, sau khi ngừng kinh doanh, các đơn hàng đang chờ xử lý vẫn sẽ phải được xử lý bình thường. Bạn vẫn phải hoàn thành các đơn hàng này.',
                           ),
                           kGapH8,
                           const Text(

@@ -68,8 +68,8 @@ class TransactionListItem extends StatelessWidget {
                     ),
                     Text(
                       transactionModel.status.isPaid
-                          ? 'Đã thanh toán ${transactionModel.paidAt != null ? 'vào ${transactionModel.paidAt!.toReadable()}' : ''}'
-                          : 'Đang chờ',
+                          ? 'Đã thanh toán'
+                          : 'Đang chờ thanh toán',
                       style: context.textTheme.bodyMedium?.copyWith(
                         color: context.theme.hintColor,
                       ),

@@ -145,6 +145,15 @@ class _ServiceInfos extends StatelessWidget {
             color: Colors.white,
           ),
         ),
+        Text(
+          '(${service.code})',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: context.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+          ),
+        ),
         kGapH12,
         // Text(
         //   service.description,

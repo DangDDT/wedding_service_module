@@ -6,6 +6,7 @@ import 'image_model.dart';
 class WeddingServiceModel {
   WeddingServiceModel({
     required this.id,
+    required this.code,
     required this.name,
     required this.description,
     required this.unit,
@@ -33,6 +34,7 @@ class WeddingServiceModel {
   }) {
     return WeddingServiceModel(
       id: 'null',
+      code: 'null',
       name: name,
       description: description,
       unit: unit,
@@ -52,6 +54,7 @@ class WeddingServiceModel {
   }
 
   final String id;
+  final String code;
   final String name;
   final String description;
   final String unit;

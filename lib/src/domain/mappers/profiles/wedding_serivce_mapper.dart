@@ -15,6 +15,8 @@ class WeddingServiceMapper
   WeddingServiceModel mapData(wss.Service entity, Mapper mapper) {
     return WeddingServiceModel(
       id: entity.id.toString(),
+      code: entity.code?.toString() ??
+          DefaultValueMapperConstants.defaultStringValue,
       name: entity.name?.toString() ??
           DefaultValueMapperConstants.defaultStringValue,
       rating: entity.rating?.toDouble() ??

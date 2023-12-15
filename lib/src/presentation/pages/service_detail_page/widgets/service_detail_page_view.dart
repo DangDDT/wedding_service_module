@@ -218,6 +218,13 @@ class _ServiceInfos extends GetView<ServiceDetailPageController> {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            kGapH8,
+            Text(
+              '(${controller.state.value.data!.code})',
+              style: kTextTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             kGapH12,
             Text(
               controller.state.value.data!.description,

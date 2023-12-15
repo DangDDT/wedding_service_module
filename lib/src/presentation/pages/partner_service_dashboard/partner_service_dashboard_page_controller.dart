@@ -79,6 +79,9 @@ class PartnerServiceDashboardPageController extends GetxController {
       recentTransactions.loading();
       final transactionsData = await _weddingServiceService.getTransactions(
         GetPartnerPaymentHistoryParam(
+          fromDate: null,
+          toDate: null,
+          status: null,
           page: null,
           pageSize: null,
           sortKey: 'CreateDate',

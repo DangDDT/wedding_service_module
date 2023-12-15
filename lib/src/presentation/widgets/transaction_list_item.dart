@@ -6,7 +6,6 @@ import 'package:wedding_service_module/core/utils/extensions/datetime_ext.dart';
 import 'package:wedding_service_module/core/utils/extensions/num_ext.dart';
 import 'package:wedding_service_module/src/domain/enums/private/transaction_status.dart';
 import 'package:wedding_service_module/src/domain/models/transaction_model.dart';
-import 'package:wedding_service_module/src/presentation/widgets/wrapped_inkwell.dart';
 
 class TransactionListItem extends StatelessWidget {
   const TransactionListItem({
@@ -19,9 +18,16 @@ class TransactionListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final transactionColor = transactionModel.status.color;
-    return WrappedInkWell(
-      onTap: () {},
-      child: Container(
+    return ExpansionTile(
+      trailing: transactionModel.detailInfos.isNotEmpty
+          ? const Icon(Icons.keyboard_arrow_down)
+          : null,
+      expandedCrossAxisAlignment: CrossAxisAlignment.start,
+      tilePadding: const EdgeInsets.all(0),
+      childrenPadding: const EdgeInsets.all(0),
+      clipBehavior: Clip.antiAlias,
+      backgroundColor: transactionColor.withOpacity(.05),
+      title: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -61,7 +67,7 @@ class TransactionListItem extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      transactionModel.createdAt.toReadable(),
+                      transactionModel.createdAt.toFullString(),
                       style: context.textTheme.bodyMedium?.copyWith(
                         color: context.theme.hintColor,
                       ),
@@ -71,15 +77,44 @@ class TransactionListItem extends StatelessWidget {
                           ? 'Đã thanh toán'
                           : 'Đang chờ thanh toán',
                       style: context.textTheme.bodyMedium?.copyWith(
-                        color: context.theme.hintColor,
+                        color: transactionColor,
+                      ),
+                    ),
+                    ListTile(
+                      dense: true,
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text(
+                        'Tổng giá trị đơn hàng:',
+                      ),
+                      trailing: Text(
+                        transactionModel.detailInfos
+                            .fold<double>(
+                              0,
+                              (previousValue, element) =>
+                                  previousValue + element.price,
+                            )
+                            .toVietNamCurrency(),
+                        style: context.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     Align(
-                      alignment: Alignment.bottomRight,
-                      child: Text(
-                        '+${transactionModel.amount.toVietNamCurrency()}',
-                        style: context.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
+                      child: ListTile(
+                        dense: true,
+                        contentPadding: EdgeInsets.zero,
+                        isThreeLine: true,
+                        title: const Text(
+                          'Doanh thu thực tế:',
+                        ),
+                        subtitle: const Text(
+                          '(Đã trừ chiết khấu)',
+                        ),
+                        trailing: Text(
+                          '+ ${transactionModel.amount.toVietNamCurrency()}',
+                          style: context.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
@@ -90,6 +125,25 @@ class TransactionListItem extends StatelessWidget {
           ),
         ),
       ),
+      children: [
+        if (transactionModel.detailInfos.isNotEmpty)
+          Column(
+            children: transactionModel.detailInfos
+                .map(
+                  (e) => ListTile(
+                    title: Text(e.serviceName),
+                    subtitle: Text(e.address),
+                    trailing: Text(
+                      e.price.toVietNamCurrency(),
+                      style: context.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+      ],
     );
   }
 }

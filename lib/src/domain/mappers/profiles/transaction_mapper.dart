@@ -17,6 +17,17 @@ class TransactionMapper
       status: TransactionStatusX.fromCode(entity.status),
       description: entity.order?.code,
       paidAt: entity.createDate ?? DefaultValueConstants.dateTime,
+      detailInfos: entity.order?.orderDetails
+              .map(
+                (e) => TransactionDetailInfo(
+                  serviceName: e.service?.name ?? DefaultValueConstants.string,
+                  address: e.address ?? DefaultValueConstants.string,
+                  price: e.price?.toDouble() ??
+                      DefaultValueConstants.defaultDouble,
+                ),
+              )
+              .toList() ??
+          [],
     );
   }
 }

@@ -1225,7 +1225,7 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: "75ecb9e4277fb24bfd68d9fc66ac1cd79b9ffa74"
+      resolved-ref: "15ecdaa52ea4e6a622542bf6c2fd9963f95efb0c"
       url: "https://github.com/DangDDT/wss_repository.git"
     source: git
     version: "0.0.1"

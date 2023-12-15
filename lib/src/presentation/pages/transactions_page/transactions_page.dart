@@ -4,7 +4,6 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:wedding_service_module/src/domain/enums/private/transaction_status.dart';
 import 'package:wedding_service_module/src/domain/models/transaction_model.dart';
 import 'package:wedding_service_module/src/presentation/pages/transactions_page/transactions_page_controller.dart';
-import 'package:wedding_service_module/src/presentation/view_models/nullable_daterange.dart';
 import 'package:wedding_service_module/src/presentation/widgets/auto_centerd_item_listview.dart';
 import 'package:wedding_service_module/src/presentation/widgets/stats_date_range_picker.dart';
 import 'package:wedding_service_module/src/presentation/widgets/transaction_list_item.dart';
@@ -14,27 +13,25 @@ class TransactionsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Lịch sử giao dịch'),
-        elevation: 0,
-        scrolledUnderElevation: 0,
-      ),
-      body: const Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: _DateRangePicker(),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
-            child: _TransactionStatusChoice(),
-          ),
-          Expanded(
-            child: _TransactionsView(),
-          ),
-        ],
-      ),
+    return GetBuilder<TransactionsPageController>(
+      init: TransactionsPageController(),
+      builder: (controller) {
+        return const Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: _DateRangePicker(),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: _TransactionStatusChoice(),
+            ),
+            Expanded(
+              child: _TransactionsView(),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -46,14 +43,14 @@ class _TransactionStatusChoice extends GetView<TransactionsPageController> {
   Widget build(BuildContext context) {
     return Obx(
       () => AutoCenteredItemListView(
-        currentIndex: controller.status.value,
+        currentIndex: controller.status.value.getIndexFromStatus(),
         height: 48,
         itemCount: 3,
         itemBuilder: (context, index) {
-          final status = TransactionStatus.values[index];
+          final status = TransactionStatusX.getStatusFromIndexTab(index);
           String name = status.name;
 
-          if (status.isUnknown) {
+          if (status.isAll) {
             name = 'Tất cả';
           }
           return GestureDetector(
@@ -63,10 +60,11 @@ class _TransactionStatusChoice extends GetView<TransactionsPageController> {
               child: Text(
                 name,
                 style: context.textTheme.titleMedium?.copyWith(
-                  fontWeight: controller.status.value == index
-                      ? FontWeight.w700
-                      : FontWeight.normal,
-                  color: controller.status.value == index
+                  fontWeight:
+                      controller.status.value.getIndexFromStatus() == index
+                          ? FontWeight.w700
+                          : FontWeight.normal,
+                  color: controller.status.value.getIndexFromStatus() == index
                       ? context.theme.colorScheme.primary
                       : context.theme.hintColor,
                 ),
@@ -79,15 +77,17 @@ class _TransactionStatusChoice extends GetView<TransactionsPageController> {
   }
 }
 
-class _DateRangePicker extends StatelessWidget {
+class _DateRangePicker extends GetView<TransactionsPageController> {
   const _DateRangePicker();
 
   @override
   Widget build(BuildContext context) {
-    return StatsDateRangePicker(
-      value: null,
-      onDateRangeChanged: (NullableDateRange value) {},
-    );
+    return Obx(() {
+      return StatsDateRangePicker(
+        value: controller.dateRange.value,
+        onDateRangeChanged: controller.changeDateRange,
+      );
+    });
   }
 }
 

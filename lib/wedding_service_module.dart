@@ -12,4 +12,6 @@ export 'src/presentation/pages/partner_service_dashboard/widgets/recent_transact
 export 'src/presentation/pages/partner_service_dashboard/partner_service_dashboard_page_controller.dart'
     show PartnerServiceDashboardPageController;
 
+export 'src/presentation/pages/transactions_page/transactions_page.dart';
+
 export 'src/presentation/pages/partner_service_dashboard/partner_service_dashboard_page.dart';

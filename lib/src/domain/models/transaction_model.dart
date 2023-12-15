@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:wedding_service_module/src/domain/enums/private/transaction_status.dart';
 
 class TransactionModel {
@@ -9,6 +10,7 @@ class TransactionModel {
     required this.createdAt,
     this.paidAt,
     required this.status,
+    required this.detailInfos,
   });
 
   final String id;
@@ -18,6 +20,7 @@ class TransactionModel {
   final DateTime createdAt;
   final DateTime? paidAt;
   final TransactionStatus status;
+  final List<TransactionDetailInfo> detailInfos;
 
   @override
   bool operator ==(Object other) {
@@ -43,4 +46,15 @@ class TransactionModel {
         paidAt.hashCode ^
         status.hashCode;
   }
+}
+
+class TransactionDetailInfo {
+  final String serviceName;
+  final String address;
+  final double price;
+  TransactionDetailInfo({
+    required this.serviceName,
+    required this.address,
+    required this.price,
+  });
 }

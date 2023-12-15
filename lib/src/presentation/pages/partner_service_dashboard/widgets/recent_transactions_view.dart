@@ -15,22 +15,22 @@ class RecentTransactionsView
       duration: const Duration(milliseconds: 410),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Text(
-                  'Lịch sử thanh toán',
-                  style: context.textTheme.titleLarge,
-                ),
-              ),
-              // TextButton(
-              //   onPressed: () => Get.toNamed(ModuleRouter.transactionsRoute),
-              //   child: const Text('Xem tất cả'),
-              // ),
-            ],
-          ),
-          kGapH8,
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.start,
+          //   children: [
+          //     Expanded(
+          //       child: Text(
+          //         'Lịch sử thanh toán',
+          //         style: context.textTheme.titleLarge,
+          //       ),
+          //     ),
+          //     // TextButton(
+          //     //   onPressed: () => Get.toNamed(ModuleRouter.transactionsRoute),
+          //     //   child: const Text('Xem tất cả'),
+          //     // ),
+          //   ],
+          // ),
+          // kGapH8,
           ConstrainedBox(
             constraints: const BoxConstraints(minHeight: 140),
             child: Obx(() {

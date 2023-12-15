@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wedding_service_module/core/utils/extensions/datetime_ext.dart';
 import 'package:wedding_service_module/core/utils/helpers/logger.dart';
 import 'package:wedding_service_module/core/utils/helpers/snack_bar_helper.dart';
 import 'package:wedding_service_module/src/domain/models/day_off_info_model.dart.dart';
@@ -91,18 +92,8 @@ class ServiceCalendarPageController extends GetxController {
   Future<void> loadDayOffInDay() async {
     selectedDayOffInfos.loading();
     try {
-      final start = _selectedDate.value.copyWith(
-        hour: 0,
-        minute: 0,
-        second: 0,
-        isUtc: true,
-      );
-      final end = _selectedDate.value.copyWith(
-        hour: 23,
-        minute: 59,
-        second: 55,
-        isUtc: true,
-      );
+      final start = _selectedDate.value.firstTimeOfDate();
+      final end = _selectedDate.value.lastTimeOfDate();
       final data = await _partnerDayOffService.getPartnerDayOffs(
         GetDayOffParams(
           serviceId: currentService?.id,

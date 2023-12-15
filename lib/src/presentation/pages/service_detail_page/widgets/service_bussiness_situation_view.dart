@@ -309,13 +309,13 @@ class _ActiveServiceView extends GetView<ServiceDetailPageController> {
         //   ),
         // ),
         kGapH28,
-        SizedBox(
-          width: double.infinity,
-          child: FilledButton(
-            onPressed: controller.pushToSalesHistoryPage,
-            child: const Text('Xem lịch sử giao dịch'),
-          ),
-        ),
+        // SizedBox(
+        //   width: double.infinity,
+        //   child: FilledButton(
+        //     onPressed: controller.pushToSalesHistoryPage,
+        //     child: const Text('Xem lịch sử giao dịch'),
+        //   ),
+        // ),
         SizedBox(
           width: double.infinity,
           child: FilledButton.tonal(

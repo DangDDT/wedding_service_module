@@ -29,29 +29,29 @@ class ServiceCalendarPage extends StatelessWidget {
           appBar: AppBar(
             title: const Text('Lịch dịch vụ'),
             scrolledUnderElevation: 0,
+            actions: [
+              IconButton(
+                onPressed: () async {
+                  await controller.loadDayOffInMonth();
+                  await controller.loadDayOffInDay();
+                },
+                icon: const Icon(Icons.refresh),
+              ),
+            ],
           ),
           floatingActionButton: FloatingActionButton(
             heroTag: UniqueKey(),
             onPressed: controller.addDayOffInfo,
             child: const Icon(Icons.add),
           ),
-          body: RefreshIndicator(
-            onRefresh: () async {
-              await controller.loadDayOffInMonth();
-              await controller.loadDayOffInDay();
-            },
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: Column(
-                children: [
-                  _CalendarView(controller),
-                  kGapH12,
-                  Expanded(
-                    child: _DayDetailInfo(controller),
-                  ),
-                ],
+          body: Column(
+            children: [
+              _CalendarView(controller),
+              kGapH12,
+              Expanded(
+                child: _DayDetailInfo(controller),
               ),
-            ),
+            ],
           ),
         );
       },

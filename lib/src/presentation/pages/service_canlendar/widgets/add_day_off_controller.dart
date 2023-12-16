@@ -13,6 +13,8 @@ import 'package:wedding_service_module/src/domain/requests/get_wedding_service_p
 import 'package:wedding_service_module/src/domain/services/interfaces/i_partner_day_off_service.dart';
 import 'package:wedding_service_module/src/domain/services/interfaces/i_wedding_service_service.dart';
 
+import 'add_day_off_bottom_sheet.dart';
+
 class AddDayOffController extends GetxController {
   final config = ModuleConfig.instance;
   final _weddingServiceService = Get.find<IWeddingServiceService>();
@@ -26,8 +28,9 @@ class AddDayOffController extends GetxController {
   late final PagingController<int, WeddingServiceModel> pagingController;
   late final TextEditingController searchController;
   final _debouncer = Debouncer(delay: const Duration(milliseconds: 500));
-
+  final List<ServiceExcept> serviceExcept;
   AddDayOffController({
+    required this.serviceExcept,
     WeddingServiceModel? weddingService,
     DateTime? date,
   }) : super() {

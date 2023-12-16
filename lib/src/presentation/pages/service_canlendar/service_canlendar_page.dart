@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_use_of_protected_member
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -39,11 +41,22 @@ class ServiceCalendarPage extends StatelessWidget {
               ),
             ],
           ),
-          floatingActionButton: FloatingActionButton(
-            heroTag: UniqueKey(),
-            onPressed: controller.addDayOffInfo,
-            child: const Icon(Icons.add),
-          ),
+          floatingActionButton: Obx(() {
+            if ((controller.dayOffByTaskInMonth.value
+                        .map((e) => e.date.day)
+                        .contains(controller.selectedDateValue.day) ||
+                    (controller.selectedDayOffInfos.value.data?.length ??
+                            [].length) >
+                        0) &&
+                controller.currentService != null) {
+              return const SizedBox.shrink();
+            }
+            return FloatingActionButton(
+              heroTag: UniqueKey(),
+              onPressed: controller.addDayOffInfo,
+              child: const Icon(Icons.add),
+            );
+          }),
           body: Column(
             children: [
               _CalendarView(controller),
@@ -78,6 +91,10 @@ class _CalendarView extends StatelessWidget {
           startingDayOfWeek: StartingDayOfWeek.monday,
           locale: 'vi_VN',
           calendarFormat: CalendarFormat.month,
+          headerStyle: const HeaderStyle(
+            formatButtonVisible: false,
+            titleCentered: true,
+          ),
           calendarStyle: CalendarStyle(
             markerDecoration: BoxDecoration(
               color: kTheme.colorScheme.secondary,
@@ -106,9 +123,11 @@ class _CalendarView extends StatelessWidget {
               color: kTheme.colorScheme.primary,
               fontWeight: FontWeight.bold,
             ),
+            outsideDaysVisible: false,
           ),
           availableCalendarFormats: const {CalendarFormat.month: 'Tháng'},
           focusedDay: controller.focusDate.value,
+          enabledDayPredicate: (day) => day.isToDayOrAfter,
           selectedDayPredicate: (day) =>
               isSameDay(day, controller.selectedDateValue),
           onDaySelected: (selectedDay, focusedDay) {
@@ -122,9 +141,8 @@ class _CalendarView extends StatelessWidget {
   }
 
   List<DayOffInfoModel> _getDayOffInMonth(DateTime day) {
-    return controller.dayOffInMonth
-        .where((element) => isSameDay(element.date, day))
-        .toList();
+    final data = controller.dayOffInMonth.value;
+    return data.where((element) => isSameDay(element.date, day)).toList();
   }
 }
 
@@ -163,7 +181,17 @@ class _DayDetailInfo extends StatelessWidget {
                     ),
                   );
                 }
-
+                final dayOffByTask = controller.dayOffByTaskInMonth.value
+                    .map((e) => e.date.day)
+                    .toList();
+                if (controller.currentService != null &&
+                    dayOffByTask.contains(controller.selectedDateValue.day)) {
+                  return const Center(
+                    child: ErrorOrEmptyWidget(
+                      message: 'Ngày này đã được đặt dịch vụ bởi khách hàng.',
+                    ),
+                  );
+                }
                 if (controller.selectedDayOffInfos.value.data.isNullOrEmpty) {
                   return Center(
                     child: ErrorOrEmptyWidget(

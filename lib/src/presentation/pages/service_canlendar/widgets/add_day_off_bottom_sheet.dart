@@ -10,13 +10,38 @@ import 'package:wedding_service_module/src/presentation/widgets/empty_handler.da
 import 'package:wedding_service_module/src/presentation/widgets/loading_widget.dart';
 import 'package:wedding_service_module/src/presentation/widgets/selection_button.dart';
 
+enum ServiceExceptType {
+  dayOff,
+  dayOffByTask;
+
+  String toReason() {
+    switch (this) {
+      case ServiceExceptType.dayOff:
+        return 'Đã được tạo ngày nghỉ';
+      case ServiceExceptType.dayOffByTask:
+        return 'Đã được đặt dịch vụ';
+    }
+  }
+}
+
+class ServiceExcept {
+  final String id;
+  final ServiceExceptType type;
+
+  ServiceExcept({
+    required this.id,
+    required this.type,
+  });
+}
+
 class AddDayOffBottomSheet extends StatelessWidget {
   const AddDayOffBottomSheet({
     super.key,
+    required this.serviceExcepts,
     this.selectedService,
     this.selectedDate,
   });
-
+  final List<ServiceExcept> serviceExcepts;
   final WeddingServiceModel? selectedService;
   final DateTime? selectedDate;
 
@@ -24,6 +49,7 @@ class AddDayOffBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<AddDayOffController>(
       init: AddDayOffController(
+        serviceExcept: serviceExcepts,
         weddingService: selectedService,
         date: selectedDate,
       ),
@@ -141,7 +167,11 @@ class _SelectServiceView extends GetView<AddDayOffController> {
       child: PagedListView<int, WeddingServiceModel>.separated(
         pagingController: controller.pagingController,
         padding: const EdgeInsets.all(12),
-        separatorBuilder: (context, index) => kGapH12,
+        separatorBuilder: (context, index) => const Divider(
+          indent: 12,
+          endIndent: 12,
+          thickness: 2,
+        ),
         builderDelegate: PagedChildBuilderDelegate(
           noItemsFoundIndicatorBuilder: (context) => EmptyErrorHandler(
             title: 'Không có dịch vụ nào',
@@ -163,8 +193,12 @@ class _SelectServiceView extends GetView<AddDayOffController> {
 
   Widget _itemBuilder(
       BuildContext context, WeddingServiceModel service, int index) {
-    return ListTile(
-      onTap: () => controller.selectedWeddingService.value = service,
+    final isEnabled =
+        !controller.serviceExcept.map((e) => e.id).contains(service.id);
+    final child = ListTile(
+      onTap: isEnabled
+          ? () => controller.selectedWeddingService.value = service
+          : null,
       leading: Container(
         width: 50,
         height: 50,
@@ -179,9 +213,54 @@ class _SelectServiceView extends GetView<AddDayOffController> {
       ),
       title: Text(service.name),
       subtitle: Text(service.description),
-      trailing: const Icon(
-        Icons.arrow_forward_ios,
-      ),
+      trailing: isEnabled
+          ? const Icon(Icons.arrow_forward_ios_rounded)
+          : const SizedBox.shrink(),
+    );
+    if (isEnabled) {
+      return child;
+    }
+    return Stack(
+      children: [
+        child,
+        Positioned.fill(
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ),
+        Positioned.fill(
+          child: Center(
+            child: Transform.rotate(
+              angle: -.2,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 2,
+                  ),
+                ),
+                child: Text(
+                  controller.serviceExcept
+                      .firstWhere((e) => e.id == service.id)
+                      .type
+                      .toReason(),
+                  style: kTheme.textTheme.headlineSmall?.copyWith(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

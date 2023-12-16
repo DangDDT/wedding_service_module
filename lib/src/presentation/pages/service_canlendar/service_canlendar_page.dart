@@ -35,14 +35,23 @@ class ServiceCalendarPage extends StatelessWidget {
             onPressed: controller.addDayOffInfo,
             child: const Icon(Icons.add),
           ),
-          body: Column(
-            children: [
-              _CalendarView(controller),
-              kGapH12,
-              Expanded(
-                child: _DayDetailInfo(controller),
+          body: RefreshIndicator(
+            onRefresh: () async {
+              await controller.loadDayOffInMonth();
+              await controller.loadDayOffInDay();
+            },
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                children: [
+                  _CalendarView(controller),
+                  kGapH12,
+                  Expanded(
+                    child: _DayDetailInfo(controller),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         );
       },

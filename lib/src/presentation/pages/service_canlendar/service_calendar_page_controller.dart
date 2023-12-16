@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wedding_service_module/core/utils/extensions/datetime_ext.dart';
@@ -52,7 +54,7 @@ class ServiceCalendarPageController extends GetxController {
 
   @override
   void onReady() {
-    _loadDayOffInMonth();
+    loadDayOffInMonth();
     loadDayOffInDay();
     super.onReady();
   }
@@ -65,7 +67,7 @@ class ServiceCalendarPageController extends GetxController {
       start: DateTime(date.year, date.month, 1),
       end: DateTime(date.year, date.month + 1, 0),
     );
-    _loadDayOffInMonth();
+    loadDayOffInMonth();
   }
 
   set selectedDate(DateTime date) {
@@ -73,7 +75,7 @@ class ServiceCalendarPageController extends GetxController {
     loadDayOffInDay();
   }
 
-  Future<void> _loadDayOffInMonth() async {
+  Future<void> loadDayOffInMonth() async {
     try {
       final data = await _partnerDayOffService.getPartnerDayOffs(
         GetDayOffParams(
@@ -120,7 +122,7 @@ class ServiceCalendarPageController extends GetxController {
 
     if (newInfo != null) {
       SnackBarHelper.show(message: 'Thêm ngày nghỉ thành công');
-      _loadDayOffInMonth();
+      loadDayOffInMonth();
       loadDayOffInDay();
     }
   }
@@ -146,7 +148,7 @@ class ServiceCalendarPageController extends GetxController {
       if (isConfirm != true) return;
       await _partnerDayOffService.deletePartnerDayOff(info.id);
       SnackBarHelper.show(message: 'Xóa ngày nghỉ thành công');
-      _loadDayOffInMonth();
+      loadDayOffInMonth();
       loadDayOffInDay();
     } catch (e, stackTrace) {
       Logger.logCritical(e.toString(), stackTrace: stackTrace);

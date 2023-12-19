@@ -90,6 +90,8 @@ class TransactionListItem extends StatelessWidget {
                       ),
                       trailing: Text(
                         transactionModel.detailInfos
+                            .where(
+                                (e) => e.createBy == config.userConfig.userId)
                             .fold<double>(
                               0,
                               (previousValue, element) =>

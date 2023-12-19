@@ -52,9 +52,11 @@ class TransactionDetailInfo {
   final String serviceName;
   final String address;
   final double price;
+  final String createBy;
   TransactionDetailInfo({
     required this.serviceName,
     required this.address,
     required this.price,
+    required this.createBy,
   });
 }

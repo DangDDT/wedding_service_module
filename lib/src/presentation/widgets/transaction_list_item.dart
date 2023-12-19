@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wedding_service_module/core/constants/ui_constant.dart';
+import 'package:wedding_service_module/core/module_configs.dart';
 import 'package:wedding_service_module/core/utils/extensions/color_ext.dart';
 import 'package:wedding_service_module/core/utils/extensions/datetime_ext.dart';
 import 'package:wedding_service_module/core/utils/extensions/num_ext.dart';
@@ -17,6 +18,7 @@ class TransactionListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final config = ModuleConfig.instance;
     final transactionColor = transactionModel.status.color;
     return ExpansionTile(
       trailing: transactionModel.detailInfos.isNotEmpty
@@ -129,6 +131,7 @@ class TransactionListItem extends StatelessWidget {
         if (transactionModel.detailInfos.isNotEmpty)
           Column(
             children: transactionModel.detailInfos
+                .where((e) => e.createBy == config.userConfig.userId)
                 .map(
                   (e) => ListTile(
                     title: Text(e.serviceName),

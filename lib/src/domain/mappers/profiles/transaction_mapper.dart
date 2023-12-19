@@ -20,6 +20,7 @@ class TransactionMapper
       detailInfos: entity.order?.orderDetails
               .map(
                 (e) => TransactionDetailInfo(
+                  createBy: e.service?.createBy ?? DefaultValueConstants.string,
                   serviceName: e.service?.name ?? DefaultValueConstants.string,
                   address: e.address ?? DefaultValueConstants.string,
                   price: e.price?.toDouble() ??

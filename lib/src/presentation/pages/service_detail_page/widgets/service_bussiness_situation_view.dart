@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, unused_element
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -83,10 +83,10 @@ class _NotRegistered extends GetView<ServiceDetailPageController> {
             width: double.infinity,
             child: _RegisterButton(),
           ),
-          const SizedBox(
-            width: double.infinity,
-            child: _ContactUsButton(),
-          ),
+          // const SizedBox(
+          //   width: double.infinity,
+          //   child: _ContactUsButton(),
+          // ),
         ],
       ),
     );
@@ -136,11 +136,11 @@ class _RequestingServiceView extends GetView<ServiceDetailPageController> {
               ),
               textAlign: TextAlign.center,
             ),
-            kGapH24,
-            const SizedBox(
-              width: double.infinity,
-              child: _ContactUsButton(),
-            ),
+            // kGapH24,
+            // const SizedBox(
+            //   width: double.infinity,
+            //   child: _ContactUsButton(),
+            // ),
           ],
         ),
       ),
@@ -198,15 +198,15 @@ class _RejectedServiceBuild extends GetView<ServiceDetailPageController> {
               color: kTheme.hintColor,
             ),
           ),
-          kGapH24,
-          const SizedBox(
-            width: double.infinity,
-            child: _RegisterButton(isReRegister: true),
-          ),
-          const SizedBox(
-            width: double.infinity,
-            child: _ContactUsButton(),
-          ),
+          // kGapH24,
+          // const SizedBox(
+          //   width: double.infinity,
+          //   child: _RegisterButton(isReRegister: true),
+          // ),
+          // const SizedBox(
+          //   width: double.infinity,
+          //   child: _ContactUsButton(),
+          // ),
         ],
       ),
     );
@@ -418,15 +418,15 @@ class _RegisterButton extends GetView<ServiceDetailPageController> {
   }
 }
 
-class _ContactUsButton extends GetView<ServiceDetailPageController> {
-  const _ContactUsButton();
+// class _ContactUsButton extends GetView<ServiceDetailPageController> {
+//   const _ContactUsButton();
 
-  @override
-  Widget build(BuildContext context) {
-    return FilledButton.tonalIcon(
-      onPressed: controller.contactUs,
-      icon: const Icon(Icons.phone),
-      label: const Text('Liên hệ với chúng tôi'),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return FilledButton.tonalIcon(
+//       onPressed: controller.contactUs,
+//       icon: const Icon(Icons.phone),
+//       label: const Text('Liên hệ với chúng tôi'),
+//     );
+//   }
+// }
